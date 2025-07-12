@@ -324,6 +324,7 @@
             max-height: 200px;
             overflow-y: auto;
             padding-right: 0.5rem;
+            white-space: pre-line;
         }
 
         .project-description::-webkit-scrollbar {
@@ -599,7 +600,7 @@
                     result.title = titleLine.replace('# ', '').trim();
                 }
                 
-                // Extract description (first paragraph after title)
+                // Extract description (all paragraphs after title until first section)
                 const descriptionStart = lines.findIndex(line => 
                     line.trim() && !line.startsWith('#') && !line.startsWith('![')
                 );
@@ -608,10 +609,15 @@
                     const descriptionLines = [];
                     for (let i = descriptionStart; i < lines.length; i++) {
                         const line = lines[i].trim();
-                        if (!line || line.startsWith('#') || line.startsWith('##')) break;
-                        descriptionLines.push(line);
+                        // Stop at first section header (## or ###)
+                        if (line.startsWith('##') || line.startsWith('###')) break;
+                        // Include non-empty lines and empty lines (for paragraph breaks)
+                        if (line || descriptionLines.length > 0) {
+                            descriptionLines.push(line);
+                        }
                     }
-                    result.description = descriptionLines.join(' ').trim();
+                    // Join with double spaces to preserve paragraph breaks
+                    result.description = descriptionLines.join('  ').trim();
                 }
                 
                 // Extract technologies
