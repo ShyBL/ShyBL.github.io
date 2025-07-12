@@ -1,5 +1,4 @@
 # Beat-Em-Up Across The Globe
-
 A mysterious robot has landed on Earth on a quest to find monuments and other landmarks. But what is its purpose? Only time will tell...
 
 This beat 'em up style game features punching action, breakable containers, loot, and four levels (France, Italy, Egypt, USA) to discover cultural landmarks. The game is styled in low-poly 3D with a full-screen pixelation effect, giving a modern take to a classic style and genre.

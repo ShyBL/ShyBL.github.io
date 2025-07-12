@@ -78,6 +78,8 @@
             box-shadow: var(--shadow-heavy);
             background: var(--card-bg);
             backdrop-filter: blur(10px);
+            width: 135%;
+            margin-left: -17.5%;
         }
 
         .carousel-track {
@@ -93,8 +95,7 @@
 
         .project-media {
             position: relative;
-            height: 50vh;
-            min-height: 300px;
+            aspect-ratio: 16/9;
             background: #f8f9fa;
             overflow: hidden;
         }
@@ -258,15 +259,7 @@
             border-radius: 10px;
         }
 
-        .screenshot {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 1;
-        }
+
 
         .media-placeholder {
             display: flex;
@@ -306,7 +299,7 @@
 
         .content-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: 2fr 1fr 1fr;
             gap: 2rem;
             align-items: start;
         }
@@ -321,28 +314,7 @@
             font-size: 1rem;
             color: var(--text-secondary);
             line-height: 1.6;
-            max-height: 200px;
-            overflow-y: auto;
-            padding-right: 0.5rem;
             white-space: pre-line;
-        }
-
-        .project-description::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .project-description::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 2px;
-        }
-
-        .project-description::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 2px;
-        }
-
-        .project-description::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
         }
 
         .section-title {
@@ -888,12 +860,16 @@
                         let currentIndex = 0;
                         
                         const updateScreenshots = () => {
+                            console.log(`Updating carousel ${carouselIndex}, currentIndex: ${currentIndex}`);
                             screenshots.forEach((screenshot, index) => {
-                                screenshot.classList.toggle('active', index === currentIndex);
+                                const isActive = index === currentIndex;
+                                screenshot.classList.toggle('active', isActive);
+                                console.log(`Screenshot ${index}: ${isActive ? 'active' : 'inactive'}`);
                             });
                             
                             dots.forEach((dot, index) => {
-                                dot.classList.toggle('active', index === currentIndex);
+                                const isActive = index === currentIndex;
+                                dot.classList.toggle('active', isActive);
                             });
                         };
                         
