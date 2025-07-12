@@ -112,24 +112,150 @@
             height: 100%;
         }
 
-        .project-media-carousel {
+        .video-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .video-button:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: translateY(-2px);
+        }
+
+        .play-icon {
+            font-size: 1.2rem;
+        }
+
+        .screenshot-carousel {
             position: relative;
             width: 100%;
             height: 100%;
         }
 
-        .media-item {
+        .screenshot-track {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .screenshot {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            object-fit: cover;
             opacity: 0;
-            transition: opacity 0.8s ease;
+            transition: opacity 0.5s ease;
         }
 
-        .media-item.active {
+        .screenshot.active {
             opacity: 1;
+        }
+
+        .screenshot-nav {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .screenshot-prev,
+        .screenshot-next {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .screenshot-prev:hover,
+        .screenshot-next:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .screenshot-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .screenshot-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .screenshot-dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+
+        .video-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .video-popup.active {
+            display: flex;
+        }
+
+        .video-popup-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+
+        .video-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        #popup-video {
+            width: 100%;
+            height: auto;
+            max-height: 90vh;
+            border-radius: 10px;
         }
 
         .screenshot {
@@ -156,26 +282,120 @@
         .project-content {
             padding: 2rem;
             flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .project-header {
+            margin-bottom: 1rem;
         }
 
         .project-title {
             font-size: 1.8rem;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 1rem;
-        }
-
-        .project-description {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            line-height: 1.7;
+            margin-bottom: 0.5rem;
         }
 
         .tech-stack {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .content-column {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .project-description {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .project-description::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .project-description::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 2px;
+        }
+
+        .project-description::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 2px;
+        }
+
+        .project-description::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.85rem;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 3px;
+            height: 0.85rem;
+            background: var(--primary-gradient);
+            border-radius: 1px;
+        }
+
+        .feature-list,
+        .team-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .feature-list li,
+        .team-list li {
+            padding: 0.25rem 0;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            position: relative;
+            padding-left: 1.25rem;
+            font-size: 0.9rem;
+        }
+
+        .feature-list li::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .team-list li::before {
+            content: '👤';
+            position: absolute;
+            left: 0;
+            font-size: 0.8rem;
         }
 
         .tech-tag {
@@ -284,6 +504,17 @@
         </div>
     </main>
 
+    <!-- Video Popup -->
+    <div id="video-popup" class="video-popup">
+        <div class="video-popup-content">
+            <button class="video-close">×</button>
+            <video id="popup-video" controls>
+                <source src="" type="video/mp4">
+                Video not supported
+            </video>
+        </div>
+    </div>
+
     <script>
         class Portfolio {
             constructor() {
@@ -360,7 +591,7 @@
 
             parseMarkdown(content) {
                 const lines = content.split('\n');
-                const result = { technologies: [] };
+                const result = { technologies: [], keyFeatures: [], team: [] };
                 
                 // Extract title
                 const titleLine = lines.find(line => line.startsWith('# '));
@@ -394,6 +625,36 @@
                         if (!line || line.startsWith('#')) break;
                         if (line.startsWith('- ')) {
                             result.technologies.push(line.replace('- ', '').trim());
+                        }
+                    }
+                }
+                
+                // Extract Key Features
+                const featuresStart = lines.findIndex(line => 
+                    /^##?\s*key features/i.test(line)
+                );
+                
+                if (featuresStart >= 0) {
+                    for (let i = featuresStart + 1; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (!line || line.startsWith('#')) break;
+                        if (line.startsWith('- ')) {
+                            result.keyFeatures.push(line.replace('- ', '').trim());
+                        }
+                    }
+                }
+                
+                // Extract Team
+                const teamStart = lines.findIndex(line => 
+                    /^##?\s*team/i.test(line)
+                );
+                
+                if (teamStart >= 0) {
+                    for (let i = teamStart + 1; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (!line || line.startsWith('#')) break;
+                        if (line.startsWith('- ')) {
+                            result.team.push(line.replace('- ', '').trim());
                         }
                     }
                 }
@@ -491,52 +752,86 @@
                     .map(tech => `<span class="tech-tag">${tech}</span>`)
                     .join('');
 
+                const featuresHTML = project.keyFeatures && project.keyFeatures.length > 0 ? `
+                    <div class="content-column">
+                        <h4 class="section-title">Key Features</h4>
+                        <ul class="feature-list">
+                            ${project.keyFeatures.map(feature => `<li>${feature}</li>`).join('')}
+                        </ul>
+                    </div>
+                ` : '<div class="content-column"></div>';
+
+                const teamHTML = project.team && project.team.length > 0 ? `
+                    <div class="content-column">
+                        <h4 class="section-title">Team</h4>
+                        <ul class="team-list">
+                            ${project.team.map(member => `<li>${member}</li>`).join('')}
+                        </ul>
+                    </div>
+                ` : '<div class="content-column"></div>';
+
                 return `
                     <article class="project-card">
                         <div class="project-media">
                             ${mediaHTML}
                         </div>
                         <div class="project-content">
-                            <h3 class="project-title">${project.title}</h3>
-                            <p class="project-description">${project.description}</p>
-                            <div class="tech-stack">${techHTML}</div>
+                            <div class="project-header">
+                                <h3 class="project-title">${project.title}</h3>
+                                <div class="tech-stack">${techHTML}</div>
+                            </div>
+                            <div class="content-grid">
+                                <div class="content-column">
+                                    <h4 class="section-title">Description</h4>
+                                    <div class="project-description">${project.description}</div>
+                                </div>
+                                ${featuresHTML}
+                                ${teamHTML}
+                            </div>
                         </div>
                     </article>
                 `;
             }
 
             renderMedia(media) {
-                const mediaItems = [];
+                let mediaHTML = '';
                 
-                // Add video first if available
+                // Add video button if available
                 if (media.video) {
-                    mediaItems.push(`
-                        <div class="media-item active" data-type="video">
-                            <video class="project-video" controls muted>
-                                <source src="${media.video}" type="video/mp4">
-                                Video not supported
-                            </video>
-                        </div>
-                    `);
-                }
-                
-                // Add screenshots
-                if (media.screenshots.length > 0) {
-                    media.screenshots.forEach((screenshot, index) => {
-                        mediaItems.push(`
-                            <div class="media-item" data-type="screenshot">
-                                <img src="${screenshot}" alt="Screenshot ${index + 1}" class="screenshot">
-                            </div>
-                        `);
-                    });
-                }
-                
-                if (mediaItems.length > 0) {
-                    return `
-                        <div class="project-media-carousel">
-                            ${mediaItems.join('')}
+                    mediaHTML += `
+                        <div class="video-button" data-video="${media.video}">
+                            <div class="play-icon">▶</div>
+                            <span>Watch Gameplay</span>
                         </div>
                     `;
+                }
+                
+                // Add screenshot carousel
+                if (media.screenshots.length > 0) {
+                    mediaHTML += `
+                        <div class="screenshot-carousel">
+                            <div class="screenshot-track">
+                                ${media.screenshots.map((screenshot, index) => 
+                                    `<img src="${screenshot}" alt="Screenshot ${index + 1}" class="screenshot ${index === 0 ? 'active' : ''}">`
+                                ).join('')}
+                            </div>
+                            ${media.screenshots.length > 1 ? `
+                                <div class="screenshot-nav">
+                                    <button class="screenshot-prev">‹</button>
+                                    <div class="screenshot-dots">
+                                        ${media.screenshots.map((_, index) => 
+                                            `<button class="screenshot-dot ${index === 0 ? 'active' : ''}" data-index="${index}"></button>`
+                                        ).join('')}
+                                    </div>
+                                    <button class="screenshot-next">›</button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+                
+                if (mediaHTML) {
+                    return `<div class="project-media">${mediaHTML}</div>`;
                 }
                 
                 return '<div class="media-placeholder">No media available</div>';
@@ -570,96 +865,91 @@
                     dot.addEventListener('click', () => this.goToSlide(index));
                 });
 
-                this.setupMediaCarousel();
-                this.setupVideoControls();
+                this.setupScreenshotCarousels();
+                this.setupVideoPopup();
             }
 
-            setupMediaCarousel() {
-                const mediaCarousels = document.querySelectorAll('.project-media-carousel');
+            setupScreenshotCarousels() {
+                const carousels = document.querySelectorAll('.screenshot-carousel');
                 
-                mediaCarousels.forEach((carousel, carouselIndex) => {
-                    const mediaItems = carousel.querySelectorAll('.media-item');
+                carousels.forEach((carousel, carouselIndex) => {
+                    const screenshots = carousel.querySelectorAll('.screenshot');
+                    const prevBtn = carousel.querySelector('.screenshot-prev');
+                    const nextBtn = carousel.querySelector('.screenshot-next');
+                    const dots = carousel.querySelectorAll('.screenshot-dot');
                     
-                    if (mediaItems.length > 1) {
+                    if (screenshots.length > 1) {
                         let currentIndex = 0;
-                        let userInteracting = false;
                         
-                        // Track user interaction with videos
-                        const videos = carousel.querySelectorAll('.project-video');
-                        videos.forEach(video => {
-                            video.addEventListener('play', () => {
-                                userInteracting = true;
-                                // Clear the interval temporarily when user starts playing
-                                const interval = this.screenshotIntervals.get(carouselIndex);
-                                if (interval) {
-                                    clearInterval(interval);
-                                }
+                        const updateScreenshots = () => {
+                            screenshots.forEach((screenshot, index) => {
+                                screenshot.classList.toggle('active', index === currentIndex);
                             });
                             
-                            video.addEventListener('pause', () => {
-                                userInteracting = false;
-                                // Restart the interval when user pauses
-                                this.restartCarouselInterval(carousel, carouselIndex, currentIndex);
+                            dots.forEach((dot, index) => {
+                                dot.classList.toggle('active', index === currentIndex);
                             });
+                        };
+                        
+                        // Navigation buttons
+                        prevBtn?.addEventListener('click', () => {
+                            currentIndex = currentIndex > 0 ? currentIndex - 1 : screenshots.length - 1;
+                            updateScreenshots();
                         });
                         
-                        const interval = setInterval(() => {
-                            // Only auto-advance if user is not interacting
-                            if (!userInteracting) {
-                                // Hide current item
-                                mediaItems[currentIndex].classList.remove('active');
-                                
-                                // Move to next item
-                                currentIndex = (currentIndex + 1) % mediaItems.length;
-                                
-                                // Show new item
-                                mediaItems[currentIndex].classList.add('active');
-                                
-                                // If it's a video, pause it when it becomes active (but don't reset)
-                                const video = mediaItems[currentIndex].querySelector('.project-video');
-                                if (video) {
-                                    video.pause();
-                                }
-                            }
-                        }, 4000); // 4 seconds per item
+                        nextBtn?.addEventListener('click', () => {
+                            currentIndex = (currentIndex + 1) % screenshots.length;
+                            updateScreenshots();
+                        });
                         
-                        this.screenshotIntervals.set(carouselIndex, interval);
+                        // Dot navigation
+                        dots.forEach((dot, index) => {
+                            dot.addEventListener('click', () => {
+                                currentIndex = index;
+                                updateScreenshots();
+                            });
+                        });
                     }
                 });
             }
 
-            restartCarouselInterval(carousel, carouselIndex, currentIndex) {
-                const mediaItems = carousel.querySelectorAll('.media-item');
-                let userInteracting = false;
+            setupVideoPopup() {
+                const videoButtons = document.querySelectorAll('.video-button');
+                const videoPopup = document.getElementById('video-popup');
+                const popupVideo = document.getElementById('popup-video');
+                const closeBtn = document.querySelector('.video-close');
                 
-                const interval = setInterval(() => {
-                    if (!userInteracting) {
-                        mediaItems[currentIndex].classList.remove('active');
-                        currentIndex = (currentIndex + 1) % mediaItems.length;
-                        mediaItems[currentIndex].classList.add('active');
-                        
-                        const video = mediaItems[currentIndex].querySelector('.project-video');
-                        if (video) {
-                            video.pause();
-                        }
-                    }
-                }, 4000);
-                
-                this.screenshotIntervals.set(carouselIndex, interval);
-            }
-
-            setupVideoControls() {
-                const videos = document.querySelectorAll('.project-video');
-                
-                videos.forEach(video => {
-                    video.addEventListener('play', () => {
-                        // Stop all other videos when this one starts playing
-                        videos.forEach(otherVideo => {
-                            if (otherVideo !== video && !otherVideo.paused) {
-                                otherVideo.pause();
-                            }
-                        });
+                videoButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const videoSrc = button.getAttribute('data-video');
+                        popupVideo.src = videoSrc;
+                        videoPopup.classList.add('active');
+                        popupVideo.play();
                     });
+                });
+                
+                closeBtn?.addEventListener('click', () => {
+                    videoPopup.classList.remove('active');
+                    popupVideo.pause();
+                    popupVideo.src = '';
+                });
+                
+                // Close on background click
+                videoPopup.addEventListener('click', (e) => {
+                    if (e.target === videoPopup) {
+                        videoPopup.classList.remove('active');
+                        popupVideo.pause();
+                        popupVideo.src = '';
+                    }
+                });
+                
+                // Close on escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && videoPopup.classList.contains('active')) {
+                        videoPopup.classList.remove('active');
+                        popupVideo.pause();
+                        popupVideo.src = '';
+                    }
                 });
             }
 
