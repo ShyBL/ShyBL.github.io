@@ -3,7 +3,18 @@ class Portfolio {
         this.projects = [];
         this.currentIndex = 0;
         this.screenshotIntervals = new Map();
+        this.isMobile = this.detectMobile();
         this.init();
+    }
+
+    detectMobile() {
+        // Simple mobile detection
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
+        const isMobileDevice = mobileRegex.test(userAgent);
+        const isMobileViewport = window.innerWidth <= 768;
+        
+        return isMobileDevice || isMobileViewport;
     }
 
     async init() {
@@ -367,6 +378,8 @@ class Portfolio {
             
             if (screenshots.length > 1) {
                 let currentIndex = 0;
+                let touchStartX = 0;
+                let touchEndX = 0;
                 
                 const updateScreenshots = () => {
                     console.log(`Updating carousel ${carouselIndex}, currentIndex: ${currentIndex}`);
@@ -400,6 +413,34 @@ class Portfolio {
                         updateScreenshots();
                     });
                 });
+
+                // Mobile touch gestures
+                if (this.isMobile) {
+                    carousel.addEventListener('touchstart', (e) => {
+                        touchStartX = e.changedTouches[0].screenX;
+                    }, { passive: true });
+
+                    carousel.addEventListener('touchend', (e) => {
+                        touchEndX = e.changedTouches[0].screenX;
+                        handleSwipe();
+                    }, { passive: true });
+
+                    const handleSwipe = () => {
+                        const swipeThreshold = 50;
+                        const diff = touchStartX - touchEndX;
+
+                        if (Math.abs(diff) > swipeThreshold) {
+                            if (diff > 0) {
+                                // Swipe left - next
+                                currentIndex = (currentIndex + 1) % screenshots.length;
+                            } else {
+                                // Swipe right - previous
+                                currentIndex = currentIndex > 0 ? currentIndex - 1 : screenshots.length - 1;
+                            }
+                            updateScreenshots();
+                        }
+                    };
+                }
             }
         });
     }
@@ -415,31 +456,40 @@ class Portfolio {
                 const videoSrc = button.getAttribute('data-video');
                 popupVideo.src = videoSrc;
                 videoPopup.classList.add('active');
+                
+                // Mobile optimization: prevent body scroll when popup is open
+                if (this.isMobile) {
+                    document.body.style.overflow = 'hidden';
+                }
+                
                 popupVideo.play();
             });
         });
         
-        closeBtn?.addEventListener('click', () => {
+        const closePopup = () => {
             videoPopup.classList.remove('active');
             popupVideo.pause();
             popupVideo.src = '';
-        });
+            
+            // Restore body scroll on mobile
+            if (this.isMobile) {
+                document.body.style.overflow = '';
+            }
+        };
+        
+        closeBtn?.addEventListener('click', closePopup);
         
         // Close on background click
         videoPopup.addEventListener('click', (e) => {
             if (e.target === videoPopup) {
-                videoPopup.classList.remove('active');
-                popupVideo.pause();
-                popupVideo.src = '';
+                closePopup();
             }
         });
         
         // Close on escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && videoPopup.classList.contains('active')) {
-                videoPopup.classList.remove('active');
-                popupVideo.pause();
-                popupVideo.src = '';
+                closePopup();
             }
         });
     }
