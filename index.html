@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Portfolio</title>
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --shadow-light: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --shadow-heavy: 0 20px 60px rgba(0, 0, 0, 0.3);
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,158 +23,153 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--primary-gradient);
             min-height: 100vh;
-            color: #333;
-            overflow-x: hidden;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
         }
 
         .hero {
             text-align: center;
-            padding: 4rem 2rem;
+            padding: 4rem 0;
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
             color: white;
             margin-bottom: 1rem;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            animation: fadeInUp 1s ease-out;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .hero p {
-            font-size: 1.3rem;
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
             color: rgba(255, 255, 255, 0.9);
             max-width: 600px;
             margin: 0 auto;
-            animation: fadeInUp 1s ease-out 0.3s both;
         }
 
-        .projects-section {
-            padding: 4rem 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
+        .projects {
+            padding: 4rem 0;
         }
 
-        .section-title {
+        .projects h2 {
             text-align: center;
-            font-size: 2.5rem;
+            font-size: clamp(2rem, 4vw, 2.5rem);
             color: white;
             margin-bottom: 3rem;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
-        .carousel-container {
+        .carousel-wrapper {
             position: relative;
             overflow: hidden;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-heavy);
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
         }
 
-        .carousel {
+        .carousel-track {
             display: flex;
-            transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: transform 0.6s ease;
         }
 
         .project-card {
             min-width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease;
-        }
-
-        .project-card:hover {
-            transform: translateY(-5px);
+            display: flex;
+            flex-direction: column;
         }
 
         .project-media {
             position: relative;
-            height: 400px;
-            overflow: hidden;
+            height: 50vh;
+            min-height: 300px;
             background: #f8f9fa;
+            overflow: hidden;
         }
 
-        .project-video {
+        .project-video,
+        .project-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
         .project-screenshots {
-            display: flex;
-            height: 100%;
-            transition: transform 0.5s ease;
-        }
-
-        .project-screenshot {
+            position: relative;
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            flex-shrink: 0;
         }
 
-        .media-overlay {
+        .screenshot {
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.5s ease;
+        }
+
+        .screenshot.active {
+            opacity: 1;
+        }
+
+        .media-placeholder {
             display: flex;
             align-items: center;
             justify-content: center;
+            height: 100%;
+            background: var(--primary-gradient);
             color: white;
             font-size: 1.2rem;
             font-weight: 600;
         }
 
-        .project-card:hover .media-overlay {
-            opacity: 1;
-        }
-
         .project-content {
             padding: 2rem;
+            flex-grow: 1;
         }
 
         .project-title {
             font-size: 1.8rem;
             font-weight: 700;
-            color: #2d3748;
+            color: var(--text-primary);
             margin-bottom: 1rem;
         }
 
         .project-description {
             font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
             line-height: 1.7;
-            color: #4a5568;
-            margin-bottom: 1.5rem;
         }
 
-        .project-tech {
+        .tech-stack {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
-            margin-bottom: 1.5rem;
         }
 
         .tech-tag {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: var(--primary-gradient);
             color: white;
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.8rem;
             border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
+            font-size: 0.85rem;
+            font-weight: 500;
             letter-spacing: 0.5px;
         }
 
@@ -176,26 +182,24 @@
 
         .nav-btn {
             background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            border: none;
             color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
+            font-weight: 500;
             backdrop-filter: blur(10px);
+            transition: var(--transition);
         }
 
-        .nav-btn:hover {
+        .nav-btn:hover:not(:disabled) {
             background: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .nav-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            transform: none;
         }
 
         .carousel-dots {
@@ -206,12 +210,12 @@
         }
 
         .dot {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.4);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
         .dot.active {
@@ -219,42 +223,22 @@
             transform: scale(1.2);
         }
 
-        .loading {
+        .loading,
+        .error {
             text-align: center;
-            padding: 4rem 2rem;
+            padding: 3rem;
             color: white;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
         .error {
-            text-align: center;
-            padding: 4rem 2rem;
             color: #ff6b6b;
-            font-size: 1.2rem;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .hero p {
-                font-size: 1.1rem;
-            }
-            
             .project-media {
-                height: 250px;
+                height: 40vh;
+                min-height: 250px;
             }
             
             .project-content {
@@ -269,23 +253,28 @@
     </style>
 </head>
 <body>
-    <div class="hero">
-        <h1>Your Portfolio</h1>
-        <p>Showcasing innovative projects and creative solutions</p>
-    </div>
-
-    <div class="projects-section">
-        <h2 class="section-title">Featured Projects</h2>
-        <div id="projectsContainer" class="loading">
-            Loading projects...
+    <header class="hero">
+        <div class="container">
+            <h1>Your Portfolio</h1>
+            <p>Showcasing innovative projects and creative solutions</p>
         </div>
-    </div>
+    </header>
+
+    <main class="projects">
+        <div class="container">
+            <h2>Featured Projects</h2>
+            <div id="carousel-container">
+                <div class="loading">Loading projects...</div>
+            </div>
+        </div>
+    </main>
 
     <script>
-        class PortfolioCarousel {
+        class Portfolio {
             constructor() {
                 this.projects = [];
                 this.currentIndex = 0;
+                this.screenshotIntervals = new Map();
                 this.init();
             }
 
@@ -293,141 +282,131 @@
                 try {
                     await this.loadProjects();
                     this.render();
-                    this.setupEventListeners();
+                    this.setupControls();
                 } catch (error) {
-                    this.showError('Failed to load projects. Please check your project structure.');
+                    console.error('Portfolio initialization failed:', error);
+                    this.showError('Failed to load projects');
                 }
             }
 
             async loadProjects() {
-                // In a real GitHub Pages deployment, you would need to manually maintain this list
-                // or use GitHub API to fetch repository contents
-                const projectFolders = [
-                    'project1',
-                    'project2', 
-                    'project3'
-                    // Add your project folder names here
-                ];
-
+                // Project folders - update this array with your actual project names
+                const projectFolders = ['project1', 'project2', 'project3'];
+                
                 for (const folder of projectFolders) {
                     try {
-                        const project = await this.loadProjectFromFolder(folder);
-                        if (project) {
-                            this.projects.push(project);
-                        }
+                        const project = await this.loadProject(folder);
+                        if (project) this.projects.push(project);
                     } catch (error) {
                         console.warn(`Failed to load project ${folder}:`, error);
                     }
                 }
 
+                // Fallback to demo projects if none found
                 if (this.projects.length === 0) {
-                    // Demo projects if no real projects are found
                     this.projects = this.getDemoProjects();
                 }
             }
 
-            async loadProjectFromFolder(folderName) {
+            async loadProject(folder) {
+                const project = { 
+                    folder,
+                    title: this.formatTitle(folder),
+                    description: 'Project description not found.',
+                    technologies: [],
+                    media: { video: null, screenshots: [] }
+                };
+
+                // Try to load README
                 try {
-                    // Try to load README.md
-                    const readmeResponse = await fetch(`${folderName}/README.md`);
-                    const readmeText = readmeResponse.ok ? await readmeResponse.text() : '';
-                    
-                    // Parse markdown content
-                    const { title, description, technologies } = this.parseMarkdown(readmeText, folderName);
-                    
-                    // Look for media files
-                    const media = await this.findMediaFiles(folderName);
-                    
-                    return {
-                        title,
-                        description,
-                        technologies,
-                        media,
-                        folder: folderName
-                    };
+                    const readme = await this.fetchFile(`${folder}/README.md`);
+                    if (readme) {
+                        const parsed = this.parseMarkdown(readme);
+                        Object.assign(project, parsed);
+                    }
                 } catch (error) {
-                    console.warn(`Error loading project ${folderName}:`, error);
+                    console.warn(`No README found for ${folder}`);
+                }
+
+                // Load media files
+                project.media = await this.loadMedia(folder);
+                
+                return project;
+            }
+
+            async fetchFile(path) {
+                try {
+                    const response = await fetch(path);
+                    return response.ok ? await response.text() : null;
+                } catch (error) {
                     return null;
                 }
             }
 
-            parseMarkdown(content, fallbackTitle) {
+            parseMarkdown(content) {
                 const lines = content.split('\n');
-                let title = fallbackTitle;
-                let description = '';
-                let technologies = [];
+                const result = { technologies: [] };
                 
-                // Extract title from first heading
-                const titleMatch = lines.find(line => line.startsWith('# '));
-                if (titleMatch) {
-                    title = titleMatch.substring(2).trim();
+                // Extract title
+                const titleLine = lines.find(line => line.startsWith('# '));
+                if (titleLine) {
+                    result.title = titleLine.replace('# ', '').trim();
                 }
                 
-                // Extract description from content
-                const descriptionLines = lines.filter(line => 
-                    line.trim() && 
-                    !line.startsWith('#') && 
-                    !line.startsWith('##') && 
-                    !line.startsWith('![') &&
-                    !line.startsWith('- ')
+                // Extract description (first paragraph after title)
+                const descriptionStart = lines.findIndex(line => 
+                    line.trim() && !line.startsWith('#') && !line.startsWith('![')
                 );
                 
-                description = descriptionLines.slice(0, 3).join(' ').trim();
-                
-                // Extract technologies from a "Technologies" section or similar
-                const techSection = lines.findIndex(line => 
-                    line.toLowerCase().includes('tech') || 
-                    line.toLowerCase().includes('built with') ||
-                    line.toLowerCase().includes('stack')
-                );
-                
-                if (techSection !== -1) {
-                    const techLines = lines.slice(techSection + 1, techSection + 10);
-                    technologies = techLines
-                        .filter(line => line.startsWith('- '))
-                        .map(line => line.substring(2).trim())
-                        .slice(0, 5);
+                if (descriptionStart >= 0) {
+                    const descriptionLines = [];
+                    for (let i = descriptionStart; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (!line || line.startsWith('#') || line.startsWith('##')) break;
+                        descriptionLines.push(line);
+                    }
+                    result.description = descriptionLines.join(' ').trim();
                 }
                 
-                return { title, description, technologies };
-            }
-
-            async findMediaFiles(folderName) {
-                const media = {
-                    video: null,
-                    screenshots: []
-                };
+                // Extract technologies
+                const techStart = lines.findIndex(line => 
+                    /^##?\s*(tech|stack|built|tools)/i.test(line)
+                );
                 
-                // Common video extensions
-                const videoExtensions = ['mp4', 'webm', 'mov', 'avi'];
-                const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-                
-                // Try to find video file
-                for (const ext of videoExtensions) {
-                    try {
-                        const videoPath = `${folderName}/demo.${ext}`;
-                        const response = await fetch(videoPath, { method: 'HEAD' });
-                        if (response.ok) {
-                            media.video = videoPath;
-                            break;
+                if (techStart >= 0) {
+                    for (let i = techStart + 1; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (!line || line.startsWith('#')) break;
+                        if (line.startsWith('- ')) {
+                            result.technologies.push(line.replace('- ', '').trim());
                         }
-                    } catch (error) {
-                        // File doesn't exist, continue
                     }
                 }
                 
-                // Try to find screenshot files
+                return result;
+            }
+
+            async loadMedia(folder) {
+                const media = { video: null, screenshots: [] };
+                
+                // Try to find video
+                const videoExts = ['mp4', 'webm', 'mov'];
+                for (const ext of videoExts) {
+                    const videoPath = `${folder}/demo.${ext}`;
+                    if (await this.fileExists(videoPath)) {
+                        media.video = videoPath;
+                        break;
+                    }
+                }
+                
+                // Try to find screenshots
+                const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
                 for (let i = 1; i <= 5; i++) {
-                    for (const ext of imageExtensions) {
-                        try {
-                            const imagePath = `${folderName}/screenshot${i}.${ext}`;
-                            const response = await fetch(imagePath, { method: 'HEAD' });
-                            if (response.ok) {
-                                media.screenshots.push(imagePath);
-                                break;
-                            }
-                        } catch (error) {
-                            // File doesn't exist, continue
+                    for (const ext of imageExts) {
+                        const imagePath = `${folder}/screenshot${i}.${ext}`;
+                        if (await this.fileExists(imagePath)) {
+                            media.screenshots.push(imagePath);
+                            break;
                         }
                     }
                 }
@@ -435,135 +414,150 @@
                 return media;
             }
 
+            async fileExists(path) {
+                try {
+                    const response = await fetch(path, { method: 'HEAD' });
+                    return response.ok;
+                } catch (error) {
+                    return false;
+                }
+            }
+
+            formatTitle(folder) {
+                return folder
+                    .replace(/[-_]/g, ' ')
+                    .replace(/\b\w/g, l => l.toUpperCase());
+            }
+
             getDemoProjects() {
                 return [
                     {
                         title: "E-Commerce Platform",
-                        description: "A full-stack e-commerce solution with modern UI/UX, secure payment processing, and real-time inventory management. Built with scalability and performance in mind.",
+                        description: "A full-stack e-commerce solution with modern UI/UX, secure payment processing, and real-time inventory management.",
                         technologies: ["React", "Node.js", "MongoDB", "Stripe", "AWS"],
-                        media: { video: null, screenshots: [] },
-                        folder: "demo1"
+                        media: { video: null, screenshots: [] }
                     },
                     {
                         title: "AI Chat Assistant",
-                        description: "An intelligent conversational AI powered by machine learning algorithms. Features natural language processing, context awareness, and multi-language support.",
+                        description: "An intelligent conversational AI powered by machine learning algorithms with natural language processing capabilities.",
                         technologies: ["Python", "TensorFlow", "FastAPI", "React", "Docker"],
-                        media: { video: null, screenshots: [] },
-                        folder: "demo2"
+                        media: { video: null, screenshots: [] }
                     },
                     {
                         title: "Portfolio Dashboard",
-                        description: "A comprehensive analytics dashboard for tracking project performance, user engagement, and business metrics. Features real-time data visualization and reporting.",
+                        description: "A comprehensive analytics dashboard for tracking project performance and user engagement with real-time data visualization.",
                         technologies: ["Vue.js", "D3.js", "Express", "PostgreSQL", "Redis"],
-                        media: { video: null, screenshots: [] },
-                        folder: "demo3"
+                        media: { video: null, screenshots: [] }
                     }
                 ];
             }
 
             render() {
-                const container = document.getElementById('projectsContainer');
+                const container = document.getElementById('carousel-container');
                 
                 if (this.projects.length === 0) {
-                    container.innerHTML = '<div class="error">No projects found. Please add project folders to your repository.</div>';
+                    container.innerHTML = '<div class="error">No projects found</div>';
                     return;
                 }
 
-                const carouselHTML = `
-                    <div class="carousel-container">
-                        <div class="carousel" id="carousel">
-                            ${this.projects.map(project => this.createProjectCard(project)).join('')}
+                container.innerHTML = `
+                    <div class="carousel-wrapper">
+                        <div class="carousel-track" id="carousel-track">
+                            ${this.projects.map(project => this.renderProject(project)).join('')}
                         </div>
                     </div>
-                    <div class="carousel-nav">
-                        <button class="nav-btn" id="prevBtn">← Previous</button>
-                        <button class="nav-btn" id="nextBtn">Next →</button>
-                    </div>
-                    <div class="carousel-dots" id="dots">
-                        ${this.projects.map((_, index) => `
-                            <div class="dot ${index === 0 ? 'active' : ''}" data-index="${index}"></div>
-                        `).join('')}
-                    </div>
+                    ${this.renderControls()}
                 `;
-
-                container.innerHTML = carouselHTML;
             }
 
-            createProjectCard(project) {
-                const mediaHTML = this.createMediaHTML(project.media);
-                const techTags = project.technologies.map(tech => 
-                    `<span class="tech-tag">${tech}</span>`
-                ).join('');
+            renderProject(project) {
+                const mediaHTML = this.renderMedia(project.media);
+                const techHTML = project.technologies
+                    .map(tech => `<span class="tech-tag">${tech}</span>`)
+                    .join('');
 
                 return `
-                    <div class="project-card">
+                    <article class="project-card">
                         <div class="project-media">
                             ${mediaHTML}
-                            <div class="media-overlay">
-                                <span>View Project</span>
-                            </div>
                         </div>
                         <div class="project-content">
                             <h3 class="project-title">${project.title}</h3>
                             <p class="project-description">${project.description}</p>
-                            <div class="project-tech">
-                                ${techTags}
-                            </div>
+                            <div class="tech-stack">${techHTML}</div>
                         </div>
+                    </article>
+                `;
+            }
+
+            renderMedia(media) {
+                if (media.video) {
+                    return `<video class="project-video" controls muted>
+                        <source src="${media.video}" type="video/mp4">
+                        Video not supported
+                    </video>`;
+                }
+                
+                if (media.screenshots.length > 0) {
+                    return `
+                        <div class="project-screenshots">
+                            ${media.screenshots.map((screenshot, index) => 
+                                `<img src="${screenshot}" alt="Screenshot ${index + 1}" class="screenshot ${index === 0 ? 'active' : ''}">`
+                            ).join('')}
+                        </div>
+                    `;
+                }
+                
+                return '<div class="media-placeholder">No media available</div>';
+            }
+
+            renderControls() {
+                if (this.projects.length <= 1) return '';
+
+                return `
+                    <div class="carousel-nav">
+                        <button class="nav-btn" id="prev-btn">← Previous</button>
+                        <button class="nav-btn" id="next-btn">Next →</button>
+                    </div>
+                    <div class="carousel-dots">
+                        ${this.projects.map((_, index) => 
+                            `<button class="dot ${index === 0 ? 'active' : ''}" data-index="${index}"></button>`
+                        ).join('')}
                     </div>
                 `;
             }
 
-            createMediaHTML(media) {
-                if (media.video) {
-                    return `<video class="project-video" controls muted>
-                        <source src="${media.video}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>`;
-                } else if (media.screenshots.length > 0) {
-                    return `
-                        <div class="project-screenshots" id="screenshots-${Date.now()}">
-                            ${media.screenshots.map(screenshot => 
-                                `<img src="${screenshot}" alt="Project Screenshot" class="project-screenshot">`
-                            ).join('')}
-                        </div>
-                    `;
-                } else {
-                    return `<div style="display: flex; align-items: center; justify-content: center; height: 100%; background: linear-gradient(45deg, #667eea, #764ba2); color: white; font-size: 1.2rem; font-weight: 600;">
-                        No media available
-                    </div>`;
-                }
-            }
-
-            setupEventListeners() {
-                const prevBtn = document.getElementById('prevBtn');
-                const nextBtn = document.getElementById('nextBtn');
+            setupControls() {
+                const prevBtn = document.getElementById('prev-btn');
+                const nextBtn = document.getElementById('next-btn');
                 const dots = document.querySelectorAll('.dot');
 
-                prevBtn.addEventListener('click', () => this.goToPrevious());
-                nextBtn.addEventListener('click', () => this.goToNext());
+                prevBtn?.addEventListener('click', () => this.goToPrevious());
+                nextBtn?.addEventListener('click', () => this.goToNext());
 
                 dots.forEach((dot, index) => {
                     dot.addEventListener('click', () => this.goToSlide(index));
                 });
 
-                // Auto-advance screenshots
                 this.setupScreenshotRotation();
-                
-                // Update navigation state
-                this.updateNavigation();
             }
 
             setupScreenshotRotation() {
                 const screenshotContainers = document.querySelectorAll('.project-screenshots');
-                screenshotContainers.forEach(container => {
-                    const screenshots = container.querySelectorAll('.project-screenshot');
+                
+                screenshotContainers.forEach((container, containerIndex) => {
+                    const screenshots = container.querySelectorAll('.screenshot');
+                    
                     if (screenshots.length > 1) {
-                        let currentScreenshot = 0;
-                        setInterval(() => {
-                            currentScreenshot = (currentScreenshot + 1) % screenshots.length;
-                            container.style.transform = `translateX(-${currentScreenshot * 100}%)`;
+                        let currentIndex = 0;
+                        
+                        const interval = setInterval(() => {
+                            screenshots[currentIndex].classList.remove('active');
+                            currentIndex = (currentIndex + 1) % screenshots.length;
+                            screenshots[currentIndex].classList.add('active');
                         }, 3000);
+                        
+                        this.screenshotIntervals.set(containerIndex, interval);
                     }
                 });
             }
@@ -574,7 +568,7 @@
             }
 
             goToNext() {
-                this.currentIndex = this.currentIndex < this.projects.length - 1 ? this.currentIndex + 1 : 0;
+                this.currentIndex = (this.currentIndex + 1) % this.projects.length;
                 this.updateCarousel();
             }
 
@@ -584,40 +578,25 @@
             }
 
             updateCarousel() {
-                const carousel = document.getElementById('carousel');
-                carousel.style.transform = `translateX(-${this.currentIndex * 100}%)`;
-                this.updateNavigation();
-            }
-
-            updateNavigation() {
-                const prevBtn = document.getElementById('prevBtn');
-                const nextBtn = document.getElementById('nextBtn');
+                const track = document.getElementById('carousel-track');
                 const dots = document.querySelectorAll('.dot');
-
-                // Update dots
+                
+                track.style.transform = `translateX(-${this.currentIndex * 100}%)`;
+                
                 dots.forEach((dot, index) => {
                     dot.classList.toggle('active', index === this.currentIndex);
                 });
-
-                // Update buttons (disable if only one project)
-                if (this.projects.length <= 1) {
-                    prevBtn.disabled = true;
-                    nextBtn.disabled = true;
-                } else {
-                    prevBtn.disabled = false;
-                    nextBtn.disabled = false;
-                }
             }
 
             showError(message) {
-                const container = document.getElementById('projectsContainer');
+                const container = document.getElementById('carousel-container');
                 container.innerHTML = `<div class="error">${message}</div>`;
             }
         }
 
-        // Initialize the portfolio when the page loads
+        // Initialize when DOM is ready
         document.addEventListener('DOMContentLoaded', () => {
-            new PortfolioCarousel();
+            new Portfolio();
         });
     </script>
 </body>
