@@ -270,28 +270,8 @@ class Portfolio {
             </div>
         ` : '<div class="content-column"></div>';
 
-        // Format the description: make the first paragraph bold and italic
-        let descriptionHTML = project.description;
-        if (descriptionHTML) {
-            // Split by <br> or double space (used for paragraph breaks)
-            let firstPara = '';
-            let rest = '';
-            if (descriptionHTML.includes('<br>')) {
-                const parts = descriptionHTML.split('<br>');
-                firstPara = parts[0].trim();
-                rest = parts.slice(1).join('<br>');
-            } else if (descriptionHTML.includes('  ')) {
-                const parts = descriptionHTML.split('  ');
-                firstPara = parts[0].trim();
-                rest = parts.slice(1).join('  ');
-            } else {
-                firstPara = descriptionHTML;
-            }
-            descriptionHTML = `<span style="font-weight:bold;font-style:italic;">${firstPara}</span>`;
-            if (rest.trim()) {
-                descriptionHTML += '<br>' + rest.trim();
-            }
-        }
+        // Use the helper for description formatting
+        let descriptionHTML = formatFirstParagraph(project.description);
 
         return `
             <article class="project-card">
@@ -381,9 +361,30 @@ class Portfolio {
         const nextBtn = document.getElementById('next-btn');
         const dots = document.querySelectorAll('.dot');
 
+        if (prevBtn) {
+            prevBtn.setAttribute('aria-label', 'Previous project');
+            prevBtn.tabIndex = 0;
+            prevBtn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') prevBtn.click();
+            });
+        }
+        if (nextBtn) {
+            nextBtn.setAttribute('aria-label', 'Next project');
+            nextBtn.tabIndex = 0;
+            nextBtn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') nextBtn.click();
+            });
+        }
+        dots.forEach((dot, index) => {
+            dot.setAttribute('aria-label', `Go to project ${index + 1}`);
+            dot.tabIndex = 0;
+            dot.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') dot.click();
+            });
+        });
+
         prevBtn?.addEventListener('click', () => this.goToPrevious());
         nextBtn?.addEventListener('click', () => this.goToNext());
-
         dots.forEach((dot, index) => {
             dot.addEventListener('click', () => this.goToSlide(index));
         });
@@ -549,6 +550,29 @@ class Portfolio {
         const container = document.getElementById('carousel-container');
         container.innerHTML = `<div class="error">${message}</div>`;
     }
+}
+
+// Helper to format the first paragraph as bold and italic
+function formatFirstParagraph(descriptionHTML) {
+    if (!descriptionHTML) return '';
+    let firstPara = '';
+    let rest = '';
+    if (descriptionHTML.includes('<br>')) {
+        const parts = descriptionHTML.split('<br>');
+        firstPara = parts[0].trim();
+        rest = parts.slice(1).join('<br>');
+    } else if (descriptionHTML.includes('  ')) {
+        const parts = descriptionHTML.split('  ');
+        firstPara = parts[0].trim();
+        rest = parts.slice(1).join('  ');
+    } else {
+        firstPara = descriptionHTML;
+    }
+    let result = `<span style="font-weight:bold;font-style:italic;">${firstPara}</span>`;
+    if (rest.trim()) {
+        result += '<br>' + rest.trim();
+    }
+    return result;
 }
 
 // Initialize when DOM is ready
