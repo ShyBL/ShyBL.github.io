@@ -582,28 +582,70 @@
                     
                     if (mediaItems.length > 1) {
                         let currentIndex = 0;
+                        let userInteracting = false;
+                        
+                        // Track user interaction with videos
+                        const videos = carousel.querySelectorAll('.project-video');
+                        videos.forEach(video => {
+                            video.addEventListener('play', () => {
+                                userInteracting = true;
+                                // Clear the interval temporarily when user starts playing
+                                const interval = this.screenshotIntervals.get(carouselIndex);
+                                if (interval) {
+                                    clearInterval(interval);
+                                }
+                            });
+                            
+                            video.addEventListener('pause', () => {
+                                userInteracting = false;
+                                // Restart the interval when user pauses
+                                this.restartCarouselInterval(carousel, carouselIndex, currentIndex);
+                            });
+                        });
                         
                         const interval = setInterval(() => {
-                            // Hide current item
-                            mediaItems[currentIndex].classList.remove('active');
-                            
-                            // Move to next item
-                            currentIndex = (currentIndex + 1) % mediaItems.length;
-                            
-                            // Show new item
-                            mediaItems[currentIndex].classList.add('active');
-                            
-                            // If it's a video, pause it when it becomes active
-                            const video = mediaItems[currentIndex].querySelector('.project-video');
-                            if (video) {
-                                video.pause();
-                                video.currentTime = 0;
+                            // Only auto-advance if user is not interacting
+                            if (!userInteracting) {
+                                // Hide current item
+                                mediaItems[currentIndex].classList.remove('active');
+                                
+                                // Move to next item
+                                currentIndex = (currentIndex + 1) % mediaItems.length;
+                                
+                                // Show new item
+                                mediaItems[currentIndex].classList.add('active');
+                                
+                                // If it's a video, pause it when it becomes active (but don't reset)
+                                const video = mediaItems[currentIndex].querySelector('.project-video');
+                                if (video) {
+                                    video.pause();
+                                }
                             }
                         }, 4000); // 4 seconds per item
                         
                         this.screenshotIntervals.set(carouselIndex, interval);
                     }
                 });
+            }
+
+            restartCarouselInterval(carousel, carouselIndex, currentIndex) {
+                const mediaItems = carousel.querySelectorAll('.media-item');
+                let userInteracting = false;
+                
+                const interval = setInterval(() => {
+                    if (!userInteracting) {
+                        mediaItems[currentIndex].classList.remove('active');
+                        currentIndex = (currentIndex + 1) % mediaItems.length;
+                        mediaItems[currentIndex].classList.add('active');
+                        
+                        const video = mediaItems[currentIndex].querySelector('.project-video');
+                        if (video) {
+                            video.pause();
+                        }
+                    }
+                }, 4000);
+                
+                this.screenshotIntervals.set(carouselIndex, interval);
             }
 
             setupVideoControls() {
