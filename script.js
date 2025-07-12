@@ -270,6 +270,29 @@ class Portfolio {
             </div>
         ` : '<div class="content-column"></div>';
 
+        // Format the description: make the first paragraph bold and italic
+        let descriptionHTML = project.description;
+        if (descriptionHTML) {
+            // Split by <br> or double space (used for paragraph breaks)
+            let firstPara = '';
+            let rest = '';
+            if (descriptionHTML.includes('<br>')) {
+                const parts = descriptionHTML.split('<br>');
+                firstPara = parts[0].trim();
+                rest = parts.slice(1).join('<br>');
+            } else if (descriptionHTML.includes('  ')) {
+                const parts = descriptionHTML.split('  ');
+                firstPara = parts[0].trim();
+                rest = parts.slice(1).join('  ');
+            } else {
+                firstPara = descriptionHTML;
+            }
+            descriptionHTML = `<span style="font-weight:bold;font-style:italic;">${firstPara}</span>`;
+            if (rest.trim()) {
+                descriptionHTML += '<br>' + rest.trim();
+            }
+        }
+
         return `
             <article class="project-card">
                 <div class="project-media">
@@ -283,7 +306,7 @@ class Portfolio {
                     <div class="content-grid">
                         <div class="content-column">
                             <h4 class="section-title">Description</h4>
-                            <div class="project-description">${project.description}</div>
+                            <div class="project-description">${descriptionHTML}</div>
                         </div>
                         ${featuresHTML}
                         ${teamHTML}
