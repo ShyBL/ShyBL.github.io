@@ -112,6 +112,26 @@
             height: 100%;
         }
 
+        .project-media-carousel {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .media-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .media-item.active {
+            opacity: 1;
+        }
+
         .screenshot {
             position: absolute;
             top: 0;
@@ -491,19 +511,35 @@
             }
 
             renderMedia(media) {
+                const mediaItems = [];
+                
+                // Add video first if available
                 if (media.video) {
-                    return `<video class="project-video" controls muted>
-                        <source src="${media.video}" type="video/mp4">
-                        Video not supported
-                    </video>`;
+                    mediaItems.push(`
+                        <div class="media-item active" data-type="video">
+                            <video class="project-video" controls muted>
+                                <source src="${media.video}" type="video/mp4">
+                                Video not supported
+                            </video>
+                        </div>
+                    `);
                 }
                 
+                // Add screenshots
                 if (media.screenshots.length > 0) {
+                    media.screenshots.forEach((screenshot, index) => {
+                        mediaItems.push(`
+                            <div class="media-item" data-type="screenshot">
+                                <img src="${screenshot}" alt="Screenshot ${index + 1}" class="screenshot">
+                            </div>
+                        `);
+                    });
+                }
+                
+                if (mediaItems.length > 0) {
                     return `
-                        <div class="project-screenshots">
-                            ${media.screenshots.map((screenshot, index) => 
-                                `<img src="${screenshot}" alt="Screenshot ${index + 1}" class="screenshot ${index === 0 ? 'active' : ''}">`
-                            ).join('')}
+                        <div class="project-media-carousel">
+                            ${mediaItems.join('')}
                         </div>
                     `;
                 }
@@ -539,26 +575,38 @@
                     dot.addEventListener('click', () => this.goToSlide(index));
                 });
 
-                this.setupScreenshotRotation();
+                this.setupMediaCarousel();
                 this.setupVideoControls();
             }
 
-            setupScreenshotRotation() {
-                const screenshotContainers = document.querySelectorAll('.project-screenshots');
+            setupMediaCarousel() {
+                const mediaCarousels = document.querySelectorAll('.project-media-carousel');
                 
-                screenshotContainers.forEach((container, containerIndex) => {
-                    const screenshots = container.querySelectorAll('.screenshot');
+                mediaCarousels.forEach((carousel, carouselIndex) => {
+                    const mediaItems = carousel.querySelectorAll('.media-item');
                     
-                    if (screenshots.length > 1) {
+                    if (mediaItems.length > 1) {
                         let currentIndex = 0;
                         
                         const interval = setInterval(() => {
-                            screenshots[currentIndex].classList.remove('active');
-                            currentIndex = (currentIndex + 1) % screenshots.length;
-                            screenshots[currentIndex].classList.add('active');
-                        }, 3000);
+                            // Hide current item
+                            mediaItems[currentIndex].classList.remove('active');
+                            
+                            // Move to next item
+                            currentIndex = (currentIndex + 1) % mediaItems.length;
+                            
+                            // Show new item
+                            mediaItems[currentIndex].classList.add('active');
+                            
+                            // If it's a video, pause it when it becomes active
+                            const video = mediaItems[currentIndex].querySelector('.project-video');
+                            if (video) {
+                                video.pause();
+                                video.currentTime = 0;
+                            }
+                        }, 4000); // 4 seconds per item
                         
-                        this.screenshotIntervals.set(containerIndex, interval);
+                        this.screenshotIntervals.set(carouselIndex, interval);
                     }
                 });
             }
