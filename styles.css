@@ -471,3 +471,10 @@ body {
         font-size: 0.9rem;
     }
 } 
+
+.section-title,
+.project-title,
+.hero,
+.hero h1 {
+    display: none !important;
+} 
