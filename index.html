@@ -540,6 +540,7 @@
                 });
 
                 this.setupScreenshotRotation();
+                this.setupVideoControls();
             }
 
             setupScreenshotRotation() {
@@ -559,6 +560,21 @@
                         
                         this.screenshotIntervals.set(containerIndex, interval);
                     }
+                });
+            }
+
+            setupVideoControls() {
+                const videos = document.querySelectorAll('.project-video');
+                
+                videos.forEach(video => {
+                    video.addEventListener('play', () => {
+                        // Stop all other videos when this one starts playing
+                        videos.forEach(otherVideo => {
+                            if (otherVideo !== video && !otherVideo.paused) {
+                                otherVideo.pause();
+                            }
+                        });
+                    });
                 });
             }
 
