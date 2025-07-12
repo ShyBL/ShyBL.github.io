@@ -167,10 +167,11 @@ body {
     display: flex;
     align-items: center;
     gap: 15px;
-    background: rgba(0, 0, 0, 0.7);
+    /* background: rgba(0, 0, 0, 0.7); */
+    background: transparent;
     padding: 10px 15px;
     border-radius: 25px;
-    backdrop-filter: blur(10px);
+    /*backdrop-filter: blur(10px);*/
 }
 
 .screenshot-prev,
@@ -183,11 +184,14 @@ body {
     padding: 5px;
     border-radius: 50%;
     transition: var(--transition);
+    /* Add drop shadow */
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,1));
 }
 
 .screenshot-prev:hover,
 .screenshot-next:hover {
-    background: rgba(255, 255, 255, 0.2);
+    /* Remove hover background */
+    background: none;
 }
 
 .screenshot-dots {
@@ -203,6 +207,8 @@ body {
     border: none;
     cursor: pointer;
     transition: var(--transition);
+    /* Add drop shadow */
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
 }
 
 .screenshot-dot.active {
@@ -216,7 +222,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 1);
     display: none;
     justify-content: center;
     align-items: center;
