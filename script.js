@@ -395,78 +395,52 @@ class Portfolio {
 
     setupScreenshotCarousels() {
         const carousels = document.querySelectorAll('.screenshot-carousel');
-        
         carousels.forEach((carousel, carouselIndex) => {
             const screenshots = carousel.querySelectorAll('.screenshot');
             const prevBtn = carousel.querySelector('.screenshot-prev');
             const nextBtn = carousel.querySelector('.screenshot-next');
             const dots = carousel.querySelectorAll('.screenshot-dot');
-            
             if (screenshots.length > 1) {
                 let currentIndex = 0;
-                let touchStartX = 0;
-                let touchEndX = 0;
-                
+                let intervalId = null;
                 const updateScreenshots = () => {
-                    console.log(`Updating carousel ${carouselIndex}, currentIndex: ${currentIndex}`);
                     screenshots.forEach((screenshot, index) => {
-                        const isActive = index === currentIndex;
-                        screenshot.classList.toggle('active', isActive);
-                        console.log(`Screenshot ${index}: ${isActive ? 'active' : 'inactive'}`);
+                        screenshot.classList.toggle('active', index === currentIndex);
                     });
-                    
                     dots.forEach((dot, index) => {
-                        const isActive = index === currentIndex;
-                        dot.classList.toggle('active', isActive);
+                        dot.classList.toggle('active', index === currentIndex);
                     });
                 };
-                
-                // Navigation buttons
-                prevBtn?.addEventListener('click', () => {
-                    currentIndex = currentIndex > 0 ? currentIndex - 1 : screenshots.length - 1;
-                    updateScreenshots();
-                });
-                
-                nextBtn?.addEventListener('click', () => {
+                const goToNext = () => {
                     currentIndex = (currentIndex + 1) % screenshots.length;
                     updateScreenshots();
-                });
-                
-                // Dot navigation
+                };
+                const goToPrev = () => {
+                    currentIndex = currentIndex > 0 ? currentIndex - 1 : screenshots.length - 1;
+                    updateScreenshots();
+                };
+                prevBtn?.addEventListener('click', goToPrev);
+                nextBtn?.addEventListener('click', goToNext);
                 dots.forEach((dot, index) => {
                     dot.addEventListener('click', () => {
                         currentIndex = index;
                         updateScreenshots();
                     });
                 });
-
-                // Mobile touch gestures
-                if (this.isMobile) {
-                    carousel.addEventListener('touchstart', (e) => {
-                        touchStartX = e.changedTouches[0].screenX;
-                    }, { passive: true });
-
-                    carousel.addEventListener('touchend', (e) => {
-                        touchEndX = e.changedTouches[0].screenX;
-                        handleSwipe();
-                    }, { passive: true });
-
-                    const handleSwipe = () => {
-                        const swipeThreshold = 50;
-                        const diff = touchStartX - touchEndX;
-
-                        if (Math.abs(diff) > swipeThreshold) {
-                            if (diff > 0) {
-                                // Swipe left - next
-                                currentIndex = (currentIndex + 1) % screenshots.length;
-                            } else {
-                                // Swipe right - previous
-                                currentIndex = currentIndex > 0 ? currentIndex - 1 : screenshots.length - 1;
-                            }
-                            updateScreenshots();
-                        }
-                    };
+                // Automatic cycling
+                function startAuto() {
+                    if (intervalId) clearInterval(intervalId);
+                    intervalId = setInterval(goToNext, 3000);
                 }
+                function stopAuto() {
+                    if (intervalId) clearInterval(intervalId);
+                }
+                carousel.addEventListener('mouseenter', stopAuto);
+                carousel.addEventListener('mouseleave', startAuto);
+                carousel.addEventListener('touchstart', stopAuto, {passive:true});
+                carousel.addEventListener('touchend', startAuto, {passive:true});
+                updateScreenshots();
+                startAuto();
             }
         });
     }

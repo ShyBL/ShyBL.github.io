@@ -444,3 +444,29 @@ body {
 .hero h1 {
     display: none !important;
 } 
+
+.dot,
+.screenshot-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+}
+
+.dot.active,
+.screenshot-dot.active {
+    background: white;
+    transform: scale(1.2);
+}
+
+.carousel-dots,
+.screenshot-dots {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 1rem;
+} 
