@@ -19,6 +19,8 @@ class Portfolio {
 
     async init() {
         try {
+            const container = document.getElementById('carousel-container');
+            container.innerHTML = '<div class="loading-throbber"><div class="loading-spinner"></div></div>';
             await this.loadProjects();
             this.render();
             this.setupControls();
