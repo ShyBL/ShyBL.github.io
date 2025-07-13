@@ -1,3 +1,14 @@
+// Configuration object - can be modified before initializing
+window.RokuganConfig = {
+    folderPattern: 'Session-', // Pattern for folder names (Session-01, Act-01, etc.)
+    folderCount: 10, // Number of folders to look for
+    navigationText: {
+        previous: '← Previous Chronicle',
+        next: 'Next Chronicle →'
+    },
+    demoSessions: null // Will be set based on the pattern
+};
+
 class RokuganChronicles {
     constructor() {
         this.sessions = [];
@@ -23,11 +34,11 @@ class RokuganChronicles {
     }
 
     async loadSessions() {
-        // Session folders - update this array with your actual session names
-        const sessionFolders = [
-            'Session-01', 'Session-02', 'Session-03', 'Session-04', 'Session-05',
-            'Session-06', 'Session-07', 'Session-08', 'Session-09', 'Session-10'
-        ];
+        // Generate folder names based on configuration
+        const sessionFolders = [];
+        for (let i = 1; i <= window.RokuganConfig.folderCount; i++) {
+            sessionFolders.push(`${window.RokuganConfig.folderPattern}${i.toString().padStart(2, '0')}`);
+        }
         
         // Load sessions in parallel for faster loading
         const sessionPromises = sessionFolders.map(async (folder) => {
@@ -274,6 +285,12 @@ class RokuganChronicles {
     }
 
     getDemoSessions() {
+        // Return configured demo sessions or default ones
+        if (window.RokuganConfig.demoSessions) {
+            return window.RokuganConfig.demoSessions;
+        }
+        
+        // Default demo sessions
         return [
             {
                 title: "The Jade Magistrate's Arrival",
@@ -422,8 +439,8 @@ class RokuganChronicles {
 
         return `
             <div class="navigation">
-                <button class="nav-btn" id="prev-btn">← Previous Chronicle</button>
-                <button class="nav-btn" id="next-btn">Next Chronicle →</button>
+                <button class="nav-btn" id="prev-btn">${window.RokuganConfig.navigationText.previous}</button>
+                <button class="nav-btn" id="next-btn">${window.RokuganConfig.navigationText.next}</button>
             </div>
             <div class="session-dots">
                 ${this.sessions.map((_, index) => 
