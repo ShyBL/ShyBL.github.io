@@ -548,12 +548,22 @@ class RokuganChronicles {
             
             isDragging = false;
             const endX = e.changedTouches[0].clientX;
+            const endY = e.changedTouches[0].clientY;
             const diffX = endX - startX;
-            const threshold = 50; // Minimum swipe distance
-            
+            const diffY = endY - startY;
+            const threshold = 100; // Increased threshold for swipe
+
             carousel.style.transition = 'transform 0.6s ease';
-            
-            if (Math.abs(diffX) > threshold) {
+
+            // Only trigger swipe if:
+            // - Horizontal movement is much greater than vertical (|diffX| > 2 * |diffY|)
+            // - Horizontal movement exceeds threshold
+            // - Ignore small movements (both |diffX| and |diffY| < 20px)
+            if (Math.abs(diffX) < 20 && Math.abs(diffY) < 20) {
+                this.updateCarousel();
+                return;
+            }
+            if (Math.abs(diffX) > threshold && Math.abs(diffX) > 2 * Math.abs(diffY)) {
                 if (diffX > 0) {
                     this.goToPrevious();
                 } else {
