@@ -1,10 +1,3 @@
-/* Reset and base styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 :root {
     --primary-gradient: linear-gradient(135deg, #8B4513 0%, #2F4F4F 50%, #8B0000 100%);
     --card-bg: rgba(255, 255, 255, 0.95);
@@ -16,6 +9,12 @@
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --gold: #D4AF37;
     --red: #8B0000;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
@@ -33,63 +32,6 @@ body {
     padding: 0 1rem;
 }
 
-/* Navigation */
-.navbar {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.nav-container {
-    max-width: 75rem;
-    margin: 0 auto;
-    padding: 0 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 70px;
-}
-
-.nav-logo a {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--red);
-    text-decoration: none;
-    transition: var(--transition);
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}
-
-.nav-logo a:hover {
-    color: var(--gold);
-    transform: translateY(-1px);
-}
-
-.nav-menu {
-    display: flex;
-    list-style: none;
-    gap: 2rem;
-}
-
-.nav-menu a {
-    text-decoration: none;
-    color: var(--text-secondary);
-    font-weight: 500;
-    transition: var(--transition);
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-}
-
-.nav-menu a:hover,
-.nav-menu a.active {
-    color: var(--red);
-    background-color: rgba(212, 175, 55, 0.1);
-    transform: translateY(-1px);
-}
-
-/* Header */
 .header {
     text-align: center;
     padding: 2rem 0;
@@ -109,7 +51,6 @@ body {
     font-style: italic;
 }
 
-/* Chronicles Section */
 .chronicles {
     padding: 2rem 0;
 }
@@ -323,7 +264,6 @@ body {
     content: '🏯';
 }
 
-/* Navigation */
 .navigation {
     display: flex;
     justify-content: center;
@@ -377,7 +317,6 @@ body {
     transform: scale(1.3);
 }
 
-/* Loading States */
 .loading-throbber {
     display: flex;
     justify-content: center;
@@ -414,7 +353,6 @@ body {
     font-size: 1.2rem;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .container {
         padding: 0 0.5rem;
@@ -437,24 +375,6 @@ body {
         padding: 0.6rem 1rem;
         font-size: 0.9rem;
     }
-    
-    /* Navigation mobile styles */
-    .nav-container {
-        padding: 0 0.5rem;
-    }
-    
-    .nav-menu {
-        gap: 1rem;
-    }
-    
-    .nav-menu a {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.9rem;
-    }
-    
-    .nav-logo a {
-        font-size: 1.3rem;
-    }
 }
 
 @media (max-width: 480px) {
@@ -468,26 +388,5 @@ body {
     
     .detail-section {
         padding: 0.75rem;
-    }
-    
-    /* Navigation mobile styles */
-    .nav-container {
-        flex-direction: column;
-        height: auto;
-        padding: 1rem 0.5rem;
-    }
-    
-    .nav-menu {
-        margin-top: 0.5rem;
-        gap: 0.5rem;
-    }
-    
-    .nav-menu a {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.8rem;
-    }
-    
-    .nav-logo a {
-        font-size: 1.2rem;
     }
 } 
