@@ -18,7 +18,7 @@ The magisters must navigate the complex politics of the Lion Clan, particularly 
 - Togashi Akai - Dragon Topaz Champion
 - Utaku no Kakita Akahiro - Unicorn Duelist
 - Shika Kazuki - Deer Matchmaker
-- Kuni (Shibamaru) Genji - Kuni Purifier
+- Kuni Genji - Kuni Purifier
 - Shiba Sono - Fire Shugenja and Courtier, Jade Magister
 
 ## Character Details
@@ -29,7 +29,7 @@ The magisters must navigate the complex politics of the Lion Clan, particularly 
 - Togashi Akai : Enlightened (+2 Void, -2 Earth)
 - Utaku no Kakita Akahiro : Determined (+2 Fire, -2 Water)
 - Shika Kazuki : Diplomatic (+2 Air, -2 Fire)
-- Kuni (Shibamaru) Genji : Stoic (+2 Earth, -2 Air)
+- Kuni Genji : Stoic (+2 Earth, -2 Air)
 - Shiba Sono : Devout (+2 Earth, -2 Air)
 
 ## Locations

@@ -14,7 +14,7 @@ At a waystation along the road, Akahiro meets Akai and they face a dangerous Nin
 - Togashi Akai - Dragon Topaz Champion
 - Utaku no Kakita Akahiro - Unicorn Duelist
 - Shika Kazuki - Deer Matchmaker
-- Kuni (Shibamaru) Genji - Kuni Purifier
+- Kuni Genji - Kuni Purifier
 - Agasha Sumiko - Ruby Champion, Acting Emerald Champion
 - Bayushi Yojiro - Honest Scorpion, Senior Emerald Magister
 - Kakita Yoshi - Voice of Honor, Imperial Chancellor
@@ -24,7 +24,7 @@ At a waystation along the road, Akahiro meets Akai and they face a dangerous Nin
 - Togashi Akai : Enlightened (+2 Void, -2 Earth)
 - Utaku no Kakita Akahiro : Determined (+2 Fire, -2 Water)
 - Shika Kazuki : Diplomatic (+2 Air, -2 Fire)
-- Kuni (Shibamaru) Genji : Stoic (+2 Earth, -2 Air)
+- Kuni Genji : Stoic (+2 Earth, -2 Air)
 - Agasha Sumiko : Calculating (+2 Air, -2 Earth)
 - Bayushi Yojiro : Ambitious (+2 Fire, -2 Water)
 - Kakita Yoshi : Honorable (+2 Earth, -2 Air)

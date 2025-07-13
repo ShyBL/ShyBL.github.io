@@ -4,7 +4,7 @@ Date: 1023
 
 **The new magisters begin their studies at the Emerald Champion Castle while investigating the murder of Doji Satsume.**
 
-The newly appointed emerald magisters arrive at the castle to begin their training under Agasha Sumiko, the Ruby Champion and Acting Emerald Champion. Among them is Kuni (Shibamaru) Genji, who will be trained as a jade magister and gradually accept the mantle from the various imperial Crab advisors. He accepts a token of his duty - a magical white headband with a black sun. 
+The newly appointed emerald magisters arrive at the castle to begin their training under Agasha Sumiko, the Ruby Champion and Acting Emerald Champion. Among them is Kuni  Genji, who will be trained as a jade magister and gradually accept the mantle from the various imperial Crab advisors. He accepts a token of his duty - a magical white headband with a black sun. 
 <br><br>
 Their studies are interrupted when they are drawn into the investigation of Doji Satsume's murder, which reveals layers of political intrigue and clan rivalries.
 <br><br>
@@ -18,7 +18,7 @@ As the investigation concludes, the magisters meet Hotaru and are sent on a tris
 - Togashi Akai - Dragon Topaz Champion
 - Utaku no Kakita Akahiro - Unicorn Duelist
 - Shika Kazuki - Deer Matchmaker
-- Kuni (Shibamaru) Genji - Kuni Purifier
+- Kuni Genji - Kuni Purifier
 - Shiba Shibamaru - Phoenix Shugenja
 - Doji Hotaru - Crane Clan Champion
 - Shiba Sono - Fire Shugenja and Courtier, Jade Magister
@@ -29,7 +29,7 @@ As the investigation concludes, the magisters meet Hotaru and are sent on a tris
 - Togashi Akai : Enlightened (+2 Void, -2 Earth)
 - Utaku no Kakita Akahiro : Determined (+2 Fire, -2 Water)
 - Shika Kazuki : Diplomatic (+2 Air, -2 Fire)
-- Kuni (Shibamaru) Genji : Stoic (+2 Earth, -2 Air)
+- Kuni Genji : Stoic (+2 Earth, -2 Air)
 - Shiba Shibamaru : Mystical (+2 Water, -2 Fire)
 - Doji Hotaru : Honorable (+2 Earth, -2 Air)
 - Shiba Sono : Devout (+2 Earth, -2 Air)

@@ -17,7 +17,7 @@ Throughout this journey, Shika Kazuki has ingrained herself in the workings of t
 - Kakita Toshimoko - Kenshinzen, Grandmaster of Duelist School
 - Togashi Akai - Dragon Topaz Champion
 - Shika Kazuki - Deer Matchmaker
-- Kuni (Shibamaru) Genji - Kuni Purifier, Jade Magister
+- Kuni Genji - Kuni Purifier, Jade Magister
 - Agasha Sumiko - Ruby Champion, Acting Emerald Champion
 - Bayushi Yojiro - Honest Scorpion, Senior Emerald Magister
 - Shiba Sono - Fire Shugenja and Courtier, Jade Magister
@@ -28,7 +28,7 @@ Throughout this journey, Shika Kazuki has ingrained herself in the workings of t
 - Kakita Toshimoko : Proud (+2 Fire, -2 Water)
 - Togashi Akai : Enlightened (+2 Void, -2 Earth)
 - Shika Kazuki : Diplomatic (+2 Air, -2 Fire)
-- Kuni (Shibamaru) Genji : Stoic (+2 Earth, -2 Air)
+- Kuni Genji : Stoic (+2 Earth, -2 Air)
 - Agasha Sumiko : Calculating (+2 Air, -2 Earth)
 - Bayushi Yojiro : Ambitious (+2 Fire, -2 Water)
 - Shiba Sono : Devout (+2 Earth, -2 Air)

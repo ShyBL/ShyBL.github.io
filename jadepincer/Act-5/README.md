@@ -20,7 +20,7 @@ The magisters use this time to consolidate their findings from their travels and
 - Togashi Akai - Dragon Topaz Champion
 - Utaku no Kakita Akahiro - Unicorn Duelist
 - Shika Kazuki - Deer Matchmaker
-- Kuni (Shibamaru) Genji - Kuni Purifier
+- Kuni Genji - Kuni Purifier
 
 ## Character Details
 - Agasha Sumiko : Calculating (+2 Air, -2 Earth)
@@ -32,7 +32,7 @@ The magisters use this time to consolidate their findings from their travels and
 - Togashi Akai : Enlightened (+2 Void, -2 Earth)
 - Utaku no Kakita Akahiro : Determined (+2 Fire, -2 Water)
 - Shika Kazuki : Diplomatic (+2 Air, -2 Fire)
-- Kuni (Shibamaru) Genji : Stoic (+2 Earth, -2 Air)
+- Kuni Genji : Stoic (+2 Earth, -2 Air)
 
 ## Locations
 - Emerald Champion Castle

@@ -15,7 +15,7 @@ During their seven-day stay at Kyotai Castle, the magisters witness the birth of
 - Togashi Akai - Dragon Topaz Champion
 - Utaku no Kakita Akahiro - Unicorn Duelist
 - Shika Kazuki - Deer Matchmaker
-- Kuni (Shibamaru) Genji - Kuni Purifier
+- Kuni Genji - Kuni Purifier
 - Tsume no Doji Takashi - Young Daimyo of Kyotai Castle
 - Nasu no Shiba Shizuma - Former General
 - Tsume Kotonoha - Young Captain of the Guard
@@ -27,7 +27,7 @@ During their seven-day stay at Kyotai Castle, the magisters witness the birth of
 - Togashi Akai : Enlightened (+2 Void, -2 Earth)
 - Utaku no Kakita Akahiro : Determined (+2 Fire, -2 Water)
 - Shika Kazuki : Diplomatic (+2 Air, -2 Fire)
-- Kuni (Shibamaru) Genji : Stoic (+2 Earth, -2 Air)
+- Kuni Genji : Stoic (+2 Earth, -2 Air)
 - Tsume no Doji Takashi : Ambitious (+2 Fire, -2 Water)
 - Nasu no Shiba Shizuma : Stoic (+2 Earth, -2 Air)
 - Tsume Kotonoha : Honorable (+2 Earth, -2 Air)
