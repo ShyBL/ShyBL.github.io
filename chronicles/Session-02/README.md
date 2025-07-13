@@ -2,7 +2,7 @@
 
 Date: Early Spring, 1158
 
-Following leads from the previous investigation, the characters venture into the mysterious bamboo grove where local peasants report strange lights and whispered voices. Ancient spirits and hidden bandits threaten the peace of the land, forcing the samurai to confront both supernatural and mundane dangers.
+**Following leads from the previous investigation**, *the characters venture into the mysterious bamboo grove where local peasants report strange lights and whispered voices. Ancient spirits and hidden bandits threaten the peace of the land, forcing the samurai to confront both supernatural and mundane dangers.*
 
 ## Characters
 - Kakita Haruto - Crane Duelist

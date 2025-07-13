@@ -2,7 +2,7 @@
 
 Date: Late Spring, 1158
 
-The characters are invited to participate in a grand tournament held in honor of the Emperor's birthday. But beneath the pageantry and competition lies a web of clan politics and hidden agendas. As the tournament progresses, it becomes clear that more than just honor is at stake.
+**The characters are invited to participate in a grand tournament held in honor of the Emperor's birthday.** *But beneath the pageantry and competition lies a web of clan politics and hidden agendas. As the tournament progresses, it becomes clear that more than just honor is at stake.*
 
 ## Characters
 - Kakita Haruto - Crane Duelist

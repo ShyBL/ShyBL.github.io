@@ -195,10 +195,9 @@ body {
 }
 
 .content-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 2rem;
-    align-items: start;
 }
 
 .session-summary {
@@ -208,11 +207,9 @@ body {
     text-align: justify;
 }
 
-
-
 .session-details {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
 }
 
@@ -359,8 +356,12 @@ body {
     }
     
     .content-grid {
-        grid-template-columns: 1fr;
         gap: 1.5rem;
+    }
+    
+    .session-details {
+        grid-template-columns: 1fr;
+        gap: 1rem;
     }
     
     .session-title {
