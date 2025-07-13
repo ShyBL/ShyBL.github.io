@@ -208,11 +208,7 @@ body {
     text-align: justify;
 }
 
-.session-summary .first-paragraph {
-    font-weight: 600;
-    font-style: italic;
-    color: var(--text-primary);
-}
+
 
 .session-details {
     display: flex;

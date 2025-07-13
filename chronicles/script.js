@@ -139,7 +139,7 @@ class RokuganChronicles {
         
         // Extract key events
         const eventsStart = lines.findIndex(line => 
-            /^##?\s*(events|highlights|key moments)/i.test(line)
+            /^##?\s*(key events|events|highlights|key moments)/i.test(line)
         );
         
         if (eventsStart >= 0) {
@@ -255,10 +255,6 @@ class RokuganChronicles {
     renderSession(session) {
         const mediaHTML = this.renderMedia(session.images);
         
-        const summaryParagraphs = session.summary.split('\n').filter(p => p.trim());
-        const firstParagraph = summaryParagraphs[0] || '';
-        const remainingParagraphs = summaryParagraphs.slice(1).join('\n');
-        
         const charactersHTML = session.characters.length > 0 ? `
             <div class="detail-section">
                 <div class="detail-title">Characters</div>
@@ -296,8 +292,7 @@ class RokuganChronicles {
                     </div>
                     <div class="content-grid">
                         <div class="session-summary">
-                            <div class="first-paragraph">${firstParagraph}</div>
-                            ${remainingParagraphs ? `<div style="margin-top: 1rem;">${remainingParagraphs}</div>` : ''}
+                            ${session.summary}
                         </div>
                         <div class="session-details">
                             ${charactersHTML}
