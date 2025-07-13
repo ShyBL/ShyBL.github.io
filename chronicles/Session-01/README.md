@@ -29,17 +29,17 @@ They are accompanied on the way to the castle by Ryu, the man who they helped wi
 - Hitoshi - Mantis Sailor
 
 ## Character Details
-- Doji Shizua - Ambitious (+2 Fire, -2 Water)
-- Bayushi Komo - Calculating (+2 Air, -2 Earth)
-- Kakita Riku - Proud (+2 Fire, -2 Water)
-- Bayushi Mei-Lin - Deceptive (+2 Air, -2 Fire)
-- Mirumoto Hinata - Enlightened (+2 Void, -2 Earth)
-- Moto Batbayer - Fierce (+2 Fire, -2 Air)
-- Iuchi Sha-hai - Mystical (+2 Water, -2 Fire)
-- Shiba Toya - Devout (+2 Earth, -2 Air)
-- Isawa Aki - Studious (+2 Water, -2 Fire)
-- Akodo Toturi - Honorable (+2 Earth, -2 Air)
-- Hitoshi - Determined (+2 Fire, -2 Water)
+- Doji Shizua : Ambitious (+2 Fire, -2 Water)
+- Bayushi Komo : Calculating (+2 Air, -2 Earth)
+- Kakita Riku : Proud (+2 Fire, -2 Water)
+- Bayushi Mei-Lin : Deceptive (+2 Air, -2 Fire)
+- Mirumoto Hinata : Enlightened (+2 Void, -2 Earth)
+- Moto Batbayer : Fierce (+2 Fire, -2 Air)
+- Iuchi Sha-hai : Mystical (+2 Water, -2 Fire)
+- Shiba Toya : Devout (+2 Earth, -2 Air)
+- Isawa Aki : Studious (+2 Water, -2 Fire)
+- Akodo Toturi : Honorable (+2 Earth, -2 Air)
+- Hitoshi : Determined (+2 Fire, -2 Water)
 
 ## Locations
 - Otosan Uchi, Capital City

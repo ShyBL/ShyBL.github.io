@@ -335,7 +335,7 @@ class RokuganChronicles {
                         const plainName = this.extractPlainName(char);
                         
                         return `
-                            <li><span class="clan-icon-btn" data-char="${encodeURIComponent(char)}">${this.getClanIcon(this.getClanName(char))}</span> <span class="character-name">${this.parseMarkdownText(char)}</span></li>
+                            <li><span class="clan-icon-btn" data-char="${encodeURIComponent(char)}">${this.parseMarkdownText(char)}</span></li>
                         `;
                     }).join('')}
                 </ul>
@@ -690,6 +690,7 @@ class RokuganChronicles {
                         <div class="character-elements">${parsedDetails.elements}</div>
                     </div>
                 ` : ''}
+                <div class="portrait-clan-icon">${this.getClanIcon(this.getClanName(charName))}</div>
             </div>
         `;
         document.body.appendChild(overlay);
@@ -794,8 +795,8 @@ class RokuganChronicles {
     parseCharacterDetails(details) {
         if (!details) return null;
         
-        // Parse format: "Doji Shizua - Ambitious (+2 Fire, -2 Water)"
-        const match = details.match(/^(.+?)\s*-\s*([^(]+?)\s*\(([^)]+)\)$/);
+        // Parse format: "Doji Shizua : Ambitious (+2 Fire, -2 Water)"
+        const match = details.match(/^(.+?)\s*:\s*([^(]+?)\s*\(([^)]+)\)$/);
         if (!match) return null;
         
         const [, characterName, trait, elements] = match;

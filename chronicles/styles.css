@@ -261,14 +261,18 @@ body {
 }
 
 .detail-list li::before {
-    content: '🏯';
+    content: '⛩️';
     position: absolute;
     left: 0;
     font-size: 0.8rem;
 }
 
+.characters-list li::before {
+    content: '🌸';
+}
+
 .locations-list li::before {
-    content: '⛩️';
+    content: '🗻';
 }
 
 .key-events-list li::before {
@@ -442,6 +446,16 @@ body {
     font-size: 1.2rem;
     color: #fff;
     font-weight: 500;
+}
+
+.portrait-clan-icon {
+    font-size: 2rem;
+    margin-top: 16px;
+    padding: 8px 12px;
+    background: rgba(212, 175, 55, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .portrait-title, .portrait-description, .clan-icon, .portrait-modal .close-hint {
