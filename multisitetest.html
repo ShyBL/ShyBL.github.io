@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Site Test - ShyBL Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Test page specific styles */
+        .test-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .test-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .test-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .site-section {
+            margin: 3rem 0;
+            padding: 2rem;
+            border-radius: 1rem;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .site-section h2 {
+            font-size: 2rem;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .site-section p {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+
+
+
+        /* Chronicles styles (from chronicles/styles.css) */
+        .chronicles-section {
+            background: linear-gradient(135deg, #8B4513 0%, #2F4F4F 50%, #8B0000 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            margin: 2rem 0;
+        }
+
+        .chronicles-header {
+            text-align: center;
+            padding: 2rem 0;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+        }
+
+        .chronicles-header h1 {
+            font-family: 'Merriweather', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .chronicles-header p {
+            font-size: 1.125rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .session-carousel {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+            box-shadow: 0 1.25rem 3.75rem rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+        }
+
+        .session-track {
+            display: flex;
+            transition: transform 0.6s ease;
+        }
+
+        .session-card {
+            min-width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .session-media {
+            position: relative;
+            aspect-ratio: 16/9;
+            background: #f8f9fa;
+            overflow: hidden;
+        }
+
+        .media-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: linear-gradient(135deg, #8B4513 0%, #2F4F4F 50%, #8B0000 100%);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .session-content {
+            padding: 2rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .session-header {
+            border-bottom: 2px solid #D4AF37;
+            padding-bottom: 1rem;
+        }
+
+        .session-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #8B0000;
+            margin-bottom: 0.5rem;
+        }
+
+        .session-date {
+            font-size: 1.1rem;
+            color: #4a5568;
+            font-style: italic;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .session-summary {
+            font-size: 1.1rem;
+            color: #4a5568;
+            line-height: 1.7;
+            text-align: justify;
+        }
+
+        .session-summary .first-paragraph {
+            font-weight: 600;
+            font-style: italic;
+            color: #2d3748;
+        }
+
+        .session-details {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .detail-section {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid #D4AF37;
+        }
+
+        .detail-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #8B0000;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .detail-list li {
+            padding: 0.25rem 0;
+            color: #4a5568;
+            line-height: 1.4;
+            position: relative;
+            padding-left: 1.25rem;
+            font-size: 0.95rem;
+        }
+
+        .detail-list li::before {
+            content: '⚔️';
+            position: absolute;
+            left: 0;
+            font-size: 0.8rem;
+        }
+
+        .characters-list li::before {
+            content: '👤';
+        }
+
+        .locations-list li::before {
+            content: '🏯';
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid #D4AF37;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: #D4AF37;
+            color: #2d3748;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .session-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35));
+        }
+
+        .dot.active {
+            background: #D4AF37;
+            transform: scale(1.3);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .session-title {
+                font-size: 1.8rem;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-header">
+        <h1>Multi-Site Test</h1>
+        <p>Testing your main site and hidden Chronicles site</p>
+    </div>
+
+    <!-- Main Site Section -->
+    <div class="site-section">
+        <h2>🏠 Main Site (Game Projects)</h2>
+        <p>Your original game projects carousel with video popups and screenshot galleries</p>
+        
+        <main class="projects">
+            <div class="container">
+                <div id="carousel-container">
+                    <div class="loading-throbber">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    <div class="loading-text">Loading projects...</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+
+    <!-- Chronicles Site Section -->
+    <div class="site-section chronicles-section">
+        <h2>📝 Chronicles Site (TTRPG Sessions)</h2>
+        <p>Japanese-inspired TTRPG session tracker with beautiful theming</p>
+        
+        <div class="chronicles-header">
+            <h1>Chronicles of Rokugan</h1>
+            <p>Tales of Honor, Duty, and Adventure in the Emerald Empire</p>
+        </div>
+
+        <div class="container">
+            <div id="session-container">
+                <div class="session-carousel">
+                    <div class="session-track" id="session-track">
+                        <article class="session-card">
+                            <div class="session-media">
+                                <div class="media-placeholder">⛩️ No Images Available ⛩️</div>
+                            </div>
+                            <div class="session-content">
+                                <div class="session-header">
+                                    <h2 class="session-title">The Jade Magistrate's Arrival</h2>
+                                    <div class="session-date">Winter Court, 1158</div>
+                                </div>
+                                <div class="content-grid">
+                                    <div class="session-summary">
+                                        <div class="first-paragraph">The characters arrive at the provincial capital as representatives of their clans. A mysterious death at the governor's estate sets the stage for intrigue and investigation.</div>
+                                        <div style="margin-top: 1rem;">Honor and duty clash as the samurai must navigate the treacherous waters of court politics while seeking the truth behind the murder.</div>
+                                    </div>
+                                    <div class="session-details">
+                                        <div class="detail-section">
+                                            <div class="detail-title">Characters</div>
+                                            <ul class="detail-list characters-list">
+                                                <li>Kakita Haruto - Crane Duelist</li>
+                                                <li>Hida Masa - Crab Berserker</li>
+                                                <li>Isawa Yuki - Phoenix Shugenja</li>
+                                                <li>Bayushi Kage - Scorpion Courtier</li>
+                                            </ul>
+                                        </div>
+                                        <div class="detail-section">
+                                            <div class="detail-title">Locations</div>
+                                            <ul class="detail-list locations-list">
+                                                <li>Governor's Estate</li>
+                                                <li>Temple of the Seven Fortunes</li>
+                                                <li>Sake House of the Floating Lily</li>
+                                            </ul>
+                                        </div>
+                                        <div class="detail-section">
+                                            <div class="detail-title">Key Events</div>
+                                            <ul class="detail-list">
+                                                <li>Arrival ceremony disrupted</li>
+                                                <li>Discovery of the poisoned tea</li>
+                                                <li>Midnight duel in the garden</li>
+                                                <li>Interrogation of the servants</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button class="nav-btn" id="prev-btn">← Previous Chronicle</button>
+                    <button class="nav-btn" id="next-btn">Next Chronicle →</button>
+                </div>
+                <div class="session-dots">
+                    <button class="dot active" data-index="0"></button>
+                    <button class="dot" data-index="1"></button>
+                    <button class="dot" data-index="2"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Popup -->
+    <div id="video-popup" class="video-popup">
+        <div class="video-popup-content" role="dialog" aria-modal="true">
+            <button class="video-close" aria-label="Close video">×</button>
+            <video id="popup-video" controls>
+                <source src="" type="video/mp4">
+                Video not supported
+            </video>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Additional test-specific functionality
+        console.log('Multi-site test page loaded');
+        
+        // Test navigation between sections
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add smooth scrolling to section headers
+            const sectionHeaders = document.querySelectorAll('.site-section h2');
+            sectionHeaders.forEach(header => {
+                header.style.cursor = 'pointer';
+                header.addEventListener('click', () => {
+                    header.scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+            
+            // Add test info
+            const testInfo = document.createElement('div');
+            testInfo.style.cssText = `
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 10px;
+                border-radius: 5px;
+                font-size: 12px;
+                z-index: 1000;
+            `;
+            testInfo.innerHTML = '🧪 Test Mode';
+            document.body.appendChild(testInfo);
+        });
+    </script>
+</body>
+</html> 

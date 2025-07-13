@@ -1,5 +1,6 @@
 /* Only keep mobile-specific overrides. Remove any duplicate or unused styles that are already in styles.css. */
 @media (max-width: 768px) {
+
     .container {
         padding: 0 0.5rem;
     }
@@ -49,6 +50,8 @@
 }
 
 @media (max-width: 480px) {
+
+    
     .project-content {
         padding: 0.5rem;
     }
