@@ -299,7 +299,7 @@ class RokuganChronicles {
                         const plainName = this.extractPlainName(char);
                         const initials = this.getClanInitials(plainName);
                         return `
-                            <li><span class="clan-icon-btn" data-char="${encodeURIComponent(char)}">${this.getClanIcon(this.getClanName(plainName))}</span> <span class="character-name">${this.parseMarkdownText(char)}</span></li>
+                            <li><span class="clan-icon-btn" data-char="${encodeURIComponent(char)}">${this.getClanIcon(this.getClanName(plainName, char))}</span> <span class="character-name">${this.parseMarkdownText(char)}</span></li>
                         `;
                     }).join('')}
                 </ul>
@@ -651,7 +651,7 @@ class RokuganChronicles {
         return initialsMap[plainName] || (plainName.split(' ').map(w => w[0]).join('').toUpperCase());
     }
 
-    getClanName(plainName) {
+    getClanName(plainName, originalChar) {
         const clanMap = {
             "Kakita Haruto": "Crane",
             "Hida Masa": "Crab",
@@ -660,7 +660,17 @@ class RokuganChronicles {
             "Akodo Shin": "Lion",
             "Mirumoto Ryu": "Dragon"
         };
-        return clanMap[plainName] || "Unknown";
+        if (clanMap[plainName]) return clanMap[plainName];
+        // Try to extract clan from the role (after dash)
+        if (originalChar && originalChar.includes('-')) {
+            const role = originalChar.split('-')[1].trim();
+            // Assume clan is the first word in the role
+            const clan = role.split(' ')[0];
+            // Only accept if it's a known clan
+            const knownClans = ['Crane','Crab','Phoenix','Scorpion','Lion','Dragon','Mantis','Unicorn','Imperial'];
+            if (knownClans.includes(clan)) return clan;
+        }
+        return "Unknown";
     }
 
     getRole(plainName) {
