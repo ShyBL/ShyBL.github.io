@@ -389,6 +389,7 @@ class RokuganChronicles {
         });
 
         this.setupImageCarousels();
+        this.setupSwipeNavigation();
     }
 
     setupImageCarousels() {
@@ -447,6 +448,69 @@ class RokuganChronicles {
                 startAuto();
             }
         });
+    }
+
+    setupSwipeNavigation() {
+        const carousel = document.querySelector('.session-carousel');
+        if (!carousel) return;
+
+        let startX = 0;
+        let startY = 0;
+        let isDragging = false;
+        let currentTranslateX = 0;
+
+        const handleTouchStart = (e) => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            isDragging = true;
+            currentTranslateX = -this.currentIndex * 100;
+            
+            carousel.style.transition = 'none';
+        };
+
+        const handleTouchMove = (e) => {
+            if (!isDragging) return;
+            
+            const currentX = e.touches[0].clientX;
+            const currentY = e.touches[0].clientY;
+            const diffX = currentX - startX;
+            const diffY = currentY - startY;
+            
+            // Only handle horizontal swipes
+            if (Math.abs(diffX) < Math.abs(diffY)) return;
+            
+            e.preventDefault();
+            
+            const translateX = currentTranslateX + diffX;
+            const track = document.getElementById('session-track');
+            track.style.transform = `translateX(${translateX}%)`;
+        };
+
+        const handleTouchEnd = (e) => {
+            if (!isDragging) return;
+            
+            isDragging = false;
+            const endX = e.changedTouches[0].clientX;
+            const diffX = endX - startX;
+            const threshold = 50; // Minimum swipe distance
+            
+            carousel.style.transition = 'transform 0.6s ease';
+            
+            if (Math.abs(diffX) > threshold) {
+                if (diffX > 0) {
+                    this.goToPrevious();
+                } else {
+                    this.goToNext();
+                }
+            } else {
+                // Snap back to current position
+                this.updateCarousel();
+            }
+        };
+
+        carousel.addEventListener('touchstart', handleTouchStart, { passive: false });
+        carousel.addEventListener('touchmove', handleTouchMove, { passive: false });
+        carousel.addEventListener('touchend', handleTouchEnd, { passive: false });
     }
 
     goToPrevious() {

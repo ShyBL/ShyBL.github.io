@@ -372,6 +372,11 @@ body {
         padding: 0.6rem 1rem;
         font-size: 0.9rem;
     }
+    
+    /* Hide navigation buttons on mobile - use swipe instead */
+    .navigation {
+        display: none;
+    }
 }
 
 @media (max-width: 480px) {
