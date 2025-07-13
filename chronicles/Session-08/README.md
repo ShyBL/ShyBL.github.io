@@ -1,6 +1,6 @@
 # The Lion's Pride
 
-Date: Late Autumn, 1158
+Date: February 21, 2024
 
 The characters are called to the Lion lands to investigate a series of mysterious deaths among the Lion's military leadership. As they dig deeper, they uncover a conspiracy that threatens to tear the Lion Clan apart from within.
 

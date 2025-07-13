@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShyBL Portfolio - Game Projects (Test)</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="mobile.css">
+</head>
+<body>
+    <header>
+        <section style="background: #e6f7ff; color: #005c7c; border: 2px solid #91d5ff; border-radius: 10px; padding: 1.2rem; margin: 2rem auto 1.5rem auto; max-width: 900px; text-align: center; font-size: 1.1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.07);">
+            <strong>Latest Changes Preview:</strong><br>
+            <ul style="text-align:left; display:inline-block; margin:0 auto; padding-left:1.2em; font-size:1em;">
+                <li>Loading spinner with text beneath</li>
+                <li>Semantic <code>&lt;header&gt;</code> and <code>&lt;footer&gt;</code> structure</li>
+                <li>ARIA accessibility for video popup and controls</li>
+                <li>First paragraph of project description is bold and italic</li>
+                <li>Keyboard-accessible carousel navigation</li>
+                <li>More compact, scalable styles (rem units)</li>
+            </ul>
+        </section>
+    </header>
+    <main class="projects">
+        <div class="container">
+            <div class="carousel-wrapper">
+                <div class="carousel-track" id="carousel-track">
+                    <!-- Beat-Em-Up Across The Globe Card -->
+                    <article class="project-card">
+                        <div class="project-media">
+                            <div class="video-button" data-video="Beat-Em-Up Across The Globe/demo.mp4" aria-label="Watch Gameplay">
+                                <div class="play-icon">▶</div>
+                                <span>Watch Gameplay</span>
+                            </div>
+                            <div class="screenshot-carousel">
+                                <div class="screenshot-track">
+                                    <img src="Beat-Em-Up Across The Globe/screenshot1.png" alt="Screenshot 1" class="screenshot active">
+                                    <img src="Beat-Em-Up Across The Globe/screenshot2.png" alt="Screenshot 2" class="screenshot">
+                                    <img src="Beat-Em-Up Across The Globe/screenshot3.png" alt="Screenshot 3" class="screenshot">
+                                </div>
+                                <div class="screenshot-nav">
+                                    <button class="screenshot-prev" aria-label="Previous screenshot">‹</button>
+                                    <div class="screenshot-dots">
+                                        <button class="screenshot-dot active" data-index="0" aria-label="Go to screenshot 1"></button>
+                                        <button class="screenshot-dot" data-index="1" aria-label="Go to screenshot 2"></button>
+                                        <button class="screenshot-dot" data-index="2" aria-label="Go to screenshot 3"></button>
+                                    </div>
+                                    <button class="screenshot-next" aria-label="Next screenshot">›</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-content">
+                            <div class="project-header">
+                                <div class="tech-stack">
+                                    <span class="tech-tag">Unity</span>
+                                    <span class="tech-tag">Maya</span>
+                                    <span class="tech-tag">GitHub</span>
+                                    <span class="tech-tag">Figma</span>
+                                </div>
+                            </div>
+                            <div class="content-grid">
+                                <div class="content-column">
+                                    <div class="project-description">
+                                        <span style="font-weight:bold;font-style:italic;">A mysterious robot has landed on Earth on a quest to find monuments and other landmarks. But what is its purpose? Only time will tell...</span><br>
+                                        This beat 'em up style game features punching action, breakable containers, loot, and four levels (France, Italy, Egypt, USA) to discover cultural landmarks. The game is styled in low-poly 3D with a full-screen pixelation effect, giving a modern take to a classic style and genre.<br>
+                                        Created for Summer Game Jam 2026. Future updates may include additional move sets, weapons, particle effects, and a landmark scanning feature.
+                                    </div>
+                                </div>
+                                <div class="content-column">
+                                    <ul class="feature-list">
+                                        <li>Beat 'em up combat with punching action and breakable containers</li>
+                                        <li>Four diverse levels: France, Italy, Egypt, and USA</li>
+                                        <li>Cultural landmark discovery and exploration</li>
+                                        <li>Low-poly 3D art style with pixelation effects</li>
+                                        <li>Loot collection system</li>
+                                    </ul>
+                                </div>
+                                <div class="content-column">
+                                    <ul class="team-list">
+                                        <li>Shy Blechman (Project Lead/Creative Lead)</li>
+                                        <li>Ron Ohayon (Programming)</li>
+                                        <li>Alex Turkin (3d Enviroment)</li>
+                                        <li>Roman Dvorkin (3d Character)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <!-- Underneath Card -->
+                    <article class="project-card">
+                        <div class="project-media">
+                            <div class="video-button" data-video="Underneath/demo.mp4" aria-label="Watch Gameplay">
+                                <div class="play-icon">▶</div>
+                                <span>Watch Gameplay</span>
+                            </div>
+                            <div class="screenshot-carousel">
+                                <div class="screenshot-track">
+                                    <img src="Underneath/screenshot1.png" alt="Screenshot 1" class="screenshot active">
+                                    <img src="Underneath/screenshot2.png" alt="Screenshot 2" class="screenshot">
+                                    <img src="Underneath/screenshot3.png" alt="Screenshot 3" class="screenshot">
+                                    <img src="Underneath/screenshot4.png" alt="Screenshot 4" class="screenshot">
+                                </div>
+                                <div class="screenshot-nav">
+                                    <button class="screenshot-prev" aria-label="Previous screenshot">‹</button>
+                                    <div class="screenshot-dots">
+                                        <button class="screenshot-dot active" data-index="0" aria-label="Go to screenshot 1"></button>
+                                        <button class="screenshot-dot" data-index="1" aria-label="Go to screenshot 2"></button>
+                                        <button class="screenshot-dot" data-index="2" aria-label="Go to screenshot 3"></button>
+                                        <button class="screenshot-dot" data-index="3" aria-label="Go to screenshot 4"></button>
+                                    </div>
+                                    <button class="screenshot-next" aria-label="Next screenshot">›</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-content">
+                            <div class="project-header">
+                                <div class="tech-stack">
+                                    <span class="tech-tag">Unity</span>
+                                    <span class="tech-tag">FMOD</span>
+                                    <span class="tech-tag">Krita</span>
+                                    <span class="tech-tag">GitHub</span>
+                                </div>
+                            </div>
+                            <div class="content-grid">
+                                <div class="content-column">
+                                    <div class="project-description">
+                                        <span style="font-weight:bold;font-style:italic;">A Looter/Metroidvania game where you play as a Mother Raccoon struggling to survive in the urban underworld. Navigate through the slums, dumpster dive for valuable items, and work to reunite with your family.</span><br>
+                                        Created for the July 2024 Ignite Game Jam hosted by P1. You venture into various locations throughout the slums, scavenging for items to sell in order to survive and eventually meet your family again.
+                                    </div>
+                                </div>
+                                <div class="content-column">
+                                    <ul class="feature-list">
+                                        <li>Metroidvania exploration with interconnected areas</li>
+                                        <li>Looter mechanics - scavenge and sell items for survival</li>
+                                        <li>Emotional narrative about family and perseverance</li>
+                                        <li>Environmental storytelling through detailed slum environments</li>
+                                    </ul>
+                                </div>
+                                <div class="content-column">
+                                    <ul class="team-list">
+                                        <li>Shy Blechman (Producer/Technical Lead)</li>
+                                        <li>Joshua Moskowitz (Creative Lead)</li>
+                                        <li>Devon Stephan (Lead Designer)</li>
+                                        <li>Stephen A. Docy (Lead Programmer)</li>
+                                        <li>Simon Duffey (Lead Artist)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <!-- Add bottom navigation for carousel, matching index.html -->
+                <div class="carousel-nav">
+                    <button class="nav-btn" id="prev-btn">← Previous</button>
+                    <button class="nav-btn" id="next-btn">Next →</button>
+                </div>
+                <div class="carousel-dots">
+                    <button class="dot active" data-index="0"></button>
+                    <button class="dot" data-index="1"></button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer></footer>
+    <!-- Video Popup -->
+    <div id="video-popup" class="video-popup">
+        <div class="video-popup-content" role="dialog" aria-modal="true">
+            <button class="video-close" aria-label="Close video">×</button>
+            <video id="popup-video" controls>
+                <source src="" type="video/mp4">
+                Video not supported
+            </video>
+        </div>
+    </div>
+    <script>
+    // Minimal JS for screenshot carousel navigation (static only, now automatic)
+    document.querySelectorAll('.screenshot-carousel').forEach(carousel => {
+        const screenshots = carousel.querySelectorAll('.screenshot');
+        const prevBtn = carousel.querySelector('.screenshot-prev');
+        const nextBtn = carousel.querySelector('.screenshot-next');
+        const dots = carousel.querySelectorAll('.screenshot-dot');
+        let currentIndex = 0;
+        let intervalId = null;
+        function updateScreenshots() {
+            screenshots.forEach((s, i) => s.classList.toggle('active', i === currentIndex));
+            dots.forEach((d, i) => d.classList.toggle('active', i === currentIndex));
+        }
+        function goToNext() {
+            currentIndex = (currentIndex + 1) % screenshots.length;
+            updateScreenshots();
+        }
+        function goToPrev() {
+            currentIndex = currentIndex > 0 ? currentIndex - 1 : screenshots.length - 1;
+            updateScreenshots();
+        }
+        prevBtn.addEventListener('click', goToPrev);
+        nextBtn.addEventListener('click', goToNext);
+        dots.forEach((dot, i) => {
+            dot.addEventListener('click', () => {
+                currentIndex = i;
+                updateScreenshots();
+            });
+        });
+        // Automatic cycling
+        function startAuto() {
+            if (intervalId) clearInterval(intervalId);
+            intervalId = setInterval(goToNext, 3000);
+        }
+        function stopAuto() {
+            if (intervalId) clearInterval(intervalId);
+        }
+        carousel.addEventListener('mouseenter', stopAuto);
+        carousel.addEventListener('mouseleave', startAuto);
+        carousel.addEventListener('touchstart', stopAuto, {passive:true});
+        carousel.addEventListener('touchend', startAuto, {passive:true});
+        updateScreenshots();
+        startAuto();
+    });
+    // Minimal JS for video popup
+    document.querySelectorAll('.video-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const videoSrc = button.getAttribute('data-video');
+            const popup = document.getElementById('video-popup');
+            const popupVideo = document.getElementById('popup-video');
+            popupVideo.src = videoSrc;
+            popup.classList.add('active');
+            popupVideo.play();
+        });
+    });
+    document.querySelector('.video-close').addEventListener('click', () => {
+        const popup = document.getElementById('video-popup');
+        const popupVideo = document.getElementById('popup-video');
+        popup.classList.remove('active');
+        popupVideo.pause();
+        popupVideo.src = '';
+    });
+    document.getElementById('video-popup').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) {
+            const popup = document.getElementById('video-popup');
+            const popupVideo = document.getElementById('popup-video');
+            popup.classList.remove('active');
+            popupVideo.pause();
+            popupVideo.src = '';
+        }
+    });
+    </script>
+</body>
+</html> 

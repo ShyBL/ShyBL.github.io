@@ -282,7 +282,7 @@ class RokuganChronicles {
             <div class="detail-section">
                 <div class="detail-title">Characters</div>
                 <ul class="detail-list characters-list">
-                    ${session.characters.map(char => `<li>${char}</li>`).join('')}
+                    ${session.characters.map(char => `<li><span class="character-link" data-char="${encodeURIComponent(char)}">${char}</span></li>`).join('')}
                 </ul>
             </div>
         ` : '';
@@ -306,7 +306,7 @@ class RokuganChronicles {
         ` : '';
 
         return `
-            <article class="session-card">
+            <article class="session-card" data-folder="${session.folder}">
                 ${mediaHTML}
                 <div class="session-content">
                     <div class="session-header">
@@ -390,6 +390,7 @@ class RokuganChronicles {
 
         this.setupImageCarousels();
         this.setupSwipeNavigation();
+        this.setupCharacterLinks();
     }
 
     setupImageCarousels() {
@@ -542,6 +543,142 @@ class RokuganChronicles {
     showError(message) {
         const container = document.getElementById('session-container');
         container.innerHTML = `<div class="error">${message}</div>`;
+    }
+
+    setupCharacterLinks() {
+        document.addEventListener('click', async (e) => {
+            const characterLink = e.target.closest('.character-link');
+            if (characterLink) {
+                const charName = decodeURIComponent(characterLink.dataset.char);
+                // Find the session for this character
+                const sessionCard = characterLink.closest('.session-card');
+                let sessionFolder = null;
+                if (sessionCard) {
+                    sessionFolder = sessionCard.dataset.folder || null;
+                }
+                if (!sessionFolder && this.sessions) {
+                    for (const session of this.sessions) {
+                        if (session.characters && session.characters.some(c => c.includes(charName))) {
+                            sessionFolder = session.folder;
+                            break;
+                        }
+                    }
+                }
+                await this.showPortraitModal(charName, characterLink.textContent, sessionFolder);
+            }
+        });
+    }
+
+    async showPortraitModal(charName, displayText, sessionFolder) {
+        // Close any open modal first
+        const existingModal = document.querySelector('.portrait-modal-overlay');
+        if (existingModal) existingModal.remove();
+        // Extract plain name (strip markdown, remove role)
+        const plainName = this.extractPlainName(charName);
+        const initials = this.getClanInitials(plainName);
+        const clan = this.getClanName(plainName);
+        const role = this.getRole(plainName);
+        // Try to load portrait image
+        let imageUrl = null;
+        if (sessionFolder) {
+            const normalized = plainName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+            const exts = ['jpg', 'jpeg', 'png', 'webp'];
+            for (const ext of exts) {
+                const path = `${sessionFolder}/portraits/${normalized}.${ext}`;
+                if (await this.fileExists(path)) {
+                    imageUrl = path;
+                    break;
+                }
+            }
+        }
+        // Create overlay and modal
+        const overlay = document.createElement('div');
+        overlay.className = 'portrait-modal-overlay';
+        overlay.innerHTML = `
+            <div class="portrait-modal">
+                ${imageUrl ?
+                    `<img src="${imageUrl}" alt="Portrait of ${plainName}" class="portrait-avatar">`
+                    : `<div class="portrait-avatar"><div class="avatar-circle">${initials}</div></div>`
+                }
+                <div class="portrait-name">${this.parseMarkdownText(displayText)}</div>
+                <div class="portrait-title">${clan ? this.capitalize(clan) + ' Clan' : ''}</div>
+                <div class="portrait-description">${role}</div>
+                <div class="clan-icon">${this.getClanIcon(clan)}</div>
+                <div class="close-hint">Click the portrait or background to close</div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        // Close on click of avatar, modal, or overlay
+        const avatar = overlay.querySelector('.portrait-avatar');
+        if (avatar) avatar.addEventListener('click', () => overlay.remove());
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) overlay.remove();
+        });
+    }
+
+    extractPlainName(text) {
+        // Remove markdown tags and role after dash
+        let name = text.replace(/<[^>]+>/g, '');
+        name = name.replace(/\*\*(.*?)\*\*/g, '$1');
+        name = name.replace(/\*(.*?)\*/g, '$1');
+        name = name.split('-')[0].trim();
+        return name;
+    }
+
+    getClanInitials(plainName) {
+        const initialsMap = {
+            "Kakita Haruto": "KH",
+            "Hida Masa": "HM",
+            "Isawa Yuki": "IY",
+            "Bayushi Kage": "BK",
+            "Akodo Shin": "AS",
+            "Mirumoto Ryu": "MR"
+        };
+        return initialsMap[plainName] || (plainName.split(' ').map(w => w[0]).join('').toUpperCase());
+    }
+
+    getClanName(plainName) {
+        const clanMap = {
+            "Kakita Haruto": "Crane",
+            "Hida Masa": "Crab",
+            "Isawa Yuki": "Phoenix",
+            "Bayushi Kage": "Scorpion",
+            "Akodo Shin": "Lion",
+            "Mirumoto Ryu": "Dragon"
+        };
+        return clanMap[plainName] || "Unknown";
+    }
+
+    getRole(plainName) {
+        const roleMap = {
+            "Kakita Haruto": "Crane Duelist",
+            "Hida Masa": "Crab Berserker",
+            "Isawa Yuki": "Phoenix Shugenja",
+            "Bayushi Kage": "Scorpion Courtier",
+            "Akodo Shin": "Lion Tactician",
+            "Mirumoto Ryu": "Dragon Swordsman"
+        };
+        return roleMap[plainName] || "Unknown Role";
+    }
+
+    capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    }
+
+    getClanIcon(clan) {
+        const icons = {
+            'crane': '🕊️',
+            'lion': '🦁',
+            'scorpion': '🦂',
+            'phoenix': '🔥',
+            'dragon': '🐉',
+            'crab': '🦀',
+            'mantis': '🦗',
+            'unicorn': '🦄',
+            'imperial': '👑',
+            'default': '🎴'
+        };
+        return icons[clan.toLowerCase()] || icons['default'];
     }
 }
 

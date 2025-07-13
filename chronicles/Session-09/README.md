@@ -1,6 +1,6 @@
 # The Crane's Honor
 
-Date: Early Winter, 1158
+Date: March 6, 2024
 
 The characters return to Crane lands to investigate a scandal that threatens to destroy the Crane Clan's reputation. As they navigate the complex world of court politics, they must decide what honor truly means.
 

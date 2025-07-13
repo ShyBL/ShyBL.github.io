@@ -1,6 +1,6 @@
 # The Crab's Duty
 
-Date: Early Autumn, 1158
+Date: January 24, 2024
 
 The characters are called to the Wall to assist the Crab Clan in defending against a massive Shadowlands incursion. But the real threat may not be from the creatures beyond the Wall, but from within the ranks of the defenders themselves.
 

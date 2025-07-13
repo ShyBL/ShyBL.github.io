@@ -1,6 +1,6 @@
 # Shadows in the Bamboo Grove
 
-Date: Early Spring, 1158
+Date: November 29, 2023
 
 **Following leads from the previous investigation**, *the characters venture into the mysterious bamboo grove where local peasants report strange lights and whispered voices. Ancient spirits and hidden bandits threaten the peace of the land, forcing the samurai to confront both supernatural and mundane dangers.*
 

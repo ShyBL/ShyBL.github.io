@@ -1,6 +1,6 @@
 # The Emperor's Judgment
 
-Date: Winter Court, 1158
+Date: March 20, 2024
 
 The characters are summoned to the Imperial Court to face the Emperor's judgment for their actions throughout the year. But this is no simple trial - the fate of the entire Empire hangs in the balance as ancient prophecies come to fruition.
 

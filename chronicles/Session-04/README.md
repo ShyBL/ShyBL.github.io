@@ -1,6 +1,6 @@
 # The Scorpion's Web
 
-Date: Summer, 1158
+Date: December 27, 2023
 
 A series of mysterious disappearances in the capital leads the characters into a complex web of Scorpion intrigue. As they investigate, they discover that the Scorpion Clan is not the only player in this dangerous game, and the stakes are higher than anyone imagined.
 

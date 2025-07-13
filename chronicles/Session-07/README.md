@@ -1,6 +1,6 @@
 # The Phoenix's Fire
 
-Date: Mid Autumn, 1158
+Date: February 7, 2024
 
 The characters travel to the Phoenix lands to investigate reports of strange magical phenomena. What they discover there could either save the Empire or destroy it, as ancient elemental forces are awakening.
 

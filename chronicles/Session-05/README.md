@@ -1,6 +1,6 @@
 # The Dragon's Secret
 
-Date: Late Summer, 1158
+Date: January 10, 2024
 
 The characters are summoned to the Dragon Mountains to investigate rumors of ancient knowledge being uncovered. What they find there challenges everything they thought they knew about honor, duty, and the nature of power itself.
 

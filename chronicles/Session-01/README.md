@@ -1,6 +1,6 @@
 # The Jade Magistrate's Arrival
 
-Date: Winter Court, 1158
+Date: November 15, 2023
 
 **The characters arrive at the provincial capital as representatives of their clans.** *A mysterious death at the governor's estate sets the stage for intrigue and investigation. Honor and duty clash as the samurai must navigate the treacherous waters of court politics while seeking the truth behind the murder.*
 
