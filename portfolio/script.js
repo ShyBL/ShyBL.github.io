@@ -47,11 +47,6 @@ class Portfolio {
 
         const projects = await Promise.all(projectPromises);
         this.projects = projects.filter(project => project !== null);
-
-        // Fallback to demo projects if none found
-        if (this.projects.length === 0) {
-            this.projects = this.getDemoProjects();
-        }
     }
 
     async loadProject(folder) {
@@ -225,28 +220,7 @@ class Portfolio {
             .replace(/\b\w/g, l => l.toUpperCase());
     }
 
-    getDemoProjects() {
-        return [
-            {
-                title: "E-Commerce Platform",
-                description: "A full-stack e-commerce solution with modern UI/UX, secure payment processing, and real-time inventory management.",
-                technologies: ["React", "Node.js", "MongoDB", "Stripe", "AWS"],
-                media: { video: null, screenshots: [] }
-            },
-            {
-                title: "AI Chat Assistant",
-                description: "An intelligent conversational AI powered by machine learning algorithms with natural language processing capabilities.",
-                technologies: ["Python", "TensorFlow", "FastAPI", "React", "Docker"],
-                media: { video: null, screenshots: [] }
-            },
-            {
-                title: "Portfolio Dashboard",
-                description: "A comprehensive analytics dashboard for tracking project performance and user engagement with real-time data visualization.",
-                technologies: ["Vue.js", "D3.js", "Express", "PostgreSQL", "Redis"],
-                media: { video: null, screenshots: [] }
-            }
-        ];
-    }
+
 
     render() {
         const container = document.getElementById('carousel-container');
