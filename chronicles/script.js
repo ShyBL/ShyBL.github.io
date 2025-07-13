@@ -37,7 +37,11 @@ class RokuganChronicles {
         // Generate folder names based on configuration
         const sessionFolders = [];
         for (let i = 1; i <= window.RokuganConfig.folderCount; i++) {
-            sessionFolders.push(`${window.RokuganConfig.folderPattern}${i.toString().padStart(2, '0')}`);
+            // Use single digit for Act folders (Act-1, Act-2, etc.)
+            const folderName = window.RokuganConfig.folderPattern === 'Act-' 
+                ? `${window.RokuganConfig.folderPattern}${i}`
+                : `${window.RokuganConfig.folderPattern}${i.toString().padStart(2, '0')}`;
+            sessionFolders.push(folderName);
         }
         
         // Load sessions in parallel for faster loading
