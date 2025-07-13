@@ -10,6 +10,7 @@ window.RokuganConfig = {
 
 class RokuganChronicles {
     constructor() {
+        console.log('RokuganChronicles constructor called');
         this.sessions = [];
         this.currentIndex = 0;
         this.container = null; // Will be set in init()
@@ -106,10 +107,11 @@ class RokuganChronicles {
         const dateLine = lines.find(line => 
             line.toLowerCase().includes('date:') || 
             line.toLowerCase().includes('date -') ||
-            line.toLowerCase().includes('date:')
+            line.toLowerCase().includes('date:') ||
+            line.toLowerCase().startsWith('date')
         );
         if (dateLine) {
-            result.date = dateLine.replace(/date[:\-]?\s*/i, '').trim();
+            result.date = dateLine.replace(/^date[:\-]?\s*/i, '').trim();
         }
         
         // Extract tagline (first bold text after date)
@@ -792,5 +794,6 @@ class RokuganChronicles {
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing RokuganChronicles');
     new RokuganChronicles();
 }); 
