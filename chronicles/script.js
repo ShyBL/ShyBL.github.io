@@ -282,7 +282,16 @@ class RokuganChronicles {
             <div class="detail-section">
                 <div class="detail-title">Characters</div>
                 <ul class="detail-list characters-list">
-                    ${session.characters.map(char => `<li><span class="character-link" data-char="${encodeURIComponent(char)}">${char}</span></li>`).join('')}
+                    ${session.characters.map(char => {
+                        const plainName = this.extractPlainName(char);
+                        const initials = this.getClanInitials(plainName);
+                        return `
+                            <li>
+                                <span class="clan-icon-btn" data-char="${encodeURIComponent(char)}">${this.getClanIcon(this.getClanName(plainName))}</span>
+                                <span class="character-name">${this.parseMarkdownText(char)}</span>
+                            </li>
+                        `;
+                    }).join('')}
                 </ul>
             </div>
         ` : '';
@@ -547,7 +556,7 @@ class RokuganChronicles {
 
     setupCharacterLinks() {
         document.addEventListener('click', async (e) => {
-            const characterLink = e.target.closest('.character-link');
+            const characterLink = e.target.closest('.clan-icon-btn');
             if (characterLink) {
                 const charName = decodeURIComponent(characterLink.dataset.char);
                 // Find the session for this character
@@ -564,7 +573,7 @@ class RokuganChronicles {
                         }
                     }
                 }
-                await this.showPortraitModal(charName, characterLink.textContent, sessionFolder);
+                await this.showPortraitModal(charName, this.parseMarkdownText(charName), sessionFolder);
             }
         });
     }
