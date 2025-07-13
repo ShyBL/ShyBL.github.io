@@ -189,7 +189,7 @@ class Portfolio {
         
         // Try to find screenshots (limit to 3 for faster loading)
         const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-        for (let i = 1; i <= 3; i++) {
+        for (let i = 1; i <= 4; i++) {
             for (const ext of imageExts) {
                 const imagePath = `${folder}/screenshot${i}.${ext}`;
                 if (await this.fileExists(imagePath)) {
