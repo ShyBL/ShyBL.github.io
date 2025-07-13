@@ -253,21 +253,21 @@ body {
 }
 
 .detail-list li::before {
-    content: '⚔️';
+    content: '🏯';
     position: absolute;
     left: 0;
     font-size: 0.8rem;
 }
 
 .locations-list li::before {
-    content: '🏯';
+    content: '⛩️';
     position: absolute;
     left: 0;
     font-size: 0.8rem
 }
 
 .key-events-list li::before {
-    content: '✨';
+    content: '⚔️';
     position: absolute;
     left: 0;
     font-size: 0.8rem
@@ -408,11 +408,6 @@ body {
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     background: #18181f;
-    color: #fff;
-    font-size: 2.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 .portrait-name {
     font-size: 1.4rem;
@@ -421,6 +416,31 @@ body {
     font-weight: bold;
     text-align: center;
 }
+
+.portrait-details {
+    text-align: center;
+    margin-top: 12px;
+    padding: 8px 12px;
+    background: rgba(212, 175, 55, 0.1);
+    border-radius: 8px;
+    border-left: 3px solid #D4AF37;
+    line-height: 1.4;
+}
+
+.character-trait {
+    font-size: 1.1rem;
+    color: #D4AF37;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.character-elements {
+    font-size: 1.2rem;
+    color: #fff;
+    font-weight: 500;
+}
+
 .portrait-title, .portrait-description, .clan-icon, .portrait-modal .close-hint {
     display: none !important;
 }

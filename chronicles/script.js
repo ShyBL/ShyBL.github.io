@@ -84,7 +84,7 @@ class RokuganChronicles {
 
     parseMarkdown(content) {
         const lines = content.split('\n');
-        const result = { characters: [], locations: [], keyEvents: [] };
+        const result = { characters: [], locations: [], keyEvents: [], characterDetails: [] };
         
         // Extract title
         const titleLine = lines.find(line => line.startsWith('# '));
@@ -136,6 +136,21 @@ class RokuganChronicles {
                 if (!line || line.startsWith('#')) break;
                 if (line.startsWith('- ')) {
                     result.characters.push(this.parseMarkdownText(line.replace('- ', '').trim()));
+                }
+            }
+        }
+        
+        // Extract character details
+        const characterDetailsStart = lines.findIndex(line => 
+            /^##?\s*(character details|character detail|character info|character information)/i.test(line)
+        );
+        
+        if (characterDetailsStart >= 0) {
+            for (let i = characterDetailsStart + 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line || line.startsWith('#')) break;
+                if (line.startsWith('- ')) {
+                    result.characterDetails.push(this.parseMarkdownText(line.replace('- ', '').trim()));
                 }
             }
         }
@@ -297,7 +312,7 @@ class RokuganChronicles {
                 <ul class="detail-list characters-list">
                     ${session.characters.map(char => {
                         const plainName = this.extractPlainName(char);
-                        const initials = this.getClanInitials(plainName);
+                        
                         return `
                             <li><span class="clan-icon-btn" data-char="${encodeURIComponent(char)}">${this.getClanIcon(this.getClanName(plainName, char))}</span> <span class="character-name">${this.parseMarkdownText(char)}</span></li>
                         `;
@@ -595,7 +610,21 @@ class RokuganChronicles {
         if (existingModal) existingModal.remove();
         // Extract plain name (strip markdown, remove role)
         const plainName = this.extractPlainName(charName);
-        const initials = this.getClanInitials(plainName);
+        
+        // Find character details from session data
+        let characterDetails = '';
+        if (sessionFolder && this.sessions) {
+            const session = this.sessions.find(s => s.folder === sessionFolder);
+            if (session && session.characterDetails) {
+                const detailEntry = session.characterDetails.find(detail => 
+                    detail.toLowerCase().includes(plainName.toLowerCase())
+                );
+                if (detailEntry) {
+                    characterDetails = detailEntry;
+                }
+            }
+        }
+        
         // Try to load portrait image
         let imageUrl = null;
         if (sessionFolder) {
@@ -609,6 +638,10 @@ class RokuganChronicles {
                 }
             }
         }
+        
+        // Parse character details for display
+        const parsedDetails = this.parseCharacterDetails(characterDetails);
+        
         // Create overlay and modal
         const overlay = document.createElement('div');
         overlay.className = 'portrait-modal-overlay';
@@ -616,9 +649,15 @@ class RokuganChronicles {
             <div class="portrait-modal">
                 ${imageUrl ?
                     `<img src="${imageUrl}" alt="Portrait of ${plainName}" class="portrait-avatar">`
-                    : `<div class="portrait-avatar"><div class="avatar-circle">${initials}</div></div>`
+                    : `<div class="portrait-avatar" style="background-color: ${this.getClanColor(this.getClanName(plainName, charName))};"></div>`
                 }
                 <div class="portrait-name">${this.parseMarkdownText(displayText)}</div>
+                ${parsedDetails ? `
+                    <div class="portrait-details">
+                        <div class="character-trait">${parsedDetails.trait}</div>
+                        <div class="character-elements">${parsedDetails.elements}</div>
+                    </div>
+                ` : ''}
             </div>
         `;
         document.body.appendChild(overlay);
@@ -639,51 +678,34 @@ class RokuganChronicles {
         return name;
     }
 
-    getClanInitials(plainName) {
-        const initialsMap = {
-            "Kakita Haruto": "KH",
-            "Hida Masa": "HM",
-            "Isawa Yuki": "IY",
-            "Bayushi Kage": "BK",
-            "Akodo Shin": "AS",
-            "Mirumoto Ryu": "MR"
-        };
-        return initialsMap[plainName] || (plainName.split(' ').map(w => w[0]).join('').toUpperCase());
-    }
-
     getClanName(plainName, originalChar) {
-        const clanMap = {
-            "Kakita Haruto": "Crane",
-            "Hida Masa": "Crab",
-            "Isawa Yuki": "Phoenix",
-            "Bayushi Kage": "Scorpion",
-            "Akodo Shin": "Lion",
-            "Mirumoto Ryu": "Dragon"
-        };
-        if (clanMap[plainName]) return clanMap[plainName];
+        // Define all known clans
+        const knownClans = ['Crane', 'Crab', 'Phoenix', 'Scorpion', 'Lion', 'Dragon', 'Mantis', 'Unicorn', 'Imperial'];
+        
         // Try to extract clan from the role (after dash)
         if (originalChar && originalChar.includes('-')) {
             const role = originalChar.split('-')[1].trim();
-            // Assume clan is the first word in the role
-            const clan = role.split(' ')[0];
-            // Only accept if it's a known clan
-            const knownClans = ['Crane','Crab','Phoenix','Scorpion','Lion','Dragon','Mantis','Unicorn','Imperial'];
-            if (knownClans.includes(clan)) return clan;
+            
+            // Search for clan keywords in the role text
+            for (const clan of knownClans) {
+                if (role.toLowerCase().includes(clan.toLowerCase())) {
+                    return clan;
+                }
+            }
         }
+        
         return "Unknown";
     }
 
-    getRole(plainName) {
-        const roleMap = {
-            "Kakita Haruto": "Crane Duelist",
-            "Hida Masa": "Crab Berserker",
-            "Isawa Yuki": "Phoenix Shugenja",
-            "Bayushi Kage": "Scorpion Courtier",
-            "Akodo Shin": "Lion Tactician",
-            "Mirumoto Ryu": "Dragon Swordsman"
-        };
-        return roleMap[plainName] || "Unknown Role";
+    getRole(plainName, originalChar) {
+        // Extract role from the original character string
+        if (originalChar && originalChar.includes('-')) {
+            return originalChar.split('-')[1].trim();
+        }
+        return "Unknown Role";
     }
+
+
 
     capitalize(str) {
         return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
@@ -700,9 +722,61 @@ class RokuganChronicles {
             'mantis': '🦗',
             'unicorn': '🦄',
             'imperial': '👑',
-            'default': '🎴'
+            'unknown': '🎴'
         };
-        return icons[clan.toLowerCase()] || icons['default'];
+        return icons[clan.toLowerCase()] || icons['unknown'];
+    }
+
+    getClanColor(clan) {
+        const colors = {
+            'crane': '#87CEEB',      // Light Blue
+            'crab': '#808080',       // Gray
+            'phoenix': '#FFA500',    // Orange
+            'scorpion': '#FF0000',   // Red
+            'lion': '#FFD700',       // Yellow/Gold
+            'dragon': '#32CD32',     // Green
+            'mantis': '#008080',     // Teal
+            'unicorn': '#800080',    // Purple
+            'imperial': '#50C878',   // Emerald Green
+            'unknown': '#D3D3D3'     // Light Gray
+        };
+        return colors[clan.toLowerCase()] || colors['unknown'];
+    }
+
+    getElementEmoji(element) {
+        const elementEmojis = {
+            'fire': '🟠',
+            'water': '🔵',
+            'earth': '🟤',
+            'air': '⚪',
+            'void': '⚫'
+        };
+        return elementEmojis[element.toLowerCase()] || element;
+    }
+
+    parseCharacterDetails(details) {
+        if (!details) return null;
+        
+        // Parse format: "Doji Shizua - Ambitious (+2 Fire, -2 Water)"
+        const match = details.match(/^(.+?)\s*-\s*([^(]+?)\s*\(([^)]+)\)$/);
+        if (!match) return null;
+        
+        const [, characterName, trait, elements] = match;
+        
+        // Parse elements: "+2 Fire, -2 Water"
+        const elementMatches = elements.match(/([+-]\d+)\s+(\w+)/g);
+        if (!elementMatches) return null;
+        
+        const formattedElements = elementMatches.map(match => {
+            const [, modifier, element] = match.match(/([+-]\d+)\s+(\w+)/);
+            const emoji = this.getElementEmoji(element);
+            return `${modifier} ${emoji}`;
+        }).join(' ');
+        
+        return {
+            trait: `<strong><em>${trait.trim()}</em></strong>`,
+            elements: formattedElements
+        };
     }
 }
 
