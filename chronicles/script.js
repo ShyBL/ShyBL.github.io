@@ -2,18 +2,23 @@ class RokuganChronicles {
     constructor() {
         this.sessions = [];
         this.currentIndex = 0;
-        this.init();
+        this.container = null; // Will be set in init()
+        this.characterClickHandler = null; // For cleanup
+        this.init().catch(error => {
+            console.error('Failed to initialize Chronicles of Rokugan:', error);
+        });
     }
 
     async init() {
         try {
-            const container = document.getElementById('session-container');
+            this.container = document.getElementById('session-container');
             await this.loadSessions();
             this.render();
             this.setupControls();
         } catch (error) {
             console.error('Chronicles initialization failed:', error);
-            this.showError('Failed to load chronicles');
+            const errorMessage = error.message || 'Failed to load chronicles';
+            this.showError(`Failed to load chronicles: ${errorMessage}`);
         }
     }
 
@@ -92,10 +97,14 @@ class RokuganChronicles {
             result.title = titleLine.replace('# ', '').trim();
         }
         
-        // Extract date
-        const dateLine = lines.find(line => line.toLowerCase().includes('date:'));
+        // Extract date - handle multiple date formats
+        const dateLine = lines.find(line => 
+            line.toLowerCase().includes('date:') || 
+            line.toLowerCase().includes('date -') ||
+            line.toLowerCase().includes('date:')
+        );
         if (dateLine) {
-            result.date = dateLine.replace(/date:\s*/i, '').trim();
+            result.date = dateLine.replace(/date[:\-]?\s*/i, '').trim();
         }
         
         // Extract tagline (first bold text after date)
@@ -227,7 +236,15 @@ class RokuganChronicles {
         return images;
     }
 
+    // Cache for file existence checks to improve performance
+    fileExistsCache = new Map();
+
     async fileExists(path) {
+        // Check cache first
+        if (this.fileExistsCache.has(path)) {
+            return this.fileExistsCache.get(path);
+        }
+
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 1000); // 1 second timeout
@@ -238,8 +255,14 @@ class RokuganChronicles {
             });
             
             clearTimeout(timeoutId);
-            return response.ok;
+            const exists = response.ok;
+            
+            // Cache the result
+            this.fileExistsCache.set(path, exists);
+            return exists;
         } catch (error) {
+            // Cache negative results too
+            this.fileExistsCache.set(path, false);
             return false;
         }
     }
@@ -286,14 +309,12 @@ class RokuganChronicles {
     }
 
     render() {
-        const container = document.getElementById('session-container');
-        
         if (this.sessions.length === 0) {
-            container.innerHTML = '<div class="error">No chronicles found</div>';
+            this.container.innerHTML = '<div class="error">No chronicles found</div>';
             return;
         }
 
-        container.innerHTML = `
+        this.container.innerHTML = `
             <div class="session-carousel">
                 <div class="session-track" id="session-track">
                     ${this.sessions.map(session => this.renderSession(session)).join('')}
@@ -314,7 +335,7 @@ class RokuganChronicles {
                         const plainName = this.extractPlainName(char);
                         
                         return `
-                            <li><span class="clan-icon-btn" data-char="${encodeURIComponent(char)}">${this.getClanIcon(this.getClanName(plainName, char))}</span> <span class="character-name">${this.parseMarkdownText(char)}</span></li>
+                            <li><span class="clan-icon-btn" data-char="${encodeURIComponent(char)}">${this.getClanIcon(this.getClanName(char))}</span> <span class="character-name">${this.parseMarkdownText(char)}</span></li>
                         `;
                     }).join('')}
                 </ul>
@@ -544,9 +565,9 @@ class RokuganChronicles {
             }
         };
 
-        carousel.addEventListener('touchstart', handleTouchStart, { passive: false });
+        carousel.addEventListener('touchstart', handleTouchStart, { passive: true });
         carousel.addEventListener('touchmove', handleTouchMove, { passive: false });
-        carousel.addEventListener('touchend', handleTouchEnd, { passive: false });
+        carousel.addEventListener('touchend', handleTouchEnd, { passive: true });
     }
 
     goToPrevious() {
@@ -576,12 +597,12 @@ class RokuganChronicles {
     }
 
     showError(message) {
-        const container = document.getElementById('session-container');
-        container.innerHTML = `<div class="error">${message}</div>`;
+        this.container.innerHTML = `<div class="error">${message}</div>`;
     }
 
     setupCharacterLinks() {
-        document.addEventListener('click', async (e) => {
+        // Store reference for potential cleanup
+        this.characterClickHandler = async (e) => {
             const characterLink = e.target.closest('.clan-icon-btn');
             if (characterLink) {
                 const charName = decodeURIComponent(characterLink.dataset.char);
@@ -601,7 +622,8 @@ class RokuganChronicles {
                 }
                 await this.showPortraitModal(charName, this.parseMarkdownText(charName), sessionFolder);
             }
-        });
+        };
+        document.addEventListener('click', this.characterClickHandler);
     }
 
     async showPortraitModal(charName, displayText, sessionFolder) {
@@ -649,7 +671,7 @@ class RokuganChronicles {
             <div class="portrait-modal">
                 ${imageUrl ?
                     `<img src="${imageUrl}" alt="Portrait of ${plainName}" class="portrait-avatar">`
-                    : `<div class="portrait-avatar" style="background-color: ${this.getClanColor(this.getClanName(plainName, charName))};"></div>`
+                    : `<div class="portrait-avatar" style="background-color: ${this.getClanColor(this.getClanName(charName))};"></div>`
                 }
                 <div class="portrait-name">${this.parseMarkdownText(displayText)}</div>
                 ${parsedDetails ? `
@@ -674,23 +696,28 @@ class RokuganChronicles {
         let name = text.replace(/<[^>]+>/g, '');
         name = name.replace(/\*\*(.*?)\*\*/g, '$1');
         name = name.replace(/\*(.*?)\*/g, '$1');
-        name = name.split('-')[0].trim();
-        return name;
+        
+        // Handle edge cases where there might be no dash
+        if (name.includes('-')) {
+            name = name.split('-')[0].trim();
+        }
+        
+        // Handle empty or whitespace-only names
+        if (!name || name.trim() === '') {
+            return 'Unknown Character';
+        }
+        
+        return name.trim();
     }
 
-    getClanName(plainName, originalChar) {
+    getClanName(originalChar) {
         // Define all known clans
         const knownClans = ['Crane', 'Crab', 'Phoenix', 'Scorpion', 'Lion', 'Dragon', 'Mantis', 'Unicorn', 'Imperial'];
         
-        // Try to extract clan from the role (after dash)
-        if (originalChar && originalChar.includes('-')) {
-            const role = originalChar.split('-')[1].trim();
-            
-            // Search for clan keywords in the role text
-            for (const clan of knownClans) {
-                if (role.toLowerCase().includes(clan.toLowerCase())) {
-                    return clan;
-                }
+        // Search for clan keywords in the entire character string
+        for (const clan of knownClans) {
+            if (originalChar.toLowerCase().includes(clan.toLowerCase())) {
+                return clan;
             }
         }
         

@@ -9,6 +9,12 @@
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --gold: #D4AF37;
     --red: #8B0000;
+    --error-color: #ff6b6b;
+    --modal-bg: #23232b;
+    --modal-overlay: rgba(20, 20, 30, 0.92);
+    --loading-spinner-size: 4rem;
+    --avatar-size: 120px;
+    --avatar-size-mobile: 90px;
 }
 
 * {
@@ -62,6 +68,7 @@ body {
     box-shadow: var(--shadow-heavy);
     background: var(--card-bg);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     margin-bottom: 2rem;
 }
 
@@ -104,6 +111,7 @@ body {
     object-fit: cover;
     opacity: 0;
     transition: opacity 0.5s ease;
+    will-change: opacity;
 }
 
 .screenshot.active {
@@ -261,16 +269,10 @@ body {
 
 .locations-list li::before {
     content: '⛩️';
-    position: absolute;
-    left: 0;
-    font-size: 0.8rem
 }
 
 .key-events-list li::before {
     content: '⚔️';
-    position: absolute;
-    left: 0;
-    font-size: 0.8rem
 }
 
 .navigation {
@@ -334,8 +336,8 @@ body {
 }
 
 .loading-spinner {
-    width: 4rem;
-    height: 4rem;
+    width: var(--loading-spinner-size);
+    height: var(--loading-spinner-size);
     border: 0.25rem solid rgba(212, 175, 55, 0.2);
     border-top: 0.25rem solid var(--gold);
     border-radius: 50%;
@@ -358,15 +360,16 @@ body {
 .error {
     text-align: center;
     padding: 3rem;
-    color: #ff6b6b;
+    color: var(--error-color);
     font-size: 1.2rem;
 }
 
 /* Floating portrait modal overlay */
+/* ===== MODAL STYLES ===== */
 .portrait-modal-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(20, 20, 30, 0.92); /* More opaque */
+    background: var(--modal-overlay);
     z-index: 1000;
     display: flex;
     align-items: center;
@@ -379,7 +382,7 @@ body {
     pointer-events: none;
 }
 .portrait-modal {
-    background: #23232b; /* Solid, dark background */
+    background: var(--modal-bg);
     border-radius: 18px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.45);
     border: 1.5px solid rgba(212, 175, 55, 0.3);
@@ -398,8 +401,8 @@ body {
     to   { transform: scale(1) translateY(0); opacity: 1; }
 }
 .portrait-avatar {
-    width: 120px;
-    height: 120px;
+    width: var(--avatar-size);
+    height: var(--avatar-size);
     border-radius: 50%;
     border: 4px solid #D4AF37;
     object-fit: cover;
@@ -450,8 +453,8 @@ body {
         padding: 1.2rem 0.5rem 1.5rem 0.5rem;
     }
     .portrait-avatar {
-        width: 90px;
-        height: 90px;
+        width: var(--avatar-size-mobile);
+        height: var(--avatar-size-mobile);
         font-size: 1.4rem;
     }
 }
@@ -503,7 +506,34 @@ body {
     }
 } 
 
+/* ===== CHARACTER STYLES ===== */
 .characters-list {
     list-style: none;
     padding-left: 0;
+}
+
+.clan-icon-btn {
+    display: inline-block;
+    font-size: 1.2rem;
+    margin-right: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 4px 6px;
+    border-radius: 6px;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
+    will-change: transform;
+}
+
+.clan-icon-btn:hover {
+    transform: scale(1.2);
+    background: rgba(212, 175, 55, 0.2);
+    border-color: #D4AF37;
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
+}
+
+.character-name {
+    color: var(--text-secondary);
+    font-weight: 500;
 } 
