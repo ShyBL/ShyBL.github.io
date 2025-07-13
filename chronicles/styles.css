@@ -249,10 +249,6 @@ body {
     font-size: 0.8rem;
 }
 
-.characters-list li::before {
-    content: '👤';
-}
-
 .locations-list li::before {
     content: '🏯';
 }
@@ -350,7 +346,7 @@ body {
 .portrait-modal-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(20, 20, 30, 0.75);
+    background: rgba(20, 20, 30, 0.92); /* More opaque */
     z-index: 1000;
     display: flex;
     align-items: center;
@@ -363,7 +359,7 @@ body {
     pointer-events: none;
 }
 .portrait-modal {
-    background: rgba(255,255,255,0.12);
+    background: #23232b; /* Solid, dark background */
     border-radius: 18px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.45);
     border: 1.5px solid rgba(212, 175, 55, 0.3);
@@ -391,44 +387,22 @@ body {
     display: block;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-.portrait-modal:hover .portrait-avatar {
-    border-color: #FFD700;
-    box-shadow: 0 6px 25px rgba(212, 175, 55, 0.4);
+    background: #18181f;
+    color: #fff;
+    font-size: 2.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .portrait-name {
     font-size: 1.4rem;
-    color: #D4AF37;
+    color: #fff;
     margin-bottom: 8px;
     font-weight: bold;
     text-align: center;
 }
-.portrait-title {
-    font-size: 1rem;
-    margin-bottom: 12px;
-    font-style: italic;
-    text-align: center;
-}
-.portrait-description {
-    font-size: 0.98rem;
-    line-height: 1.5;
-    opacity: 0.92;
-    text-align: center;
-    margin-bottom: 10px;
-}
-.clan-icon {
-    display: inline-block;
-    font-size: 1.8rem;
-    margin-top: 10px;
-    transition: all 0.3s ease;
-    text-align: center;
-}
-.portrait-modal .close-hint {
-    font-size: 0.95rem;
-    color: #fff;
-    opacity: 0.7;
-    margin-top: 18px;
-    text-align: center;
+.portrait-title, .portrait-description, .clan-icon, .portrait-modal .close-hint {
+    display: none !important;
 }
 @media (max-width: 600px) {
     .portrait-modal {
@@ -438,6 +412,7 @@ body {
     .portrait-avatar {
         width: 90px;
         height: 90px;
+        font-size: 1.4rem;
     }
 }
 
@@ -486,4 +461,9 @@ body {
     .detail-section {
         padding: 0.75rem;
     }
+} 
+
+.characters-list {
+    list-style: none;
+    padding-left: 0;
 } 

@@ -286,10 +286,7 @@ class RokuganChronicles {
                         const plainName = this.extractPlainName(char);
                         const initials = this.getClanInitials(plainName);
                         return `
-                            <li>
-                                <span class="clan-icon-btn" data-char="${encodeURIComponent(char)}">${this.getClanIcon(this.getClanName(plainName))}</span>
-                                <span class="character-name">${this.parseMarkdownText(char)}</span>
-                            </li>
+                            <li><span class="clan-icon-btn" data-char="${encodeURIComponent(char)}">${this.getClanIcon(this.getClanName(plainName))}</span> <span class="character-name">${this.parseMarkdownText(char)}</span></li>
                         `;
                     }).join('')}
                 </ul>
@@ -585,8 +582,6 @@ class RokuganChronicles {
         // Extract plain name (strip markdown, remove role)
         const plainName = this.extractPlainName(charName);
         const initials = this.getClanInitials(plainName);
-        const clan = this.getClanName(plainName);
-        const role = this.getRole(plainName);
         // Try to load portrait image
         let imageUrl = null;
         if (sessionFolder) {
@@ -610,10 +605,6 @@ class RokuganChronicles {
                     : `<div class="portrait-avatar"><div class="avatar-circle">${initials}</div></div>`
                 }
                 <div class="portrait-name">${this.parseMarkdownText(displayText)}</div>
-                <div class="portrait-title">${clan ? this.capitalize(clan) + ' Clan' : ''}</div>
-                <div class="portrait-description">${role}</div>
-                <div class="clan-icon">${this.getClanIcon(clan)}</div>
-                <div class="close-hint">Click the portrait or background to close</div>
             </div>
         `;
         document.body.appendChild(overlay);
