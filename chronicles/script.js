@@ -138,7 +138,10 @@ class RokuganChronicles {
                     summaryLines.push(line);
                 }
             }
-            result.summary = this.parseMarkdownText(summaryLines.join('\n').trim());
+            let summary = summaryLines.join('\n').trim();
+            // Clean up HTML tags like <br><br>
+            summary = summary.replace(/<br\s*\/?>/gi, ' ');
+            result.summary = this.parseMarkdownText(summary);
         }
         
         // Extract characters
