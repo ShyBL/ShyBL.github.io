@@ -34,14 +34,19 @@ class Portfolio {
         // Project folders - update this array with your actual project names
         const projectFolders = ['Beat-Em-Up Across The Globe', 'Underneath'];
         
-        for (const folder of projectFolders) {
+        // Load projects in parallel for faster loading
+        const projectPromises = projectFolders.map(async (folder) => {
             try {
                 const project = await this.loadProject(folder);
-                if (project) this.projects.push(project);
+                return project;
             } catch (error) {
                 console.warn(`Failed to load project ${folder}:`, error);
+                return null;
             }
-        }
+        });
+
+        const projects = await Promise.all(projectPromises);
+        this.projects = projects.filter(project => project !== null);
 
         // Fallback to demo projects if none found
         if (this.projects.length === 0) {
@@ -182,9 +187,9 @@ class Portfolio {
             }
         }
         
-        // Try to find screenshots
+        // Try to find screenshots (limit to 3 for faster loading)
         const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-        for (let i = 1; i <= 5; i++) {
+        for (let i = 1; i <= 3; i++) {
             for (const ext of imageExts) {
                 const imagePath = `${folder}/screenshot${i}.${ext}`;
                 if (await this.fileExists(imagePath)) {
@@ -199,7 +204,15 @@ class Portfolio {
 
     async fileExists(path) {
         try {
-            const response = await fetch(path, { method: 'HEAD' });
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 1000); // 1 second timeout
+            
+            const response = await fetch(path, { 
+                method: 'HEAD',
+                signal: controller.signal
+            });
+            
+            clearTimeout(timeoutId);
             return response.ok;
         } catch (error) {
             return false;

@@ -19,16 +19,24 @@ class RokuganChronicles {
 
     async loadSessions() {
         // Session folders - update this array with your actual session names
-        const sessionFolders = ['Session-01', 'Session-02', 'Session-03'];
+        const sessionFolders = [
+            'Session-01', 'Session-02', 'Session-03', 'Session-04', 'Session-05',
+            'Session-06', 'Session-07', 'Session-08', 'Session-09', 'Session-10'
+        ];
         
-        for (const folder of sessionFolders) {
+        // Load sessions in parallel for faster loading
+        const sessionPromises = sessionFolders.map(async (folder) => {
             try {
                 const session = await this.loadSession(folder);
-                if (session) this.sessions.push(session);
+                return session;
             } catch (error) {
                 console.warn(`Failed to load session ${folder}:`, error);
+                return null;
             }
-        }
+        });
+
+        const sessions = await Promise.all(sessionPromises);
+        this.sessions = sessions.filter(session => session !== null);
 
         // Fallback to demo sessions if none found
         if (this.sessions.length === 0) {
@@ -166,8 +174,8 @@ class RokuganChronicles {
         const images = [];
         const imageExts = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
         
-        // Try numbered images first
-        for (let i = 1; i <= 10; i++) {
+        // Try numbered images first (limit to 5 for faster loading)
+        for (let i = 1; i <= 5; i++) {
             for (const ext of imageExts) {
                 const imagePath = `${folder}/${i}.${ext}`;
                 if (await this.fileExists(imagePath)) {
@@ -177,9 +185,9 @@ class RokuganChronicles {
             }
         }
         
-        // If no numbered images, try common names
+        // If no numbered images, try common names (limit to 3)
         if (images.length === 0) {
-            const commonNames = ['image1', 'image2', 'image3', 'screenshot1', 'screenshot2', 'photo1', 'photo2'];
+            const commonNames = ['image1', 'screenshot1', 'photo1'];
             for (const name of commonNames) {
                 for (const ext of imageExts) {
                     const imagePath = `${folder}/${name}.${ext}`;
@@ -196,7 +204,15 @@ class RokuganChronicles {
 
     async fileExists(path) {
         try {
-            const response = await fetch(path, { method: 'HEAD' });
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 1000); // 1 second timeout
+            
+            const response = await fetch(path, { 
+                method: 'HEAD',
+                signal: controller.signal
+            });
+            
+            clearTimeout(timeoutId);
             return response.ok;
         } catch (error) {
             return false;
