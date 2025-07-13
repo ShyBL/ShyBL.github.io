@@ -2,7 +2,9 @@
 
 Date: March 6, 2024
 
-The characters return to Crane lands to investigate a scandal that threatens to destroy the Crane Clan's reputation. As they navigate the complex world of court politics, they must decide what honor truly means.
+**The characters return to Crane lands to investigate a scandal that threatens to destroy the Crane Clan's reputation.**
+
+As they navigate the complex world of court politics, they must decide what honor truly means. The Crane Clan's commitment to beauty, art, and honor is put to the test as the characters uncover a web of deception that could shatter the clan's standing in the Empire.
 
 ## Characters
 - Kakita Haruto - Crane Duelist

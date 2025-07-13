@@ -98,16 +98,26 @@ class RokuganChronicles {
             result.date = dateLine.replace(/date:\s*/i, '').trim();
         }
         
-        // Extract summary (first paragraph after title)
+        // Extract tagline (first bold text after date)
+        const taglineStart = lines.findIndex(line => 
+            line.trim() && !line.startsWith('#') && !line.toLowerCase().includes('date:') && line.includes('**')
+        );
+        
+        if (taglineStart >= 0) {
+            const taglineLine = lines[taglineStart].trim();
+            result.tagline = this.parseMarkdownText(taglineLine);
+        }
+        
+        // Extract summary (text after tagline, before first ## header)
         const summaryStart = lines.findIndex(line => 
-            line.trim() && !line.startsWith('#') && !line.toLowerCase().includes('date:')
+            line.trim() && !line.startsWith('#') && !line.toLowerCase().includes('date:') && !line.includes('**')
         );
         
         if (summaryStart >= 0) {
             const summaryLines = [];
             for (let i = summaryStart; i < lines.length; i++) {
                 const line = lines[i].trim();
-                if (line.startsWith('##') || line.startsWith('###')) break;
+                if (line.startsWith('##')) break;
                 if (line || summaryLines.length > 0) {
                     summaryLines.push(line);
                 }
@@ -230,7 +240,8 @@ class RokuganChronicles {
             {
                 title: "The Jade Magistrate's Arrival",
                 date: "Winter Court, 1158",
-                summary: "The characters arrive at the provincial capital as representatives of their clans. A mysterious death at the governor's estate sets the stage for intrigue and investigation. Honor and duty clash as the samurai must navigate the treacherous waters of court politics while seeking the truth behind the murder.",
+                tagline: "**The characters arrive at the provincial capital as representatives of their clans.**",
+                summary: "A mysterious death at the governor's estate sets the stage for intrigue and investigation. Honor and duty clash as the samurai must navigate the treacherous waters of court politics while seeking the truth behind the murder.",
                 characters: ["Kakita Haruto - Crane Duelist", "Hida Masa - Crab Berserker", "Isawa Yuki - Phoenix Shugenja", "Bayushi Kage - Scorpion Courtier"],
                 locations: ["Governor's Estate", "Temple of the Seven Fortunes", "Sake House of the Floating Lily"],
                 keyEvents: ["Arrival ceremony disrupted", "Discovery of the poisoned tea", "Midnight duel in the garden", "Interrogation of the servants"],
@@ -239,7 +250,8 @@ class RokuganChronicles {
             {
                 title: "Shadows in the Bamboo Grove",
                 date: "Early Spring, 1158",
-                summary: "Following leads from the previous investigation, the characters venture into the mysterious bamboo grove where local peasants report strange lights and whispered voices. Ancient spirits and hidden bandits threaten the peace of the land, forcing the samurai to confront both supernatural and mundane dangers.",
+                tagline: "**Following leads from the previous investigation, the characters venture into the mysterious bamboo grove.**",
+                summary: "Ancient spirits and hidden bandits threaten the peace of the land, forcing the samurai to confront both supernatural and mundane dangers. Local peasants report strange lights and whispered voices that lead to a deeper mystery.",
                 characters: ["Kakita Haruto - Crane Duelist", "Hida Masa - Crab Berserker", "Isawa Yuki - Phoenix Shugenja", "Bayushi Kage - Scorpion Courtier", "Akodo Shin - Lion Tactician"],
                 locations: ["Whispering Bamboo Grove", "Abandoned Shrine of Inari", "Bandit Cave Network", "Village of Peaceful Waters"],
                 keyEvents: ["Encounter with the Fox Spirit", "Ambush by masterless ronin", "Purification ritual at dawn", "Discovery of the smuggling operation"],
@@ -248,7 +260,8 @@ class RokuganChronicles {
             {
                 title: "The Emperor's Tournament",
                 date: "Late Spring, 1158",
-                summary: "The characters are invited to participate in a grand tournament held in honor of the Emperor's birthday. But beneath the pageantry and competition lies a web of clan politics and hidden agendas. As the tournament progresses, it becomes clear that more than just honor is at stake.",
+                tagline: "**The characters are invited to participate in a grand tournament held in honor of the Emperor's birthday.**",
+                summary: "But beneath the pageantry and competition lies a web of clan politics and hidden agendas. As the tournament progresses, it becomes clear that more than just honor is at stake.",
                 characters: ["Kakita Haruto - Crane Duelist", "Hida Masa - Crab Berserker", "Isawa Yuki - Phoenix Shugenja", "Bayushi Kage - Scorpion Courtier", "Akodo Shin - Lion Tactician", "Mirumoto Ryu - Dragon Swordsman"],
                 locations: ["Imperial Tournament Grounds", "Pavilion of the Clans", "Gardens of Contemplation", "The Emperor's Viewing Platform"],
                 keyEvents: ["Opening ceremony blessing", "Haruto's victory in the dueling competition", "Midnight conspiracy meeting", "The Emperor's final judgment"],
@@ -320,6 +333,7 @@ class RokuganChronicles {
                         <div class="session-date">${session.date}</div>
                     </div>
                     <div class="content-grid">
+                        ${session.tagline ? `<div class="session-tagline">${session.tagline}</div>` : ''}
                         <div class="session-summary">
                             ${session.summary}
                         </div>

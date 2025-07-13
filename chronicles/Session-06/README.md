@@ -2,7 +2,9 @@
 
 Date: January 24, 2024
 
-The characters are called to the Wall to assist the Crab Clan in defending against a massive Shadowlands incursion. But the real threat may not be from the creatures beyond the Wall, but from within the ranks of the defenders themselves.
+**The characters are called to the Wall to assist the Crab Clan in defending against a massive Shadowlands incursion.**
+
+But the real threat may not be from the creatures beyond the Wall, but from within the ranks of the defenders themselves. The characters must balance their duty to protect the Empire with the need to uncover the truth about what's really happening at the Wall.
 
 ## Characters
 - Kakita Haruto - Crane Duelist

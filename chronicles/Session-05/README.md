@@ -2,7 +2,9 @@
 
 Date: January 10, 2024
 
-The characters are summoned to the Dragon Mountains to investigate rumors of ancient knowledge being uncovered. What they find there challenges everything they thought they knew about honor, duty, and the nature of power itself.
+**The characters are summoned to the Dragon Mountains to investigate rumors of ancient knowledge being uncovered.**
+
+What they find there challenges everything they thought they knew about honor, duty, and the nature of power itself. The Dragon Clan's mysterious ways and ancient wisdom force the characters to question their own beliefs and the very foundations of their society.
 
 ## Characters
 - Kakita Haruto - Crane Duelist

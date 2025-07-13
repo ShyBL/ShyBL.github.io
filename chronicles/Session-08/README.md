@@ -2,7 +2,9 @@
 
 Date: February 21, 2024
 
-The characters are called to the Lion lands to investigate a series of mysterious deaths among the Lion's military leadership. As they dig deeper, they uncover a conspiracy that threatens to tear the Lion Clan apart from within.
+**The characters are called to the Lion lands to investigate a series of mysterious deaths among the Lion's military leadership.**
+
+As they dig deeper, they uncover a conspiracy that threatens to tear the Lion Clan apart from within. The characters must navigate the complex politics of the Lion Clan while uncovering the truth behind the deaths and preventing a civil war.
 
 ## Characters
 - Kakita Haruto - Crane Duelist

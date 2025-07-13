@@ -2,7 +2,9 @@
 
 Date: March 20, 2024
 
-The characters are summoned to the Imperial Court to face the Emperor's judgment for their actions throughout the year. But this is no simple trial - the fate of the entire Empire hangs in the balance as ancient prophecies come to fruition.
+**The characters are summoned to the Imperial Court to face the Emperor's judgment for their actions throughout the year.**
+
+But this is no simple trial - the fate of the entire Empire hangs in the balance as ancient prophecies come to fruition. The characters must present their case before the most powerful figure in Rokugan, knowing that their words and actions will determine not just their own fate, but the future of the entire Empire.
 
 ## Characters
 - Kakita Haruto - Crane Duelist

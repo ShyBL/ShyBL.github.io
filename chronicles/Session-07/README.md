@@ -2,7 +2,9 @@
 
 Date: February 7, 2024
 
-The characters travel to the Phoenix lands to investigate reports of strange magical phenomena. What they discover there could either save the Empire or destroy it, as ancient elemental forces are awakening.
+**The characters travel to the Phoenix lands to investigate reports of strange magical phenomena.**
+
+What they discover there could either save the Empire or destroy it, as ancient elemental forces are awakening. The Phoenix Clan's deep connection to the elemental spirits puts them at the center of a conflict that could reshape the very nature of magic in Rokugan.
 
 ## Characters
 - Kakita Haruto - Crane Duelist

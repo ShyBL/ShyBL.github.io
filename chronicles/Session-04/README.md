@@ -2,7 +2,9 @@
 
 Date: December 27, 2023
 
-A series of mysterious disappearances in the capital leads the characters into a complex web of Scorpion intrigue. As they investigate, they discover that the Scorpion Clan is not the only player in this dangerous game, and the stakes are higher than anyone imagined.
+**A series of mysterious disappearances in the capital leads the characters into a complex web of Scorpion intrigue.**
+
+As they investigate, they discover that the Scorpion Clan is not the only player in this dangerous game, and the stakes are higher than anyone imagined. The characters must navigate a treacherous landscape of deception and betrayal, where every ally could be an enemy and every truth could be a lie.
 
 ## Characters
 - Kakita Haruto - Crane Duelist
