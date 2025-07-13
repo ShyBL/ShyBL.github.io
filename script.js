@@ -111,7 +111,7 @@ class Portfolio {
                 }
             }
             // Join with double spaces to preserve paragraph breaks
-            result.description = descriptionLines.join('  ').trim();
+            result.description = this.parseMarkdownText(descriptionLines.join('  ').trim());
         }
         
         // Extract technologies
@@ -124,7 +124,7 @@ class Portfolio {
                 const line = lines[i].trim();
                 if (!line || line.startsWith('#')) break;
                 if (line.startsWith('- ')) {
-                    result.technologies.push(line.replace('- ', '').trim());
+                    result.technologies.push(this.parseMarkdownText(line.replace('- ', '').trim()));
                 }
             }
         }
@@ -139,7 +139,7 @@ class Portfolio {
                 const line = lines[i].trim();
                 if (!line || line.startsWith('#')) break;
                 if (line.startsWith('- ')) {
-                    result.keyFeatures.push(line.replace('- ', '').trim());
+                    result.keyFeatures.push(this.parseMarkdownText(line.replace('- ', '').trim()));
                 }
             }
         }
@@ -154,12 +154,19 @@ class Portfolio {
                 const line = lines[i].trim();
                 if (!line || line.startsWith('#')) break;
                 if (line.startsWith('- ')) {
-                    result.team.push(line.replace('- ', '').trim());
+                    result.team.push(this.parseMarkdownText(line.replace('- ', '').trim()));
                 }
             }
         }
         
         return result;
+    }
+
+    parseMarkdownText(text) {
+        return text
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/`(.*?)`/g, '<code>$1</code>');
     }
 
     async loadMedia(folder) {

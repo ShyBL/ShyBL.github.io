@@ -104,7 +104,7 @@ class RokuganChronicles {
                     summaryLines.push(line);
                 }
             }
-            result.summary = summaryLines.join('\n').trim();
+            result.summary = this.parseMarkdownText(summaryLines.join('\n').trim());
         }
         
         // Extract characters
@@ -117,7 +117,7 @@ class RokuganChronicles {
                 const line = lines[i].trim();
                 if (!line || line.startsWith('#')) break;
                 if (line.startsWith('- ')) {
-                    result.characters.push(line.replace('- ', '').trim());
+                    result.characters.push(this.parseMarkdownText(line.replace('- ', '').trim()));
                 }
             }
         }
@@ -147,12 +147,19 @@ class RokuganChronicles {
                 const line = lines[i].trim();
                 if (!line || line.startsWith('#')) break;
                 if (line.startsWith('- ')) {
-                    result.keyEvents.push(line.replace('- ', '').trim());
+                    result.keyEvents.push(this.parseMarkdownText(line.replace('- ', '').trim()));
                 }
             }
         }
         
         return result;
+    }
+
+    parseMarkdownText(text) {
+        return text
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/`(.*?)`/g, '<code>$1</code>');
     }
 
     async loadImages(folder) {
