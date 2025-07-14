@@ -1,4 +1,4 @@
-// Chronicles - robust, portfolio-style implementation
+// Chronicles - robust, portfolio-style implementation with full features
 
 class Chronicles {
     constructor() {
@@ -8,6 +8,7 @@ class Chronicles {
             'Session-01', 'Session-02', 'Session-03', 'Session-04', 'Session-05',
             'Session-06', 'Session-07', 'Session-08', 'Session-09', 'Session-10'
         ];
+        this.characterClickHandler = null;
         this.init();
     }
 
@@ -33,10 +34,12 @@ class Chronicles {
         const session = {
             folder,
             title: this.formatTitle(folder),
+            date: 'Date Unknown',
             summary: 'Session summary not found.',
             characters: [],
             locations: [],
             keyEvents: [],
+            characterDetails: [],
             images: []
         };
         try {
@@ -46,7 +49,7 @@ class Chronicles {
                 Object.assign(session, parsed);
             }
         } catch (error) {
-            // No README, use placeholders
+            console.warn(`No README found for ${folder}`);
         }
         session.images = await this.loadImages(folder);
         return session;
@@ -63,41 +66,124 @@ class Chronicles {
 
     parseMarkdown(content) {
         const lines = content.split('\n');
-        const result = { characters: [], locations: [], keyEvents: [] };
-        // Title
+        const result = { characters: [], locations: [], keyEvents: [], characterDetails: [] };
+        
+        // Extract title
         const titleLine = lines.find(line => line.startsWith('# '));
-        if (titleLine) result.title = titleLine.replace('# ', '').trim();
-        // Summary (first bold or paragraph after title)
-        const summaryLine = lines.find(line => line.startsWith('**'));
-        if (summaryLine) result.summary = summaryLine.replace(/\*\*/g, '').trim();
-        // Characters
-        const charStart = lines.findIndex(line => /^##?\s*Characters/i.test(line));
-        if (charStart >= 0) {
-            for (let i = charStart + 1; i < lines.length; i++) {
+        if (titleLine) {
+            result.title = titleLine.replace('# ', '').trim();
+        }
+        
+        // Extract date - handle multiple date formats
+        const dateLine = lines.find(line => 
+            line.toLowerCase().includes('date:') || 
+            line.toLowerCase().includes('date -') ||
+            line.toLowerCase().includes('date:') ||
+            line.toLowerCase().startsWith('date')
+        );
+        if (dateLine) {
+            result.date = dateLine.replace(/^date[:\-]?\s*/i, '').trim();
+        }
+        
+        // Extract tagline (first bold text after date)
+        const taglineStart = lines.findIndex(line => 
+            line.trim() && !line.startsWith('#') && !line.toLowerCase().includes('date:') && line.includes('**')
+        );
+        
+        if (taglineStart >= 0) {
+            const taglineLine = lines[taglineStart].trim();
+            result.tagline = this.parseMarkdownText(taglineLine);
+        }
+        
+        // Extract summary (text after tagline, before first ## header)
+        const summaryStart = lines.findIndex(line => 
+            line.trim() && !line.startsWith('#') && !line.toLowerCase().includes('date:') && !line.includes('**')
+        );
+        
+        if (summaryStart >= 0) {
+            const summaryLines = [];
+            for (let i = summaryStart; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (line.startsWith('##')) break;
+                if (line || summaryLines.length > 0) {
+                    summaryLines.push(line);
+                }
+            }
+            let summary = summaryLines.join('\n').trim();
+            // Clean up HTML tags like <br><br>
+            summary = summary.replace(/<br\s*\/?>/gi, ' ');
+            result.summary = this.parseMarkdownText(summary);
+        }
+        
+        // Extract characters
+        const charactersStart = lines.findIndex(line => 
+            /^##?\s*(characters|cast|players)/i.test(line)
+        );
+        
+        if (charactersStart >= 0) {
+            for (let i = charactersStart + 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line || line.startsWith('#')) break;
-                if (line.startsWith('- ')) result.characters.push(line.replace('- ', ''));
+                if (line.startsWith('- ')) {
+                    result.characters.push(this.parseMarkdownText(line.replace('- ', '').trim()));
+                }
             }
         }
-        // Locations
-        const locStart = lines.findIndex(line => /^##?\s*Locations/i.test(line));
-        if (locStart >= 0) {
-            for (let i = locStart + 1; i < lines.length; i++) {
+        
+        // Extract character details
+        const characterDetailsStart = lines.findIndex(line => 
+            /^##?\s*(character details|character detail|character info|character information)/i.test(line)
+        );
+        
+        if (characterDetailsStart >= 0) {
+            for (let i = characterDetailsStart + 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line || line.startsWith('#')) break;
-                if (line.startsWith('- ')) result.locations.push(line.replace('- ', ''));
+                if (line.startsWith('- ')) {
+                    result.characterDetails.push(this.parseMarkdownText(line.replace('- ', '').trim()));
+                }
             }
         }
-        // Key Events
-        const eventStart = lines.findIndex(line => /^##?\s*Key Events/i.test(line));
-        if (eventStart >= 0) {
-            for (let i = eventStart + 1; i < lines.length; i++) {
+        
+        // Extract locations
+        const locationsStart = lines.findIndex(line => 
+            /^##?\s*(locations|places|settings)/i.test(line)
+        );
+        
+        if (locationsStart >= 0) {
+            for (let i = locationsStart + 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line || line.startsWith('#')) break;
-                if (line.startsWith('- ')) result.keyEvents.push(line.replace('- ', ''));
+                if (line.startsWith('- ')) {
+                    result.locations.push(line.replace('- ', '').trim());
+                }
             }
         }
+        
+        // Extract key events
+        const eventsStart = lines.findIndex(line => 
+            /^##?\s*(key events|events|highlights|key moments)/i.test(line)
+        );
+        
+        if (eventsStart >= 0) {
+            for (let i = eventsStart + 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line || line.startsWith('#')) break;
+                if (line.startsWith('- ')) {
+                    result.keyEvents.push(line.replace('- ', '').trim());
+                }
+            }
+        }
+        
         return result;
+    }
+
+    parseMarkdownText(text) {
+        if (!text) return '';
+        return text
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/<br\s*\/?>/gi, '<br>');
     }
 
     async loadImages(folder) {
@@ -145,19 +231,57 @@ class Chronicles {
 
     renderSession(session) {
         const mediaHTML = this.renderMedia(session.images);
-        const charactersHTML = session.characters.length ? `<div class="detail-section"><div class="detail-title">Characters</div><ul class="detail-list characters-list">${session.characters.map(char => `<li>${char}</li>`).join('')}</ul></div>` : '';
-        const locationsHTML = session.locations.length ? `<div class="detail-section"><div class="detail-title">Locations</div><ul class="detail-list locations-list">${session.locations.map(loc => `<li>${loc}</li>`).join('')}</ul></div>` : '';
-        const eventsHTML = session.keyEvents.length ? `<div class="detail-section"><div class="detail-title">Key Events</div><ul class="detail-list">${session.keyEvents.map(event => `<li>${event}</li>`).join('')}</ul></div>` : '';
+        
+        const charactersHTML = session.characters.length > 0 ? `
+            <div class="detail-section">
+                <div class="detail-title">Characters</div>
+                <ul class="detail-list characters-list">
+                    ${session.characters.map(char => {
+                        const plainName = this.extractPlainName(char);
+                        return `
+                            <li><span class="clan-icon-btn" data-char="${encodeURIComponent(char)}">${this.parseMarkdownText(char)}</span></li>
+                        `;
+                    }).join('')}
+                </ul>
+            </div>
+        ` : '';
+
+        const locationsHTML = session.locations.length > 0 ? `
+            <div class="detail-section">
+                <div class="detail-title">Locations</div>
+                <ul class="detail-list locations-list">
+                    ${session.locations.map(loc => `<li>${loc}</li>`).join('')}
+                </ul>
+            </div>
+        ` : '';
+
+        const eventsHTML = session.keyEvents.length > 0 ? `
+            <div class="detail-section">
+                <div class="detail-title">Key Events</div>
+                <ul class="detail-list">
+                    ${session.keyEvents.map(event => `<li>${event}</li>`).join('')}
+                </ul>
+            </div>
+        ` : '';
+
         return `
             <article class="session-card" data-folder="${session.folder}">
                 ${mediaHTML}
                 <div class="session-content">
                     <div class="session-header">
                         <h2 class="session-title">${session.title}</h2>
+                        <div class="session-date">${session.date}</div>
                     </div>
                     <div class="content-grid">
-                        <div class="session-summary">${session.summary}</div>
-                        <div class="session-details">${charactersHTML}${locationsHTML}${eventsHTML}</div>
+                        ${session.tagline ? `<div class="session-tagline">${session.tagline}</div>` : ''}
+                        <div class="session-summary">
+                            ${session.summary}
+                        </div>
+                        <div class="session-details">
+                            ${charactersHTML}
+                            ${locationsHTML}
+                            ${eventsHTML}
+                        </div>
                     </div>
                 </div>
             </article>
@@ -165,17 +289,413 @@ class Chronicles {
     }
 
     renderMedia(images) {
-        if (!images.length) return '<div class="session-media"><div class="media-placeholder">⛩️ No Images Available ⛩️</div></div>';
-        return `<div class="session-media"><div class="screenshot-carousel"><div class="screenshot-track">${images.map((img, i) => `<img src="${img}" loading="lazy" alt="Session Image ${i + 1}" class="screenshot${i === 0 ? ' active' : ''}">`).join('')}</div></div></div>`;
+        if (images.length === 0) {
+            return `
+                <div class="session-media">
+                    <div class="media-placeholder">⛩️ No Images Available ⛩️</div>
+                </div>
+            `;
+        }
+
+        return `
+            <div class="session-media">
+                <div class="screenshot-carousel">
+                    <div class="screenshot-track">
+                        ${images.map((image, index) => 
+                            `<img src="${image}" alt="Session Image ${index + 1}" class="screenshot ${index === 0 ? 'active' : ''}">`
+                        ).join('')}
+                    </div>
+                    ${images.length > 1 ? `
+                        <div class="screenshot-nav">
+                            <button class="screenshot-prev">‹</button>
+                            <div class="screenshot-dots">
+                                ${images.map((_, index) => 
+                                    `<button class="screenshot-dot ${index === 0 ? 'active' : ''}" data-index="${index}"></button>`
+                                ).join('')}
+                            </div>
+                            <button class="screenshot-next">›</button>
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+        `;
     }
 
     renderNavigation() {
         if (this.sessions.length <= 1) return '';
-        return `<div class="navigation"><button class="nav-btn" id="prev-btn">← Previous Chronicle</button><button class="nav-btn" id="next-btn">Next Chronicle →</button></div><div class="session-dots">${this.sessions.map((_, i) => `<button class="dot${i === 0 ? ' active' : ''}" data-index="${i}"></button>`).join('')}</div>`;
+
+        return `
+            <div class="navigation">
+                <button class="nav-btn" id="prev-btn">← Previous Chronicle</button>
+                <button class="nav-btn" id="next-btn">Next Chronicle →</button>
+            </div>
+            <div class="session-dots">
+                ${this.sessions.map((_, index) => 
+                    `<button class="dot ${index === 0 ? 'active' : ''}" data-index="${index}"></button>`
+                ).join('')}
+            </div>
+        `;
     }
 
     setupControls() {
-        // Add navigation and carousel controls as in portfolio/script.js
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const dots = document.querySelectorAll('.dot');
+
+        prevBtn?.addEventListener('click', () => this.goToPrevious());
+        nextBtn?.addEventListener('click', () => this.goToNext());
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => this.goToSlide(index));
+        });
+
+        this.setupImageCarousels();
+        this.setupSwipeNavigation();
+        this.setupCharacterLinks();
+    }
+
+    setupImageCarousels() {
+        const carousels = document.querySelectorAll('.screenshot-carousel');
+        carousels.forEach(carousel => {
+            const images = carousel.querySelectorAll('.screenshot');
+            const prevBtn = carousel.querySelector('.screenshot-prev');
+            const nextBtn = carousel.querySelector('.screenshot-next');
+            const dots = carousel.querySelectorAll('.screenshot-dot');
+            
+            if (images.length > 1) {
+                let currentIndex = 0;
+                let intervalId = null;
+                
+                const updateImages = () => {
+                    images.forEach((img, index) => {
+                        img.classList.toggle('active', index === currentIndex);
+                    });
+                    dots.forEach((dot, index) => {
+                        dot.classList.toggle('active', index === currentIndex);
+                    });
+                };
+                
+                const goToNext = () => {
+                    currentIndex = (currentIndex + 1) % images.length;
+                    updateImages();
+                };
+                
+                const goToPrev = () => {
+                    currentIndex = currentIndex > 0 ? currentIndex - 1 : images.length - 1;
+                    updateImages();
+                };
+                
+                prevBtn?.addEventListener('click', goToPrev);
+                nextBtn?.addEventListener('click', goToNext);
+                dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => {
+                        currentIndex = index;
+                        updateImages();
+                    });
+                });
+                
+                // Auto-advance images
+                const startAuto = () => {
+                    if (intervalId) clearInterval(intervalId);
+                    intervalId = setInterval(goToNext, 4000);
+                };
+                
+                const stopAuto = () => {
+                    if (intervalId) clearInterval(intervalId);
+                };
+                
+                carousel.addEventListener('mouseenter', stopAuto);
+                carousel.addEventListener('mouseleave', startAuto);
+                
+                startAuto();
+            }
+        });
+    }
+
+    setupSwipeNavigation() {
+        const carousel = document.querySelector('.session-carousel');
+        if (!carousel) return;
+
+        let startX = 0;
+        let startY = 0;
+        let isDragging = false;
+        let currentTranslateX = 0;
+
+        const handleTouchStart = (e) => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            isDragging = true;
+            currentTranslateX = -this.currentIndex * 100;
+            
+            carousel.style.transition = 'none';
+        };
+
+        const handleTouchMove = (e) => {
+            if (!isDragging) return;
+            
+            const currentX = e.touches[0].clientX;
+            const currentY = e.touches[0].clientY;
+            const diffX = currentX - startX;
+            const diffY = currentY - startY;
+            
+            // Only handle horizontal swipes
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                e.preventDefault();
+                const translateX = currentTranslateX + diffX;
+                carousel.style.transform = `translateX(${translateX}%)`;
+            }
+        };
+
+        const handleTouchEnd = (e) => {
+            if (!isDragging) return;
+            
+            const currentX = e.changedTouches[0].clientX;
+            const diffX = currentX - startX;
+            const threshold = 50;
+            
+            if (Math.abs(diffX) > threshold) {
+                if (diffX > 0) {
+                    this.goToPrevious();
+                } else {
+                    this.goToNext();
+                }
+            } else {
+                this.updateCarousel();
+            }
+            
+            isDragging = false;
+            carousel.style.transition = '';
+        };
+
+        carousel.addEventListener('touchstart', handleTouchStart, { passive: false });
+        carousel.addEventListener('touchmove', handleTouchMove, { passive: false });
+        carousel.addEventListener('touchend', handleTouchEnd);
+    }
+
+    goToPrevious() {
+        if (this.currentIndex > 0) {
+            this.currentIndex--;
+            this.updateCarousel();
+        }
+    }
+
+    goToNext() {
+        if (this.currentIndex < this.sessions.length - 1) {
+            this.currentIndex++;
+            this.updateCarousel();
+        }
+    }
+
+    goToSlide(index) {
+        this.currentIndex = index;
+        this.updateCarousel();
+    }
+
+    updateCarousel() {
+        const track = document.getElementById('session-track');
+        if (track) {
+            track.style.transform = `translateX(-${this.currentIndex * 100}%)`;
+        }
+        
+        // Update navigation dots
+        const dots = document.querySelectorAll('.dot');
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === this.currentIndex);
+        });
+    }
+
+    setupCharacterLinks() {
+        // Store reference for potential cleanup
+        this.characterClickHandler = async (e) => {
+            const characterLink = e.target.closest('.clan-icon-btn');
+            if (characterLink) {
+                const charName = decodeURIComponent(characterLink.dataset.char);
+                // Find the session for this character
+                const sessionCard = characterLink.closest('.session-card');
+                let sessionFolder = null;
+                if (sessionCard) {
+                    sessionFolder = sessionCard.dataset.folder || null;
+                }
+                if (!sessionFolder && this.sessions) {
+                    for (const session of this.sessions) {
+                        if (session.characters && session.characters.some(c => c.includes(charName))) {
+                            sessionFolder = session.folder;
+                            break;
+                        }
+                    }
+                }
+                await this.showPortraitModal(charName, this.parseMarkdownText(charName), sessionFolder);
+            }
+        };
+        document.addEventListener('click', this.characterClickHandler);
+    }
+
+    async showPortraitModal(charName, displayText, sessionFolder) {
+        // Close any open modal first
+        const existingModal = document.querySelector('.portrait-modal-overlay');
+        if (existingModal) existingModal.remove();
+        
+        // Extract plain name (strip markdown, remove role)
+        const plainName = this.extractPlainName(charName);
+        
+        // Find character details from session data
+        let characterDetails = '';
+        if (sessionFolder && this.sessions) {
+            const session = this.sessions.find(s => s.folder === sessionFolder);
+            if (session && session.characterDetails) {
+                const detailEntry = session.characterDetails.find(detail => 
+                    detail.toLowerCase().includes(plainName.toLowerCase())
+                );
+                if (detailEntry) {
+                    characterDetails = detailEntry;
+                }
+            }
+        }
+        
+        // Try to load portrait image
+        let imageUrl = null;
+        if (sessionFolder) {
+            const normalized = plainName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+            const exts = ['jpg', 'jpeg', 'png', 'webp'];
+            for (const ext of exts) {
+                const path = `${sessionFolder}/portraits/${normalized}.${ext}`;
+                if (await this.fileExists(path)) {
+                    imageUrl = path;
+                    break;
+                }
+            }
+        }
+        
+        // Parse character details for display
+        const parsedDetails = this.parseCharacterDetails(characterDetails);
+        
+        // Create overlay and modal
+        const overlay = document.createElement('div');
+        overlay.className = 'portrait-modal-overlay';
+        overlay.innerHTML = `
+            <div class="portrait-modal">
+                ${imageUrl ?
+                    `<img src="${imageUrl}" alt="Portrait of ${plainName}" class="portrait-avatar">`
+                    : `<div class="portrait-avatar" style="background-color: ${this.getClanColor(this.getClanName(charName))};"></div>`
+                }
+                <div class="portrait-name">${this.parseMarkdownText(displayText)}</div>
+                ${parsedDetails ? `
+                    <div class="portrait-details">
+                        <div class="character-trait">${parsedDetails.trait}</div>
+                        <div class="character-elements">${parsedDetails.elements}</div>
+                    </div>
+                ` : ''}
+                <div class="portrait-clan-icon">${this.getClanIcon(this.getClanName(charName))}</div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        
+        // Close on click of avatar, modal, or overlay
+        const avatar = overlay.querySelector('.portrait-avatar');
+        if (avatar) avatar.addEventListener('click', () => overlay.remove());
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) overlay.remove();
+        });
+    }
+
+    extractPlainName(text) {
+        // Remove markdown tags and role after dash
+        let name = text.replace(/<[^>]+>/g, '');
+        name = name.replace(/\*\*(.*?)\*\*/g, '$1');
+        name = name.replace(/\*(.*?)\*/g, '$1');
+        
+        // Handle edge cases where there might be no dash
+        if (name.includes('-')) {
+            name = name.split('-')[0].trim();
+        }
+        
+        // Handle empty or whitespace-only names
+        if (!name || name.trim() === '') {
+            return 'Unknown Character';
+        }
+        
+        return name.trim();
+    }
+
+    getClanName(originalChar) {
+        // Define all known clans
+        const knownClans = ['Crane', 'Crab', 'Phoenix', 'Scorpion', 'Lion', 'Dragon', 'Mantis', 'Unicorn', 'Imperial'];
+        
+        // Search for clan keywords in the entire character string
+        for (const clan of knownClans) {
+            if (originalChar.toLowerCase().includes(clan.toLowerCase())) {
+                return clan;
+            }
+        }
+        
+        return "Unknown";
+    }
+
+    getClanIcon(clan) {
+        const icons = {
+            'crane': '🕊️',
+            'lion': '🦁',
+            'scorpion': '🦂',
+            'phoenix': '🔥',
+            'dragon': '🐉',
+            'crab': '🦀',
+            'mantis': '🦗',
+            'unicorn': '🦄',
+            'imperial': '👑',
+            'unknown': '🎴'
+        };
+        return icons[clan.toLowerCase()] || icons['unknown'];
+    }
+
+    getClanColor(clan) {
+        const colors = {
+            'crane': '#87CEEB',      // Light Blue
+            'crab': '#808080',       // Gray
+            'phoenix': '#FFA500',    // Orange
+            'scorpion': '#FF0000',   // Red
+            'lion': '#FFD700',       // Yellow/Gold
+            'dragon': '#32CD32',     // Green
+            'mantis': '#008080',     // Teal
+            'unicorn': '#800080',    // Purple
+            'imperial': '#50C878',   // Emerald Green
+            'unknown': '#D3D3D3'     // Light Gray
+        };
+        return colors[clan.toLowerCase()] || colors['unknown'];
+    }
+
+    getElementEmoji(element) {
+        const elementEmojis = {
+            'fire': '🟠',
+            'water': '🔵',
+            'earth': '🟤',
+            'air': '⚪',
+            'void': '⚫'
+        };
+        return elementEmojis[element.toLowerCase()] || element;
+    }
+
+    parseCharacterDetails(details) {
+        if (!details) return null;
+        
+        // Parse format: "Doji Shizua : Ambitious (+2 Fire, -2 Water)"
+        const match = details.match(/^(.+?)\s*:\s*([^(]+?)\s*\(([^)]+)\)$/);
+        if (!match) return null;
+        
+        const [, characterName, trait, elements] = match;
+        
+        // Parse elements: "+2 Fire, -2 Water"
+        const elementMatches = elements.match(/([+-]\d+)\s+(\w+)/g);
+        if (!elementMatches) return null;
+        
+        const formattedElements = elementMatches.map(match => {
+            const [, modifier, element] = match.match(/([+-]\d+)\s+(\w+)/);
+            const emoji = this.getElementEmoji(element);
+            return `${modifier} ${emoji}`;
+        }).join(' ');
+        
+        return {
+            trait: trait.trim(),
+            elements: formattedElements
+        };
     }
 
     showError(message) {
