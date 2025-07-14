@@ -526,7 +526,7 @@ body {
     padding-left: 0;
 }
 
-.clan-icon-btn {
+.character-btn {
     display: inline-block;
     font-size: 1.2rem;
     margin-right: 8px;
@@ -540,7 +540,25 @@ body {
     will-change: transform;
 }
 
-.clan-icon-btn:hover {
+.character-btn:hover {
+    /* Hover effect removed */
+}
+
+.location-btn {
+    display: inline-block;
+    font-size: 1.2rem;
+    margin-right: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 4px 6px;
+    border-radius: 6px;
+    background: rgba(34, 139, 34, 0.1);
+    border: 1px solid rgba(34, 139, 34, 0.3);
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
+    will-change: transform;
+}
+
+.location-btn:hover {
     /* Hover effect removed */
 }
 

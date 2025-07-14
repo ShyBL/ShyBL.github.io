@@ -37,6 +37,7 @@ class JadePincerChronicles {
             locations: [],
             keyEvents: [],
             characterDetails: [],
+            locationDetails: [],
             images: []
         };
         try {
@@ -63,7 +64,7 @@ class JadePincerChronicles {
 
     parseMarkdown(content) {
         const lines = content.split('\n');
-        const result = { characters: [], locations: [], keyEvents: [], characterDetails: [] };
+        const result = { characters: [], locations: [], keyEvents: [], characterDetails: [], locationDetails: [] };
         
         // Extract title
         const titleLine = lines.find(line => line.startsWith('# '));
@@ -138,6 +139,21 @@ class JadePincerChronicles {
                 if (!line || line.startsWith('#')) break;
                 if (line.startsWith('- ')) {
                     result.characterDetails.push(this.parseMarkdownText(line.replace('- ', '').trim()));
+                }
+            }
+        }
+        
+        // Extract location details
+        const locationDetailsStart = lines.findIndex(line => 
+            /^##?\s*(location details|location detail|location info|location information)/i.test(line)
+        );
+        
+        if (locationDetailsStart >= 0) {
+            for (let i = locationDetailsStart + 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line || line.startsWith('#')) break;
+                if (line.startsWith('- ')) {
+                    result.locationDetails.push(this.parseMarkdownText(line.replace('- ', '').trim()));
                 }
             }
         }
@@ -236,7 +252,7 @@ class JadePincerChronicles {
                     ${act.characters.map(char => {
                         const plainName = this.extractPlainName(char);
                         return `
-                            <li><span class="clan-icon-btn" data-char="${encodeURIComponent(char)}">${this.parseMarkdownText(char)}</span></li>
+                            <li><span class="character-btn" data-char="${encodeURIComponent(char)}">${this.parseMarkdownText(char)}</span></li>
                         `;
                     }).join('')}
                 </ul>
@@ -247,7 +263,9 @@ class JadePincerChronicles {
             <div class="detail-section">
                 <div class="detail-title">Locations</div>
                 <ul class="detail-list locations-list">
-                    ${act.locations.map(loc => `<li>${loc}</li>`).join('')}
+                    ${act.locations.map(loc => `
+                        <li><span class="location-btn" data-location="${encodeURIComponent(loc)}">${loc}</span></li>
+                    `).join('')}
                 </ul>
             </div>
         ` : '';
@@ -503,7 +521,9 @@ class JadePincerChronicles {
     setupCharacterLinks() {
         // Store reference for potential cleanup
         this.characterClickHandler = async (e) => {
-            const characterLink = e.target.closest('.clan-icon-btn');
+            const characterLink = e.target.closest('.character-btn');
+            const locationLink = e.target.closest('.location-btn');
+            
             if (characterLink) {
                 const charName = decodeURIComponent(characterLink.dataset.char);
                 // Find the act for this character
@@ -521,6 +541,25 @@ class JadePincerChronicles {
                     }
                 }
                 await this.showPortraitModal(charName, this.parseMarkdownText(charName), actFolder);
+            }
+            
+            if (locationLink) {
+                const locationName = decodeURIComponent(locationLink.dataset.location);
+                // Find the act for this location
+                const actCard = locationLink.closest('.session-card');
+                let actFolder = null;
+                if (actCard) {
+                    actFolder = actCard.dataset.folder || null;
+                }
+                if (!actFolder && this.acts) {
+                    for (const act of this.acts) {
+                        if (act.locations && act.locations.some(l => l.includes(locationName))) {
+                            actFolder = act.folder;
+                            break;
+                        }
+                    }
+                }
+                await this.showLocationModal(locationName, actFolder);
             }
         };
         document.addEventListener('click', this.characterClickHandler);
@@ -693,6 +732,97 @@ class JadePincerChronicles {
             trait: trait.trim(),
             elements: formattedElements
         };
+    }
+
+    parseLocationDetails(details) {
+        if (!details) return null;
+        
+        // Parse format: "Topaz Championship Grounds - Ceremony Yard, Training Yard, Melee Stage, Dinner Hall (Hollowed)"
+        const match = details.match(/^(.+?)\s*-\s*(.+?)\s*\((.+?)\)$/);
+        if (!match) return null;
+        
+        const [, locationName, subLocations, terrainQualities] = match;
+        
+        // Split sub-locations by comma and clean them up
+        const subLocationList = subLocations.split(',').map(loc => loc.trim());
+        
+        return {
+            locationName: locationName.trim(),
+            subLocations: subLocationList,
+            terrainQualities: terrainQualities.trim()
+        };
+    }
+
+    async showLocationModal(locationName, actFolder) {
+        // Close any open modal first
+        const existingModal = document.querySelector('.portrait-modal-overlay');
+        if (existingModal) existingModal.remove();
+        
+        // Find location details from act data
+        let locationDetails = '';
+        if (actFolder && this.acts) {
+            const act = this.acts.find(a => a.folder === actFolder);
+            if (act && act.locationDetails) {
+                const detailEntry = act.locationDetails.find(detail => 
+                    detail.toLowerCase().includes(locationName.toLowerCase())
+                );
+                if (detailEntry) {
+                    locationDetails = detailEntry;
+                }
+            }
+        }
+        
+        // Try to load location image
+        let imageUrl = null;
+        if (actFolder) {
+            const normalized = locationName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+            const exts = ['jpg', 'jpeg', 'png', 'webp'];
+            for (const ext of exts) {
+                const path = `${actFolder}/locations/${normalized}.${ext}`;
+                if (await this.fileExists(path)) {
+                    imageUrl = path;
+                    break;
+                }
+            }
+        }
+        
+        // Parse location details for display
+        const parsedDetails = this.parseLocationDetails(locationDetails);
+        
+        // Create overlay and modal
+        const overlay = document.createElement('div');
+        overlay.className = 'portrait-modal-overlay';
+        overlay.innerHTML = `
+            <div class="portrait-modal">
+                ${imageUrl ?
+                    `<img src="${imageUrl}" alt="Image of ${locationName}" class="portrait-avatar">`
+                    : `<div class="portrait-avatar" style="background-color: #228B22;"></div>`
+                }
+                <div class="portrait-name">${locationName}</div>
+                ${parsedDetails ? `
+                    <div class="portrait-details">
+                        <div class="character-trait">Sub-locations</div>
+                        <div class="character-elements">${parsedDetails.subLocations.join(', ')}</div>
+                        <div class="character-trait" style="margin-top: 8px;">Terrain</div>
+                        <div class="character-elements">${parsedDetails.terrainQualities}</div>
+                    </div>
+                ` : `
+                    <div class="portrait-details">
+                        <div class="character-trait">Location</div>
+                        <div class="character-elements">🏛️ ${locationName}</div>
+                    </div>
+                `}
+                <div class="portrait-clan-icon">🏛️</div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        
+        // Close on click of avatar, modal, or overlay
+        const avatar = overlay.querySelector('.portrait-avatar');
+        if (avatar) avatar.addEventListener('click', () => overlay.remove());
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) overlay.remove();
+        });
     }
 
     showError(message) {

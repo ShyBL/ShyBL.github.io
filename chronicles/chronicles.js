@@ -40,6 +40,7 @@ class Chronicles {
             locations: [],
             keyEvents: [],
             characterDetails: [],
+            locationDetails: [],
             images: []
         };
         try {
@@ -66,7 +67,7 @@ class Chronicles {
 
     parseMarkdown(content) {
         const lines = content.split('\n');
-        const result = { characters: [], locations: [], keyEvents: [], characterDetails: [] };
+        const result = { characters: [], locations: [], keyEvents: [], characterDetails: [], locationDetails: [] };
         
         // Extract title
         const titleLine = lines.find(line => line.startsWith('# '));
@@ -141,6 +142,21 @@ class Chronicles {
                 if (!line || line.startsWith('#')) break;
                 if (line.startsWith('- ')) {
                     result.characterDetails.push(this.parseMarkdownText(line.replace('- ', '').trim()));
+                }
+            }
+        }
+        
+        // Extract location details
+        const locationDetailsStart = lines.findIndex(line => 
+            /^##?\s*(location details|location detail|location info|location information)/i.test(line)
+        );
+        
+        if (locationDetailsStart >= 0) {
+            for (let i = locationDetailsStart + 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line || line.startsWith('#')) break;
+                if (line.startsWith('- ')) {
+                    result.locationDetails.push(this.parseMarkdownText(line.replace('- ', '').trim()));
                 }
             }
         }
@@ -239,7 +255,7 @@ class Chronicles {
                     ${session.characters.map(char => {
                         const plainName = this.extractPlainName(char);
                         return `
-                            <li><span class="clan-icon-btn" data-char="${encodeURIComponent(char)}">${this.parseMarkdownText(char)}</span></li>
+                            <li><span class="character-btn" data-char="${encodeURIComponent(char)}">${this.parseMarkdownText(char)}</span></li>
                         `;
                     }).join('')}
                 </ul>
@@ -250,7 +266,9 @@ class Chronicles {
             <div class="detail-section">
                 <div class="detail-title">Locations</div>
                 <ul class="detail-list locations-list">
-                    ${session.locations.map(loc => `<li>${loc}</li>`).join('')}
+                    ${session.locations.map(loc => `
+                        <li><span class="location-btn" data-location="${encodeURIComponent(loc)}">${loc}</span></li>
+                    `).join('')}
                 </ul>
             </div>
         ` : '';
@@ -506,7 +524,9 @@ class Chronicles {
     setupCharacterLinks() {
         // Store reference for potential cleanup
         this.characterClickHandler = async (e) => {
-            const characterLink = e.target.closest('.clan-icon-btn');
+            const characterLink = e.target.closest('.character-btn');
+            const locationLink = e.target.closest('.location-btn');
+            
             if (characterLink) {
                 const charName = decodeURIComponent(characterLink.dataset.char);
                 // Find the session for this character
@@ -524,6 +544,25 @@ class Chronicles {
                     }
                 }
                 await this.showPortraitModal(charName, this.parseMarkdownText(charName), sessionFolder);
+            }
+            
+            if (locationLink) {
+                const locationName = decodeURIComponent(locationLink.dataset.location);
+                // Find the session for this location
+                const sessionCard = locationLink.closest('.session-card');
+                let sessionFolder = null;
+                if (sessionCard) {
+                    sessionFolder = sessionCard.dataset.folder || null;
+                }
+                if (!sessionFolder && this.sessions) {
+                    for (const session of this.sessions) {
+                        if (session.locations && session.locations.some(l => l.includes(locationName))) {
+                            sessionFolder = session.folder;
+                            break;
+                        }
+                    }
+                }
+                await this.showLocationModal(locationName, sessionFolder);
             }
         };
         document.addEventListener('click', this.characterClickHandler);
@@ -696,6 +735,97 @@ class Chronicles {
             trait: trait.trim(),
             elements: formattedElements
         };
+    }
+
+    parseLocationDetails(details) {
+        if (!details) return null;
+        
+        // Parse format: "Topaz Championship Grounds - Ceremony Yard, Training Yard, Melee Stage, Dinner Hall (Hollowed)"
+        const match = details.match(/^(.+?)\s*-\s*(.+?)\s*\((.+?)\)$/);
+        if (!match) return null;
+        
+        const [, locationName, subLocations, terrainQualities] = match;
+        
+        // Split sub-locations by comma and clean them up
+        const subLocationList = subLocations.split(',').map(loc => loc.trim());
+        
+        return {
+            locationName: locationName.trim(),
+            subLocations: subLocationList,
+            terrainQualities: terrainQualities.trim()
+        };
+    }
+
+    async showLocationModal(locationName, sessionFolder) {
+        // Close any open modal first
+        const existingModal = document.querySelector('.portrait-modal-overlay');
+        if (existingModal) existingModal.remove();
+        
+        // Find location details from session data
+        let locationDetails = '';
+        if (sessionFolder && this.sessions) {
+            const session = this.sessions.find(s => s.folder === sessionFolder);
+            if (session && session.locationDetails) {
+                const detailEntry = session.locationDetails.find(detail => 
+                    detail.toLowerCase().includes(locationName.toLowerCase())
+                );
+                if (detailEntry) {
+                    locationDetails = detailEntry;
+                }
+            }
+        }
+        
+        // Try to load location image
+        let imageUrl = null;
+        if (sessionFolder) {
+            const normalized = locationName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+            const exts = ['jpg', 'jpeg', 'png', 'webp'];
+            for (const ext of exts) {
+                const path = `${sessionFolder}/locations/${normalized}.${ext}`;
+                if (await this.fileExists(path)) {
+                    imageUrl = path;
+                    break;
+                }
+            }
+        }
+        
+        // Parse location details for display
+        const parsedDetails = this.parseLocationDetails(locationDetails);
+        
+        // Create overlay and modal
+        const overlay = document.createElement('div');
+        overlay.className = 'portrait-modal-overlay';
+        overlay.innerHTML = `
+            <div class="portrait-modal">
+                ${imageUrl ?
+                    `<img src="${imageUrl}" alt="Image of ${locationName}" class="portrait-avatar">`
+                    : `<div class="portrait-avatar" style="background-color: #228B22;"></div>`
+                }
+                <div class="portrait-name">${locationName}</div>
+                ${parsedDetails ? `
+                    <div class="portrait-details">
+                        <div class="character-trait">Sub-locations</div>
+                        <div class="character-elements">${parsedDetails.subLocations.join(', ')}</div>
+                        <div class="character-trait" style="margin-top: 8px;">Terrain</div>
+                        <div class="character-elements">${parsedDetails.terrainQualities}</div>
+                    </div>
+                ` : `
+                    <div class="portrait-details">
+                        <div class="character-trait">Location</div>
+                        <div class="character-elements">🏛️ ${locationName}</div>
+                    </div>
+                `}
+                <div class="portrait-clan-icon">🏛️</div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        
+        // Close on click of avatar, modal, or overlay
+        const avatar = overlay.querySelector('.portrait-avatar');
+        if (avatar) avatar.addEventListener('click', () => overlay.remove());
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) overlay.remove();
+        });
     }
 
     showError(message) {

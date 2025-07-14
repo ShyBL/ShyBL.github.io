@@ -36,6 +36,12 @@ At a waystation along the road, Akahiro meets Akai and they face a dangerous Nin
 - Waystation on the Road
 - Capital City (Otosan Uchi)
 
+## Location Details
+- Topaz Championship Grounds - Ceremony Yard, Training Yard, Melee Stage, Dinner Hall (Hollowed)
+- Emerald Champion Castle - Grand Library, Hall of Judgment, Secret Cave, Tower of the Ruby CHampion (Elevated)
+- Waystation on the Road - Magisters' Office, River Marker (Imbalanced)
+- "Otosan Uchi" Capital City - Embassy District, Temple of the Seven Fortunes, "Miwaku Kabe" the Enchanted Wall (Sacred)
+
 ## Key Events
 - Topaz Championship disrupted by sabotage
 - Togashi Akai declared Topaz Champion
