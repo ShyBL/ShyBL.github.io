@@ -1,6 +1,6 @@
 # The Topaz Championship
 
-Date: 1023
+Date: November 15, 2023
 
 **The Topaz Championship is disrupted by mysterious sabotage, leading the new Topaz Champion and his allies to the Emerald Champion Castle.**
 
