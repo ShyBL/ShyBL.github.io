@@ -42,9 +42,9 @@ class Chronicles {
     async loadSession(folder) {
         const session = {
             folder,
-            title: this.formatTitle(folder),
-            date: 'Date Unknown',
-            summary: 'Session summary not found.',
+            title: null,
+            date: null,
+            summary: null,
             characters: [],
             locations: [],
             keyEvents: [],
@@ -60,6 +60,10 @@ class Chronicles {
             console.warn(`No README found for ${folder}`);
         }
         session.images = await this.loadImages(folder);
+        // Use placeholders if fields are missing
+        session.title = session.title || this.formatTitle(folder);
+        session.date = session.date || 'Date Unknown';
+        session.summary = session.summary || 'Session summary not found.';
         return session;
     }
 
@@ -108,8 +112,53 @@ class Chronicles {
     }
 
     renderSession(session) {
-        // ... (copy the renderSession method from chronicles/script.js)
-// ... existing code ...
+        // Always render a card, even if some fields are missing
+        const mediaHTML = this.renderMedia(session.images || []);
+        const charactersHTML = (session.characters && session.characters.length > 0) ? `
+            <div class="detail-section">
+                <div class="detail-title">Characters</div>
+                <ul class="detail-list characters-list">
+                    ${session.characters.map(char => `<li>${char}</li>`).join('')}
+                </ul>
+            </div>
+        ` : '';
+        const locationsHTML = (session.locations && session.locations.length > 0) ? `
+            <div class="detail-section">
+                <div class="detail-title">Locations</div>
+                <ul class="detail-list locations-list">
+                    ${session.locations.map(loc => `<li>${loc}</li>`).join('')}
+                </ul>
+            </div>
+        ` : '';
+        const eventsHTML = (session.keyEvents && session.keyEvents.length > 0) ? `
+            <div class="detail-section">
+                <div class="detail-title">Key Events</div>
+                <ul class="detail-list">
+                    ${session.keyEvents.map(event => `<li>${event}</li>`).join('')}
+                </ul>
+            </div>
+        ` : '';
+        return `
+            <article class="session-card" data-folder="${session.folder}">
+                ${mediaHTML}
+                <div class="session-content">
+                    <div class="session-header">
+                        <h2 class="session-title">${session.title || 'Untitled Session'}</h2>
+                        <div class="session-date">${session.date || ''}</div>
+                    </div>
+                    <div class="content-grid">
+                        <div class="session-summary">
+                            ${session.summary || 'No summary available.'}
+                        </div>
+                        <div class="session-details">
+                            ${charactersHTML}
+                            ${locationsHTML}
+                            ${eventsHTML}
+                        </div>
+                    </div>
+                </div>
+            </article>
+        `;
     }
 
     renderMedia(images) {
