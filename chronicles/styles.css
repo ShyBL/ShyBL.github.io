@@ -252,31 +252,34 @@ body {
 }
 
 .detail-list li {
-    padding: 0.25rem 0;
+    padding: 0.5rem 0;
     color: var(--text-secondary);
-    line-height: 1.4;
+    line-height: 1.5;
     position: relative;
-    padding-left: 1.25rem;
-    font-size: 0.95rem;
+    padding-left: 2rem;
+    font-size: 1.1rem;
 }
 
 .detail-list li::before {
     content: '⛩️';
     position: absolute;
     left: 0;
-    font-size: 0.8rem;
+    font-size: 1.5rem;
 }
 
 .characters-list li::before {
-    content: '🌸';
+    content: '🪷';
+    font-size: 1.5rem;
 }
 
 .locations-list li::before {
     content: '🗻';
+    font-size: 1.5rem;
 }
 
 .key-events-list li::before {
     content: '⚔️';
+    font-size: 1.5rem;
 }
 
 .navigation {
