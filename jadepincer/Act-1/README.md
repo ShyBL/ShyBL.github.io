@@ -1,6 +1,6 @@
 # The Topaz Championship
 
-Date: November 15, 2023
+Date: 1022
 
 **The Topaz Championship is disrupted by mysterious sabotage, leading the new Topaz Champion and his allies to the Emerald Champion Castle.**
 
@@ -34,13 +34,13 @@ At a waystation along the road, Akahiro meets Akai and they face a dangerous Nin
 - Topaz Championship Grounds
 - Emerald Champion Castle
 - Waystation on the Road
-- Capital City (Otosan Uchi)
+- Otosan Uchi, Capital City 
 
 ## Location Details
 - Topaz Championship Grounds - Ceremony Yard, Training Yard, Melee Stage, Dinner Hall (Hollowed)
 - Emerald Champion Castle - Grand Library, Hall of Judgment, Secret Cave, Tower of the Ruby Champion (Elevated)
 - Waystation on the Road - Magisters' Office, River Marker (Imbalanced)
-- "Otosan Uchi" Capital City - Embassy District, Temple of the Seven Fortunes, "Miwaku Kabe" the Enchanted Wall (Sacred)
+- Otosan Uchi, Capital City - Embassy District, Temple of the Seven Fortunes, "Miwaku Kabe" the Enchanted Wall (Sacred)
 
 ## Key Events
 - Topaz Championship disrupted by sabotage

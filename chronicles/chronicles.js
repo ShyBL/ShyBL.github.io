@@ -111,8 +111,6 @@ class Chronicles {
                 }
             }
             let summary = summaryLines.join('\n').trim();
-            // Clean up HTML tags like <br><br>
-            summary = summary.replace(/<br\s*\/?>/gi, ' ');
             result.summary = this.parseMarkdownText(summary);
         }
         
