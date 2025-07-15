@@ -429,17 +429,6 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-@media (max-width: 768px) {
-    .project-content {
-        padding: 1.5rem;
-    }
-    
-    .nav-btn {
-        padding: 0.6rem 1rem;
-        font-size: 0.9rem;
-    }
-} 
-
 .section-title,
 .project-title,
 .hero,

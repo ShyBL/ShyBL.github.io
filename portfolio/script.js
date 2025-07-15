@@ -3,18 +3,7 @@ class Portfolio {
         this.projects = [];
         this.currentIndex = 0;
         this.screenshotIntervals = new Map();
-        this.isMobile = this.detectMobile();
         this.init();
-    }
-
-    detectMobile() {
-        // Simple mobile detection
-        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
-        const isMobileDevice = mobileRegex.test(userAgent);
-        const isMobileViewport = window.innerWidth <= 768;
-        
-        return isMobileDevice || isMobileViewport;
     }
 
     async init() {
@@ -469,9 +458,9 @@ class Portfolio {
                 videoPopup.classList.add('active');
                 
                 // Mobile optimization: prevent body scroll when popup is open
-                if (this.isMobile) {
-                    document.body.style.overflow = 'hidden';
-                }
+                // if (this.isMobile) { // Removed isMobile check
+                //     document.body.style.overflow = 'hidden';
+                // }
                 
                 popupVideo.play();
             });
@@ -483,9 +472,9 @@ class Portfolio {
             popupVideo.src = '';
             
             // Restore body scroll on mobile
-            if (this.isMobile) {
-                document.body.style.overflow = '';
-            }
+            // if (this.isMobile) { // Removed isMobile check
+            //     document.body.style.overflow = '';
+            // }
         };
         
         closeBtn?.addEventListener('click', closePopup);
