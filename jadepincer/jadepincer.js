@@ -16,9 +16,9 @@ class JadePincerChronicles {
             this.container = document.getElementById('session-container');
             this.container.innerHTML = '<div class="loading-throbber"><div class="loading-spinner"></div></div>';
             await this.loadActs();
-            // Preload images for the first act
-            if (this.acts.length > 0) {
-                await this.preloadImages(this.acts[0].folder);
+            // Preload images for all acts
+            for (const act of this.acts) {
+                await this.preloadImages(act.folder);
             }
             this.render();
             this.setupControls();
@@ -524,11 +524,6 @@ class JadePincerChronicles {
     goToPrevious() {
         if (this.currentIndex > 0) {
             this.currentIndex--;
-            // Lazy load images for the previous act if not already loaded
-            const prevAct = this.acts[this.currentIndex];
-            if (prevAct) {
-                this.preloadImages(prevAct.folder);
-            }
             this.updateCarousel();
         }
     }
@@ -536,11 +531,6 @@ class JadePincerChronicles {
     goToNext() {
         if (this.currentIndex < this.acts.length - 1) {
             this.currentIndex++;
-            // Lazy load images for the next act if not already loaded
-            const nextAct = this.acts[this.currentIndex];
-            if (nextAct) {
-                this.preloadImages(nextAct.folder);
-            }
             this.updateCarousel();
         }
     }
@@ -548,11 +538,6 @@ class JadePincerChronicles {
     goToSlide(index) {
         if (index >= 0 && index < this.acts.length) {
             this.currentIndex = index;
-            // Lazy load images for the selected act if not already loaded
-            const act = this.acts[this.currentIndex];
-            if (act) {
-                this.preloadImages(act.folder);
-            }
             this.updateCarousel();
         }
     }

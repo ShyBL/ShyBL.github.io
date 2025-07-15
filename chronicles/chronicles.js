@@ -19,9 +19,9 @@ class Chronicles {
             this.container = document.getElementById('session-container');
             this.container.innerHTML = '<div class="loading-throbber"><div class="loading-spinner"></div></div>';
             await this.loadSessions();
-            // Preload images for the first session
-            if (this.sessions.length > 0) {
-                await this.preloadImages(this.sessions[0].folder);
+            // Preload images for all sessions
+            for (const session of this.sessions) {
+                await this.preloadImages(session.folder);
             }
             this.render();
             this.setupControls();
@@ -527,11 +527,6 @@ class Chronicles {
     goToPrevious() {
         if (this.currentIndex > 0) {
             this.currentIndex--;
-            // Lazy load images for the previous session if not already loaded
-            const prevSession = this.sessions[this.currentIndex];
-            if (prevSession) {
-                this.preloadImages(prevSession.folder);
-            }
             this.updateCarousel();
         }
     }
@@ -539,11 +534,6 @@ class Chronicles {
     goToNext() {
         if (this.currentIndex < this.sessions.length - 1) {
             this.currentIndex++;
-            // Lazy load images for the next session if not already loaded
-            const nextSession = this.sessions[this.currentIndex];
-            if (nextSession) {
-                this.preloadImages(nextSession.folder);
-            }
             this.updateCarousel();
         }
     }
@@ -551,11 +541,6 @@ class Chronicles {
     goToSlide(index) {
         if (index >= 0 && index < this.sessions.length) {
             this.currentIndex = index;
-            // Lazy load images for the selected session if not already loaded
-            const session = this.sessions[this.currentIndex];
-            if (session) {
-                this.preloadImages(session.folder);
-            }
             this.updateCarousel();
         }
     }
