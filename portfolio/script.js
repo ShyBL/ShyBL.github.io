@@ -22,6 +22,8 @@ class Portfolio {
             const container = document.getElementById('carousel-container');
             container.innerHTML = '<div class="loading-throbber"><div class="loading-spinner"></div></div>';
             await this.loadProjects();
+            // Preload all media for all projects
+            this.projects.forEach(project => this.preloadMedia(project));
             this.render();
             this.setupControls();
         } catch (error) {
@@ -220,6 +222,19 @@ class Portfolio {
             .replace(/\b\w/g, l => l.toUpperCase());
     }
 
+    preloadMedia(project) {
+        // Preload screenshots
+        if (project.media && Array.isArray(project.media.screenshots)) {
+            project.media.screenshots.forEach(src => {
+                const img = new Image();
+                img.src = src;
+            });
+        }
+        // Preload video (as a fetch, not as a video element, to warm the cache)
+        if (project.media && project.media.video) {
+            fetch(project.media.video, { method: 'HEAD' });
+        }
+    }
 
 
     render() {
