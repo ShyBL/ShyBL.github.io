@@ -588,14 +588,47 @@ class JadePincerChronicles {
         // Try to load portrait image
         let imageUrl = null;
         if (actFolder) {
-            const normalized = plainName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
             const exts = ['jpg', 'jpeg', 'png', 'webp'];
-            for (const ext of exts) {
-                const path = `${actFolder}/portraits/${normalized}.${ext}`;
-                if (await this.fileExists(path)) {
-                    imageUrl = path;
-                    break;
+            
+            // Generate multiple possible filename patterns based on the character name
+            const nameParts = plainName.split(' ');
+            const firstName = nameParts[0].toLowerCase();
+            const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1].toLowerCase() : '';
+            
+            // Create various filename patterns to try
+            const patterns = [
+                // Original normalized name
+                plainName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase(),
+                // First name only
+                firstName,
+                // First name with underscore
+                firstName.replace(/[^a-zA-Z0-9]/g, '_'),
+                // First name with no special chars
+                firstName.replace(/[^a-zA-Z0-9]/g, ''),
+                // First name + last name
+                `${firstName}_${lastName}`,
+                // Last name only
+                lastName,
+                // Handle special cases like "Doji_Shizue"
+                plainName.replace(/[^a-zA-Z0-9_]/g, '_'),
+                // Handle cases with spaces
+                plainName.replace(/\s+/g, '_').toLowerCase(),
+                // Handle cases with hyphens
+                plainName.replace(/[^a-zA-Z0-9-]/g, '').toLowerCase()
+            ];
+            
+            // Try each pattern with each extension
+            for (const pattern of patterns) {
+                if (!pattern) continue; // Skip empty patterns
+                
+                for (const ext of exts) {
+                    const path = `${actFolder}/portraits/${pattern}.${ext}`;
+                    if (await this.fileExists(path)) {
+                        imageUrl = path;
+                        break;
+                    }
                 }
+                if (imageUrl) break;
             }
         }
         
