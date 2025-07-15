@@ -1,3 +1,4 @@
+// ARCHIVED: This file was moved to /Tests as it is no longer used in the main site.
 // Configuration object - can be modified before initializing
 window.RokuganConfig = {
     folderPattern: 'Session-', // Pattern for folder names (Session-01, Act-01, etc.)

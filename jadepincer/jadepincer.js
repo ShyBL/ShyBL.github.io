@@ -53,7 +53,7 @@ class JadePincerChronicles {
                 Object.assign(act, parsed);
             }
         } catch (error) {
-            console.warn(`No README found for ${folder}`);
+            console.warn(`No README found for ${folder}`, error);
         }
         act.images = await this.loadImages(folder);
         // NEW: Load portrait manifest for this act
@@ -64,6 +64,7 @@ class JadePincerChronicles {
                 this.portraitManifests[folder] = JSON.parse(manifestText);
             }
         } catch (e) {
+            console.warn('Error loading portrait manifest for', folder, e);
             this.portraitManifests[folder] = {};
         }
         return act;
@@ -73,7 +74,8 @@ class JadePincerChronicles {
         try {
             const response = await fetch(path);
             return response.ok ? await response.text() : null;
-        } catch {
+        } catch (e) {
+            console.warn('fetchFile error for', path, e);
             return null;
         }
     }
@@ -232,7 +234,8 @@ class JadePincerChronicles {
         try {
             const response = await fetch(path, { method: 'HEAD' });
             return response.ok;
-        } catch {
+        } catch (e) {
+            console.warn('fileExists error for', path, e);
             return false;
         }
     }
@@ -621,14 +624,28 @@ class JadePincerChronicles {
                 }
             }
         }
-        // NEW: Use manifest for instant portrait lookup
+        // Robust portrait matching: scan the portraits folder for a file that matches the plain name (ignore case, dashes, spaces)
         let imageUrl = null;
-        if (actFolder && this.portraitManifests[actFolder]) {
-            const manifest = this.portraitManifests[actFolder];
-            // Try exact match, then normalized
-            imageUrl = manifest[plainName] || manifest[plainName.replace(/[^a-zA-Z0-9 _-]/g, '')];
-            if (imageUrl) {
-                imageUrl = `${actFolder}/portraits/${imageUrl}`;
+        if (actFolder) {
+            try {
+                // List of portrait files (simulate by fetching manifest and using its values)
+                const manifest = this.portraitManifests[actFolder];
+                if (manifest) {
+                    const files = Object.values(manifest);
+                    // Normalize function: lower, remove spaces/dashes/underscores
+                    const normalize = s => s.toLowerCase().replace(/[-_\s]/g, '');
+                    const plainNorm = normalize(plainName);
+                    // Try to find a file whose base name matches the normalized plain name
+                    for (const file of files) {
+                        const base = file.replace(/\.[^.]+$/, '');
+                        if (normalize(base) === plainNorm) {
+                            imageUrl = `${actFolder}/portraits/${file}`;
+                            break;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn('Portrait modal: error matching portrait for', plainName, 'in', actFolder, e);
             }
         }
         // Parse character details for display

@@ -68,7 +68,7 @@ class Portfolio {
                 Object.assign(project, parsed);
             }
         } catch (error) {
-            console.warn(`No README found for ${folder}`);
+            console.warn(`No README found for ${folder}`, error);
         }
 
         // Load media files
@@ -82,6 +82,7 @@ class Portfolio {
             const response = await fetch(path);
             return response.ok ? await response.text() : null;
         } catch (error) {
+            console.warn('fetchFile error for', path, error);
             return null;
         }
     }
@@ -212,6 +213,7 @@ class Portfolio {
             clearTimeout(timeoutId);
             return response.ok;
         } catch (error) {
+            console.warn('fileExists error for', path, error);
             return false;
         }
     }
