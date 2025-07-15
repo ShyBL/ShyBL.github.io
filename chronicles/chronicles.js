@@ -384,7 +384,6 @@ class Chronicles {
         });
 
         this.setupImageCarousels();
-        this.setupSwipeNavigation();
         this.setupCharacterLinks();
     }
 
@@ -444,66 +443,6 @@ class Chronicles {
                 startAuto();
             }
         });
-    }
-
-    setupSwipeNavigation() {
-        const carousel = document.querySelector('.session-carousel');
-        if (!carousel) return;
-
-        let startX = 0;
-        let startY = 0;
-        let isDragging = false;
-        let currentTranslateX = 0;
-
-        const handleTouchStart = (e) => {
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-            isDragging = true;
-            currentTranslateX = -this.currentIndex * 100;
-            
-            carousel.style.transition = 'none';
-        };
-
-        const handleTouchMove = (e) => {
-            if (!isDragging) return;
-            
-            const currentX = e.touches[0].clientX;
-            const currentY = e.touches[0].clientY;
-            const diffX = currentX - startX;
-            const diffY = currentY - startY;
-            
-            // Only handle horizontal swipes
-            if (Math.abs(diffX) > Math.abs(diffY)) {
-                e.preventDefault();
-                const translateX = currentTranslateX + diffX;
-                carousel.style.transform = `translateX(${translateX}%)`;
-            }
-        };
-
-        const handleTouchEnd = (e) => {
-            if (!isDragging) return;
-            
-            const currentX = e.changedTouches[0].clientX;
-            const diffX = currentX - startX;
-            const threshold = 50;
-            
-            if (Math.abs(diffX) > threshold) {
-                if (diffX > 0) {
-                    this.goToPrevious();
-                } else {
-                    this.goToNext();
-                }
-            } else {
-                this.updateCarousel();
-            }
-            
-            isDragging = false;
-            carousel.style.transition = '';
-        };
-
-        carousel.addEventListener('touchstart', handleTouchStart, { passive: false });
-        carousel.addEventListener('touchmove', handleTouchMove, { passive: false });
-        carousel.addEventListener('touchend', handleTouchEnd);
     }
 
     async preloadImages(sessionFolder) {
