@@ -33,7 +33,7 @@ body {
 }
 
 .container {
-    max-width: 75rem;
+    max-width: 90rem;
     margin: 0 auto;
     padding: 0 1rem;
 }
@@ -227,7 +227,7 @@ body {
 
 .session-details {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: 1.5rem;
 }
 
@@ -489,6 +489,7 @@ body {
     .session-details {
         grid-template-columns: 1fr;
         gap: 1rem;
+        min-width: 100%;
     }
     
     .session-title {

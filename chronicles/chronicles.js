@@ -712,6 +712,154 @@ class Chronicles {
         return elementEmojis[element.toLowerCase()] || element;
     }
 
+    getLocationEmoji(locationName) {
+        const locationEmojis = {
+            // Religious & Spiritual
+            'temple': '⛩️',
+            'shrine': '🎐',
+            'lotus': '🪷',
+            'meditation': '🧘',
+            'prayer': '📿',
+            'spiritual': '☯️',
+            
+            // Royal & Political
+            'castle': '🏯',
+            'palace': '🏯',
+            'throne': '👑',
+            'imperial': '👑',
+            'royal': '👑',
+            'noble': '👑',
+            
+            // Nature & Gardens
+            'garden': '🎋',
+            'bamboo': '🎋',
+            'cherry': '🌸',
+            'lotus garden': '🪷',
+            'mountain': '🗻',
+            'cave': '🗻',
+            'forest': '🎋',
+            'grove': '🎋',
+            
+            // Commercial & Social
+            'market': '🎏',
+            'shop': '🎏',
+            'store': '🎏',
+            'inn': '🍵',
+            'tavern': '🍵',
+            'restaurant': '🍱',
+            'food': '🍱',
+            
+            // Training & Combat
+            'dojo': '🥋',
+            'training': '🥋',
+            'martial': '🥋',
+            'combat': '⚔️',
+            'weapon': '🏹',
+            'armory': '🗡️',
+            'barracks': '🗡️',
+            
+            // Cultural & Entertainment
+            'theater': '🎭',
+            'stage': '🎭',
+            'performance': '🎭',
+            'gambling': '🎴',
+            'game': '🎴',
+            'festival': '🎆',
+            'celebration': '🎆',
+            
+            // Traditional & Ceremonial
+            'tea house': '🍵',
+            'tea room': '🍵',
+            'ceremony': '🎎',
+            'ritual': '🎎',
+            'traditional': '🎎',
+            'doll': '🎎',
+            
+            // Food & Hospitality
+            'kitchen': '🍱',
+            'dining': '🍱',
+            'dinner': '🍱',
+            'banquet': '🍱',
+            'feast': '🍱',
+            'hospitality': '🍵',
+            
+            // Architecture & Structures
+            'tower': '🏯',
+            'fortress': '🏯',
+            'watchtower': '🏯',
+            'gate': '🏯',
+            'wall': '🏯',
+            'bridge': '🏯',
+            
+            // Living Quarters
+            'quarters': '🏯',
+            'room': '🏯',
+            'chamber': '🏯',
+            'suite': '🏯',
+            'apartment': '🏯',
+            'residence': '🏯',
+            
+            // Transportation & Travel
+            'stables': '🏯',
+            'stable': '🏯',
+            'road': '🏯',
+            'path': '🏯',
+            'waystation': '🏯',
+            'station': '🏯',
+            
+            // Urban & Administrative
+            'capital': '🏯',
+            'city': '🏯',
+            'town': '🏯',
+            'village': '🏯',
+            'district': '🏯',
+            'ward': '🏯',
+            
+            // Specific Areas
+            'grounds': '🌸',
+            'yard': '🌸',
+            'courtyard': '🌸',
+            'plaza': '🌸',
+            'square': '🌸',
+            'hall': '🏯',
+            'lobby': '🏯',
+            'entrance': '🏯',
+            
+            // Seasonal & Festive
+            'festival': '🎆',
+            'celebration': '🎆',
+            'party': '🎆',
+            'holiday': '🎆',
+            'tanabata': '🎋',
+            'children': '🎏',
+            
+            // Mystical & Supernatural
+            'mystical': '👹',
+            'supernatural': '👹',
+            'spirit': '👹',
+            'ghost': '👹',
+            'demon': '👹',
+            'oni': '👹',
+            
+            // Lucky & Prosperous
+            'lucky': '🧧',
+            'fortune': '🧧',
+            'prosperity': '🧧',
+            'wealth': '🧧',
+            'treasure': '🧧',
+            'gold': '🧧'
+        };
+        
+        const lowerName = locationName.toLowerCase();
+        for (const [keyword, emoji] of Object.entries(locationEmojis)) {
+            if (lowerName.includes(keyword)) {
+                return emoji;
+            }
+        }
+        
+        return '🏛️'; // Default fallback
+    }
+
     parseCharacterDetails(details) {
         if (!details) return null;
         
@@ -805,17 +953,21 @@ class Chronicles {
                 ${parsedDetails ? `
                     <div class="portrait-details">
                         <div class="character-trait">Sub-locations</div>
-                        <div class="character-elements">${parsedDetails.subLocations.join(', ')}</div>
+                        <div class="character-elements">
+                            <ul style="margin: 0; padding-left: 20px; list-style-type: disc;">
+                                ${parsedDetails.subLocations.map(loc => `<li>${loc}</li>`).join('')}
+                            </ul>
+                        </div>
                         <div class="character-trait" style="margin-top: 8px;">Terrain</div>
                         <div class="character-elements">${parsedDetails.terrainQualities}</div>
                     </div>
                 ` : `
                     <div class="portrait-details">
                         <div class="character-trait">Location</div>
-                        <div class="character-elements">🏛️ ${locationName}</div>
+                        <div class="character-elements">${this.getLocationEmoji(locationName)} ${locationName}</div>
                     </div>
                 `}
-                <div class="portrait-clan-icon">🏛️</div>
+                <div class="portrait-clan-icon">${this.getLocationEmoji(locationName)}</div>
             </div>
         `;
         document.body.appendChild(overlay);
@@ -835,4 +987,4 @@ class Chronicles {
 
 document.addEventListener('DOMContentLoaded', () => {
     new Chronicles();
-}); 
+});
