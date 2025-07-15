@@ -290,7 +290,7 @@ class JadePincerChronicles {
                     ${act.characters.map(char => {
                         const plainName = this.extractPlainName(char);
                         return `
-                            <li><span class="character-btn" data-char="${encodeURIComponent(char)}">${this.parseMarkdownText(char)}</span></li>
+                            <li><span class="character-btn" data-char="${encodeURIComponent(char)}" style="user-select: none;">${this.parseMarkdownText(char)}</span></li>
                         `;
                     }).join('')}
                 </ul>
@@ -302,7 +302,7 @@ class JadePincerChronicles {
                 <div class="detail-title">Locations</div>
                 <ul class="detail-list locations-list">
                     ${act.locations.map(loc => `
-                        <li><span class="location-btn" data-location="${encodeURIComponent(loc)}">${loc}</span></li>
+                        <li><span class="location-btn" data-location="${encodeURIComponent(loc)}" style="user-select: none;">${loc}</span></li>
                     `).join('')}
                 </ul>
             </div>

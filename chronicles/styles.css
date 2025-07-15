@@ -542,6 +542,7 @@ body {
     border: 1px solid rgba(212, 175, 55, 0.3);
     filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
     will-change: transform;
+    user-select: none;
 }
 
 .character-btn:hover {
@@ -560,6 +561,7 @@ body {
     border: 1px solid rgba(34, 139, 34, 0.3);
     filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
     will-change: transform;
+    user-select: none;
 }
 
 .location-btn:hover {
