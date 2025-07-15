@@ -6,6 +6,8 @@ class JadePincerChronicles {
         this.currentIndex = 0;
         this.actFolders = ['Act-1', 'Act-2', 'Act-3', 'Act-4', 'Act-5', 'Act-6'];
         this.characterClickHandler = null;
+        this.portraitManifests = {}; // store loaded manifests
+        this.preloadedActs = new Set(); // track preloaded acts
         this.init();
     }
 
@@ -14,6 +16,10 @@ class JadePincerChronicles {
             this.container = document.getElementById('session-container');
             this.container.innerHTML = '<div class="loading-throbber"><div class="loading-spinner"></div></div>';
             await this.loadActs();
+            // Preload images for the first act
+            if (this.acts.length > 0) {
+                await this.preloadImages(this.acts[0].folder);
+            }
             this.render();
             this.setupControls();
         } catch (error) {
@@ -50,6 +56,16 @@ class JadePincerChronicles {
             console.warn(`No README found for ${folder}`);
         }
         act.images = await this.loadImages(folder);
+        // NEW: Load portrait manifest for this act
+        try {
+            const manifestPath = `${folder}/portraits/manifest.json`;
+            const manifestText = await this.fetchFile(manifestPath);
+            if (manifestText) {
+                this.portraitManifests[folder] = JSON.parse(manifestText);
+            }
+        } catch (e) {
+            this.portraitManifests[folder] = {};
+        }
         return act;
     }
 
@@ -219,6 +235,27 @@ class JadePincerChronicles {
         } catch {
             return false;
         }
+    }
+
+    async preloadImages(actFolder) {
+        if (this.preloadedActs.has(actFolder)) return;
+        // Preload portraits from manifest
+        const manifest = this.portraitManifests[actFolder];
+        if (manifest) {
+            Object.values(manifest).forEach(filename => {
+                const img = new Image();
+                img.src = `${actFolder}/portraits/${filename}`;
+            });
+        }
+        // Preload main images (carousel)
+        const act = this.acts.find(a => a.folder === actFolder);
+        if (act && act.images) {
+            act.images.forEach(imagePath => {
+                const img = new Image();
+                img.src = imagePath;
+            });
+        }
+        this.preloadedActs.add(actFolder);
     }
 
     formatTitle(folder) {
@@ -487,6 +524,11 @@ class JadePincerChronicles {
     goToPrevious() {
         if (this.currentIndex > 0) {
             this.currentIndex--;
+            // Lazy load images for the previous act if not already loaded
+            const prevAct = this.acts[this.currentIndex];
+            if (prevAct) {
+                this.preloadImages(prevAct.folder);
+            }
             this.updateCarousel();
         }
     }
@@ -494,13 +536,25 @@ class JadePincerChronicles {
     goToNext() {
         if (this.currentIndex < this.acts.length - 1) {
             this.currentIndex++;
+            // Lazy load images for the next act if not already loaded
+            const nextAct = this.acts[this.currentIndex];
+            if (nextAct) {
+                this.preloadImages(nextAct.folder);
+            }
             this.updateCarousel();
         }
     }
 
     goToSlide(index) {
-        this.currentIndex = index;
-        this.updateCarousel();
+        if (index >= 0 && index < this.acts.length) {
+            this.currentIndex = index;
+            // Lazy load images for the selected act if not already loaded
+            const act = this.acts[this.currentIndex];
+            if (act) {
+                this.preloadImages(act.folder);
+            }
+            this.updateCarousel();
+        }
     }
 
     updateCarousel() {
@@ -567,10 +621,8 @@ class JadePincerChronicles {
         // Close any open modal first
         const existingModal = document.querySelector('.portrait-modal-overlay');
         if (existingModal) existingModal.remove();
-        
         // Extract plain name (strip markdown, remove role)
         const plainName = this.extractPlainName(charName);
-        
         // Find character details from act data
         let characterDetails = '';
         if (actFolder && this.acts) {
@@ -584,57 +636,18 @@ class JadePincerChronicles {
                 }
             }
         }
-        
-        // Try to load portrait image
+        // NEW: Use manifest for instant portrait lookup
         let imageUrl = null;
-        if (actFolder) {
-            const exts = ['jpg', 'jpeg', 'png', 'webp'];
-            
-            // Generate multiple possible filename patterns based on the character name
-            const nameParts = plainName.split(' ');
-            const firstName = nameParts[0].toLowerCase();
-            const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1].toLowerCase() : '';
-            
-            // Create various filename patterns to try
-            const patterns = [
-                // Original normalized name
-                plainName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase(),
-                // First name only
-                firstName,
-                // First name with underscore
-                firstName.replace(/[^a-zA-Z0-9]/g, '_'),
-                // First name with no special chars
-                firstName.replace(/[^a-zA-Z0-9]/g, ''),
-                // First name + last name
-                `${firstName}_${lastName}`,
-                // Last name only
-                lastName,
-                // Handle special cases like "Doji_Shizue"
-                plainName.replace(/[^a-zA-Z0-9_]/g, '_'),
-                // Handle cases with spaces
-                plainName.replace(/\s+/g, '_').toLowerCase(),
-                // Handle cases with hyphens
-                plainName.replace(/[^a-zA-Z0-9-]/g, '').toLowerCase()
-            ];
-            
-            // Try each pattern with each extension
-            for (const pattern of patterns) {
-                if (!pattern) continue; // Skip empty patterns
-                
-                for (const ext of exts) {
-                    const path = `${actFolder}/portraits/${pattern}.${ext}`;
-                    if (await this.fileExists(path)) {
-                        imageUrl = path;
-                        break;
-                    }
-                }
-                if (imageUrl) break;
+        if (actFolder && this.portraitManifests[actFolder]) {
+            const manifest = this.portraitManifests[actFolder];
+            // Try exact match, then normalized
+            imageUrl = manifest[plainName] || manifest[plainName.replace(/[^a-zA-Z0-9 _-]/g, '')];
+            if (imageUrl) {
+                imageUrl = `${actFolder}/portraits/${imageUrl}`;
             }
         }
-        
         // Parse character details for display
         const parsedDetails = this.parseCharacterDetails(characterDetails);
-        
         // Create overlay and modal
         const overlay = document.createElement('div');
         overlay.className = 'portrait-modal-overlay';
@@ -655,7 +668,6 @@ class JadePincerChronicles {
             </div>
         `;
         document.body.appendChild(overlay);
-        
         // Close on click of avatar, modal, or overlay
         const avatar = overlay.querySelector('.portrait-avatar');
         if (avatar) avatar.addEventListener('click', () => overlay.remove());

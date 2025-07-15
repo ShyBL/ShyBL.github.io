@@ -261,7 +261,7 @@ body {
 }
 
 .detail-list li::before {
-    content: '⛩️';
+    content: '🗻';
     position: absolute;
     left: 0;
     font-size: 1.5rem;
@@ -273,7 +273,7 @@ body {
 }
 
 .locations-list li::before {
-    content: '🗻';
+    content: '⛩️';
     font-size: 1.5rem;
 }
 

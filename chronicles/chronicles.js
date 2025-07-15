@@ -9,6 +9,8 @@ class Chronicles {
             'Session-06', 'Session-07', 'Session-08', 'Session-09', 'Session-10'
         ];
         this.characterClickHandler = null;
+        this.portraitManifests = {}; // store loaded manifests
+        this.preloadedSessions = new Set(); // track preloaded sessions
         this.init();
     }
 
@@ -17,6 +19,10 @@ class Chronicles {
             this.container = document.getElementById('session-container');
             this.container.innerHTML = '<div class="loading-throbber"><div class="loading-spinner"></div></div>';
             await this.loadSessions();
+            // Preload images for the first session
+            if (this.sessions.length > 0) {
+                await this.preloadImages(this.sessions[0].folder);
+            }
             this.render();
             this.setupControls();
         } catch (error) {
@@ -53,6 +59,16 @@ class Chronicles {
             console.warn(`No README found for ${folder}`);
         }
         session.images = await this.loadImages(folder);
+        // NEW: Load portrait manifest for this session
+        try {
+            const manifestPath = `${folder}/portraits/manifest.json`;
+            const manifestText = await this.fetchFile(manifestPath);
+            if (manifestText) {
+                this.portraitManifests[folder] = JSON.parse(manifestText);
+            }
+        } catch (e) {
+            this.portraitManifests[folder] = {};
+        }
         return session;
     }
 
@@ -274,7 +290,7 @@ class Chronicles {
         const eventsHTML = session.keyEvents.length > 0 ? `
             <div class="detail-section">
                 <div class="detail-title">Key Events</div>
-                <ul class="detail-list">
+                <ul class="detail-list key-events-list">
                     ${session.keyEvents.map(event => `<li>${event}</li>`).join('')}
                 </ul>
             </div>
@@ -487,9 +503,35 @@ class Chronicles {
         carousel.addEventListener('touchend', handleTouchEnd);
     }
 
+    async preloadImages(sessionFolder) {
+        if (this.preloadedSessions.has(sessionFolder)) return;
+        // Preload portraits from manifest
+        const manifest = this.portraitManifests[sessionFolder];
+        if (manifest) {
+            Object.values(manifest).forEach(filename => {
+                const img = new Image();
+                img.src = `${sessionFolder}/portraits/${filename}`;
+            });
+        }
+        // Preload main images (carousel)
+        const session = this.sessions.find(s => s.folder === sessionFolder);
+        if (session && session.images) {
+            session.images.forEach(imagePath => {
+                const img = new Image();
+                img.src = imagePath;
+            });
+        }
+        this.preloadedSessions.add(sessionFolder);
+    }
+
     goToPrevious() {
         if (this.currentIndex > 0) {
             this.currentIndex--;
+            // Lazy load images for the previous session if not already loaded
+            const prevSession = this.sessions[this.currentIndex];
+            if (prevSession) {
+                this.preloadImages(prevSession.folder);
+            }
             this.updateCarousel();
         }
     }
@@ -497,13 +539,25 @@ class Chronicles {
     goToNext() {
         if (this.currentIndex < this.sessions.length - 1) {
             this.currentIndex++;
+            // Lazy load images for the next session if not already loaded
+            const nextSession = this.sessions[this.currentIndex];
+            if (nextSession) {
+                this.preloadImages(nextSession.folder);
+            }
             this.updateCarousel();
         }
     }
 
     goToSlide(index) {
-        this.currentIndex = index;
-        this.updateCarousel();
+        if (index >= 0 && index < this.sessions.length) {
+            this.currentIndex = index;
+            // Lazy load images for the selected session if not already loaded
+            const session = this.sessions[this.currentIndex];
+            if (session) {
+                this.preloadImages(session.folder);
+            }
+            this.updateCarousel();
+        }
     }
 
     updateCarousel() {
@@ -570,10 +624,8 @@ class Chronicles {
         // Close any open modal first
         const existingModal = document.querySelector('.portrait-modal-overlay');
         if (existingModal) existingModal.remove();
-        
         // Extract plain name (strip markdown, remove role)
         const plainName = this.extractPlainName(charName);
-        
         // Find character details from session data
         let characterDetails = '';
         if (sessionFolder && this.sessions) {
@@ -587,57 +639,18 @@ class Chronicles {
                 }
             }
         }
-        
-        // Try to load portrait image
+        // NEW: Use manifest for instant portrait lookup
         let imageUrl = null;
-        if (sessionFolder) {
-            const exts = ['jpg', 'jpeg', 'png', 'webp'];
-            
-            // Generate multiple possible filename patterns based on the character name
-            const nameParts = plainName.split(' ');
-            const firstName = nameParts[0].toLowerCase();
-            const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1].toLowerCase() : '';
-            
-            // Create various filename patterns to try
-            const patterns = [
-                // Original normalized name
-                plainName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase(),
-                // First name only
-                firstName,
-                // First name with underscore
-                firstName.replace(/[^a-zA-Z0-9]/g, '_'),
-                // First name with no special chars
-                firstName.replace(/[^a-zA-Z0-9]/g, ''),
-                // First name + last name
-                `${firstName}_${lastName}`,
-                // Last name only
-                lastName,
-                // Handle special cases like "Doji_Shizue"
-                plainName.replace(/[^a-zA-Z0-9_]/g, '_'),
-                // Handle cases with spaces
-                plainName.replace(/\s+/g, '_').toLowerCase(),
-                // Handle cases with hyphens
-                plainName.replace(/[^a-zA-Z0-9-]/g, '').toLowerCase()
-            ];
-            
-            // Try each pattern with each extension
-            for (const pattern of patterns) {
-                if (!pattern) continue; // Skip empty patterns
-                
-                for (const ext of exts) {
-                    const path = `${sessionFolder}/portraits/${pattern}.${ext}`;
-                    if (await this.fileExists(path)) {
-                        imageUrl = path;
-                        break;
-                    }
-                }
-                if (imageUrl) break;
+        if (sessionFolder && this.portraitManifests[sessionFolder]) {
+            const manifest = this.portraitManifests[sessionFolder];
+            // Try exact match, then normalized
+            imageUrl = manifest[plainName] || manifest[plainName.replace(/[^a-zA-Z0-9 _-]/g, '')];
+            if (imageUrl) {
+                imageUrl = `${sessionFolder}/portraits/${imageUrl}`;
             }
         }
-        
         // Parse character details for display
         const parsedDetails = this.parseCharacterDetails(characterDetails);
-        
         // Create overlay and modal
         const overlay = document.createElement('div');
         overlay.className = 'portrait-modal-overlay';
@@ -658,7 +671,6 @@ class Chronicles {
             </div>
         `;
         document.body.appendChild(overlay);
-        
         // Close on click of avatar, modal, or overlay
         const avatar = overlay.querySelector('.portrait-avatar');
         if (avatar) avatar.addEventListener('click', () => overlay.remove());
