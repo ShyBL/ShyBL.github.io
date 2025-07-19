@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Game Name on Steam</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(to bottom, #1b2838 0%, #2a475e 100%);
+            color: #c6d4df;
+            font-family: "Motiva Sans", Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        /* Steam Header */
+        .steam-header {
+            background: #171a21;
+            border-bottom: 1px solid #2a3f5f;
+            height: 104px;
+        }
+
+        .header-content {
+            max-width: 940px;
+            margin: 0 auto;
+            padding: 0 16px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .steam-logo {
+            background: #ffffff;
+            color: #171a21;
+            padding: 8px 16px;
+            font-weight: bold;
+            font-size: 18px;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .nav-breadcrumb {
+            color: #8091a2;
+            font-size: 12px;
+        }
+
+        .nav-breadcrumb a {
+            color: #66c0f4;
+            text-decoration: none;
+        }
+
+        .nav-breadcrumb a:hover {
+            color: #ffffff;
+        }
+
+        /* Main Layout */
+        .page-content {
+            max-width: 940px;
+            margin: 0 auto;
+            padding: 16px;
+            display: grid;
+            grid-template-columns: 1fr 308px;
+            gap: 16px;
+        }
+
+        /* Game Header Section */
+        .game-header {
+            grid-column: 1 / -1;
+            margin-bottom: 10px;
+        }
+
+        .game-title {
+            color: #ffffff;
+            font-size: 26px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        /* Left Column - Main Content */
+        .left-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Screenshot Section */
+        .screenshot-section {
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .main-screenshot {
+            width: 100%;
+            height: 353px;
+            background: #000000;
+            position: relative;
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .screenshot-placeholder {
+            width: 100%;
+            height: 100%;
+            border: 2px dashed #67c1f5;
+            background: rgba(103, 193, 245, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #67c1f5;
+            font-size: 14px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .screenshot-placeholder:hover {
+            background: rgba(103, 193, 245, 0.2);
+            border-color: #ffffff;
+            color: #ffffff;
+        }
+
+        .screenshot-thumbnails {
+            display: flex;
+            gap: 2px;
+            margin-top: 2px;
+        }
+
+        .screenshot-thumb {
+            width: 116px;
+            height: 65px;
+            background: #000000;
+            border-radius: 3px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .thumb-placeholder {
+            width: 100%;
+            height: 100%;
+            border: 1px dashed #417a9b;
+            background: rgba(65, 122, 155, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #67c1f5;
+            font-size: 10px;
+            text-align: center;
+        }
+
+        .thumb-placeholder:hover {
+            background: rgba(65, 122, 155, 0.2);
+            border-color: #67c1f5;
+        }
+
+        /* Game Description */
+        .game-description {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 5px;
+            line-height: 1.6;
+        }
+
+        .description-title {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        /* Tags Section */
+        .tags-section {
+            margin: 16px 0;
+        }
+
+        .tags-title {
+            color: #8091a2;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(103, 193, 245, 0.1);
+            color: #67c1f5;
+            padding: 1px 7px;
+            margin: 0 8px 4px 0;
+            border-radius: 2px;
+            font-size: 10px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .tag:hover {
+            background: #417a9b;
+            color: #ffffff;
+        }
+
+        /* System Requirements */
+        .system-requirements {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 16px;
+            border-radius: 5px;
+            margin-top: 16px;
+        }
+
+        .req-title {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .req-tabs {
+            display: flex;
+            margin-bottom: 16px;
+        }
+
+        .req-tab {
+            background: #4c6b22;
+            color: #beee11;
+            padding: 4px 15px;
+            margin-right: 2px;
+            cursor: pointer;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .req-tab.active {
+            background: #beee11;
+            color: #4c6b22;
+        }
+
+        .req-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .req-column h4 {
+            color: #8091a2;
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .req-list {
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+        .req-list strong {
+            color: #8091a2;
+        }
+
+        /* Right Column - Sidebar */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Purchase Section */
+        .purchase-area {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 16px;
+            border-radius: 5px;
+        }
+
+        .game-title-purchase {
+            color: #ffffff;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .package-contents {
+            color: #8091a2;
+            font-size: 11px;
+            margin-bottom: 16px;
+        }
+
+        .price-area {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+            gap: 8px;
+        }
+
+        .discount-pct {
+            background: #4c6b22;
+            color: #beee11;
+            padding: 2px 6px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .discount-original-price {
+            color: #626366;
+            text-decoration: line-through;
+            font-size: 11px;
+        }
+
+        .discount-final-price {
+            color: #beee11;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .btn-green-white-innerfade {
+            background: linear-gradient(to bottom, #75b022 5%, #588a1b 95%);
+            border: 1px solid #4b6f20;
+            color: #d2efa9;
+            width: 100%;
+            padding: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 2px;
+            margin-bottom: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-green-white-innerfade:hover {
+            background: linear-gradient(to bottom, #81bc29 5%, #618b25 95%);
+        }
+
+        .btn-darkblue-white-innerfade {
+            background: linear-gradient(to bottom, #4c6b22 5%, #3d5518 95%);
+            border: 1px solid #2d3f0f;
+            color: #67c1f5;
+            width: 100%;
+            padding: 8px;
+            font-size: 12px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 2px;
+            margin-bottom: 4px;
+        }
+
+        .btn-darkblue-white-innerfade:hover {
+            background: linear-gradient(to bottom, #588a1b 5%, #4a741a 95%);
+            color: #ffffff;
+        }
+
+        /* Game Details */
+        .game-details {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 16px;
+            border-radius: 5px;
+        }
+
+        .details-block {
+            margin-bottom: 16px;
+        }
+
+        .subtitle {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .details-list {
+            font-size: 12px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 4px;
+        }
+
+        .detail-label {
+            color: #8091a2;
+            width: 90px;
+            flex-shrink: 0;
+        }
+
+        .detail-value {
+            color: #c6d4df;
+        }
+
+        .detail-value a {
+            color: #67c1f5;
+            text-decoration: none;
+        }
+
+        .detail-value a:hover {
+            color: #ffffff;
+        }
+
+        /* Language Support Table */
+        .language-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            margin-top: 8px;
+        }
+
+        .language-table th {
+            background: rgba(103, 193, 245, 0.1);
+            color: #8091a2;
+            padding: 4px 8px;
+            text-align: left;
+            font-weight: normal;
+            text-transform: uppercase;
+        }
+
+        .language-table td {
+            padding: 4px 8px;
+            border-bottom: 1px solid #2a3f5f;
+        }
+
+        .language-table .supported {
+            text-align: center;
+            color: #beee11;
+        }
+
+        /* More From Developer */
+        .more-from-developer {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 16px;
+            border-radius: 5px;
+        }
+
+        .developer-games {
+            display: grid;
+            gap: 8px;
+        }
+
+        .developer-game {
+            display: flex;
+            gap: 8px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .developer-game:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .dev-game-capsule {
+            width: 47px;
+            height: 22px;
+            background: #2a475e;
+            border: 1px dashed #417a9b;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            color: #67c1f5;
+        }
+
+        .dev-game-info {
+            flex: 1;
+        }
+
+        .dev-game-title {
+            color: #67c1f5;
+            font-size: 12px;
+            margin-bottom: 2px;
+        }
+
+        .dev-game-price {
+            color: #626366;
+            font-size: 11px;
+        }
+
+        /* Asset Upload Areas */
+        .upload-placeholder {
+            border: 2px dashed #67c1f5;
+            background: rgba(103, 193, 245, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #67c1f5;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .upload-placeholder:hover {
+            background: rgba(103, 193, 245, 0.2);
+            border-color: #ffffff;
+            color: #ffffff;
+        }
+
+        /* Capsule Areas for Steam Assets */
+        .capsule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .capsule-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 16px;
+            border-radius: 5px;
+        }
+
+        .capsule-title {
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .capsule-dimensions {
+            color: #8091a2;
+            font-size: 10px;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        /* Specific capsule sizes based on Steam requirements */
+        .header-capsule { width: 100%; height: 215px; } /* 920x430 ratio */
+        .main-capsule { width: 100%; height: 145px; } /* 1232x706 ratio but scaled */
+        .small-capsule { width: 100%; height: 95px; } /* 462x174 ratio */
+        .vertical-capsule { width: 150px; height: 180px; margin: 0 auto; } /* 748x896 ratio */
+
+        /* Responsive Design */
+        @media (max-width: 940px) {
+            .page-content {
+                grid-template-columns: 1fr;
+                padding: 8px;
+            }
+            
+            .right-column {
+                order: -1;
+            }
+            
+            .capsule-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Steam Header -->
+    <header class="steam-header">
+        <div class="header-content">
+            <a href="#" class="steam-logo">STEAM</a>
+            <nav class="nav-breadcrumb">
+                <a href="#">Store</a> &gt; 
+                <a href="#">Browse</a> &gt; 
+                <a href="#">Action Games</a> &gt; 
+                Your Game Name
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="page-content">
+        <!-- Game Header -->
+        <div class="game-header">
+            <h1 class="game-title">Your Game Name</h1>
+        </div>
+
+        <!-- Left Column -->
+        <div class="left-column">
+            <!-- Screenshot Section -->
+            <div class="screenshot-section">
+                <div class="main-screenshot" onclick="uploadImage(this, 'main')">
+                    <div class="screenshot-placeholder">
+                        Click to upload main screenshot<br>
+                        <small>Minimum 1920x1080, 16:9 ratio recommended</small>
+                    </div>
+                </div>
+                <div class="screenshot-thumbnails">
+                    <div class="screenshot-thumb" onclick="uploadImage(this, 'thumb')">
+                        <div class="thumb-placeholder">Screenshot 1</div>
+                    </div>
+                    <div class="screenshot-thumb" onclick="uploadImage(this, 'thumb')">
+                        <div class="thumb-placeholder">Screenshot 2</div>
+                    </div>
+                    <div class="screenshot-thumb" onclick="uploadImage(this, 'thumb')">
+                        <div class="thumb-placeholder">Screenshot 3</div>
+                    </div>
+                    <div class="screenshot-thumb" onclick="uploadImage(this, 'thumb')">
+                        <div class="thumb-placeholder">Screenshot 4</div>
+                    </div>
+                    <div class="screenshot-thumb" onclick="uploadImage(this, 'thumb')">
+                        <div class="thumb-placeholder">Screenshot 5</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Description -->
+            <div class="game-description">
+                <div class="description-title">About This Game</div>
+                <p>Enter the captivating world of [Your Game Name], where every decision shapes your destiny. Experience groundbreaking gameplay mechanics, stunning visuals, and an immersive storyline that will keep you engaged for hours.</p>
+                <br>
+                <p><strong>Key Features:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 8px;">
+                    <li>Revolutionary gameplay mechanics</li>
+                    <li>Stunning next-gen graphics</li>
+                    <li>Epic single-player campaign</li>
+                    <li>Multiplayer battles for up to 16 players</li>
+                    <li>Extensive customization options</li>
+                </ul>
+            </div>
+
+            <!-- Tags -->
+            <div class="tags-section">
+                <div class="tags-title">Popular user-defined tags for this product:</div>
+                <a href="#" class="tag">Action</a>
+                <a href="#" class="tag">Adventure</a>
+                <a href="#" class="tag">Indie</a>
+                <a href="#" class="tag">Multiplayer</a>
+                <a href="#" class="tag">Open World</a>
+                <a href="#" class="tag">RPG</a>
+                <a href="#" class="tag">Strategy</a>
+                <a href="#" class="tag">Simulation</a>
+                <a href="#" class="tag">Early Access</a>
+                <a href="#" class="tag">Co-op</a>
+            </div>
+
+            <!-- System Requirements -->
+            <div class="system-requirements">
+                <div class="req-title">System Requirements</div>
+                <div class="req-tabs">
+                    <div class="req-tab active">Windows</div>
+                    <div class="req-tab">Mac OS X</div>
+                    <div class="req-tab">SteamOS + Linux</div>
+                </div>
+                <div class="req-content">
+                    <div class="req-column">
+                        <h4>Minimum:</h4>
+                        <div class="req-list">
+                            <strong>OS:</strong> Windows 10 64-bit<br>
+                            <strong>Processor:</strong> Intel Core i5-4430 / AMD FX-6300<br>
+                            <strong>Memory:</strong> 8 GB RAM<br>
+                            <strong>Graphics:</strong> NVIDIA GeForce GTX 960 / AMD Radeon R9 280<br>
+                            <strong>DirectX:</strong> Version 11<br>
+                            <strong>Network:</strong> Broadband Internet connection<br>
+                            <strong>Storage:</strong> 50 GB available space<br>
+                            <strong>Sound Card:</strong> DirectX compatible
+                        </div>
+                    </div>
+                    <div class="req-column">
+                        <h4>Recommended:</h4>
+                        <div class="req-list">
+                            <strong>OS:</strong> Windows 11 64-bit<br>
+                            <strong>Processor:</strong> Intel Core i7-6700K / AMD Ryzen 5 1600<br>
+                            <strong>Memory:</strong> 16 GB RAM<br>
+                            <strong>Graphics:</strong> NVIDIA GeForce GTX 1070 / AMD Radeon RX 580<br>
+                            <strong>DirectX:</strong> Version 12<br>
+                            <strong>Network:</strong> Broadband Internet connection<br>
+                            <strong>Storage:</strong> 50 GB available space (SSD recommended)<br>
+                            <strong>Sound Card:</strong> DirectX compatible
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column - Sidebar -->
+        <div class="right-column">
+            <!-- Main Capsule Image -->
+            <div class="main-capsule-area" style="margin-bottom: 8px;">
+                <div class="main-capsule upload-placeholder" onclick="uploadImage(this, 'main-capsule')" style="width: 100%; height: 145px; border-radius: 5px;">
+                    Click to upload Main Capsule<br>
+                    <small>616×353px recommended</small>
+                </div>
+            </div>
+
+            <!-- Purchase Area -->
+            <div class="purchase-area">
+                <div class="game-title-purchase">Buy Your Game Name</div>
+                <div class="package-contents">Includes 2 items: Your Game Name, Soundtrack</div>
+                <div class="price-area">
+                    <div class="discount-pct">-25%</div>
+                    <div class="discount-original-price">$39.99</div>
+                    <div class="discount-final-price">$29.99</div>
+                </div>
+                <button class="btn-green-white-innerfade">Add to Cart</button>
+                <button class="btn-darkblue-white-innerfade">Add to Wishlist</button>
+            </div>
+
+            <!-- Game Details -->
+            <div class="game-details">
+                <div class="details-block">
+                    <div class="details-list">
+                        <div class="detail-row">
+                            <div class="detail-label">Developer:</div>
+                            <div class="detail-value"><a href="#">Your Studio Name</a></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Publisher:</div>
+                            <div class="detail-value"><a href="#">Your Publisher</a></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Release Date:</div>
+                            <div class="detail-value">Jul 19, 2025</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details-block">
+                    <div class="subtitle">Languages</div>
+                    <table class="language-table">
+                        <thead>
+                            <tr>
+                                <th>Languages</th>
+                                <th>Interface</th>
+                                <th>Audio</th>
+                                <th>Subtitles</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>English</td>
+                                <td class="supported">✓</td>
+                                <td class="supported">✓</td>
+                                <td class="supported">✓</td>
+                            </tr>
+                            <tr>
+                                <td>French</td>
+                                <td class="supported">✓</td>
+                                <td class="supported">✓</td>
+                                <td class="supported">✓</td>
+                            </tr>
+                            <tr>
+                                <td>Spanish</td>
+                                <td class="supported">✓</td>
+                                <td>-</td>
+                                <td class="supported">✓</td>
+                            </tr>
+                            <tr>
+                                <td>German</td>
+                                <td class="supported">✓</td>
+                                <td>-</td>
+                                <td class="supported">✓</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- More From Developer -->
+            <div class="more-from-developer">
+                <div class="subtitle">More from Your Studio Name</div>
+                <div class="developer-games">
+                    <div class="developer-game">
+                        <div class="dev-game-capsule">IMG</div>
+                        <div class="dev-game-info">
+                            <div class="dev-game-title">Previous Game Title</div>
+                            <div class="dev-game-price">$19.99</div>
+                        </div>
+                    </div>
+                    <div class="developer-game">
+                        <div class="dev-game-capsule">IMG</div>
+                        <div class="dev-game-info">
+                            <div class="dev-game-title">Another Great Game</div>
+                            <div class="dev-game-price">$24.99</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        function uploadImage(element, type) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        element.style.backgroundImage = `url(${e.target.result})`;
+                        element.style.backgroundSize = 'cover';
+                        element.style.backgroundPosition = 'center';
+                        element.innerHTML = '';
+                        element.style.border = 'none';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+
+        // Add drag and drop functionality
+        document.querySelectorAll('.upload-placeholder, .screenshot-placeholder, .thumb-placeholder').forEach(area => {
+            area.parentElement.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                area.style.borderColor = '#ffffff';
+                area.style.color = '#ffffff';
+            });
+
+            area.parentElement.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                area.style.borderColor = '#67c1f5';
+                area.style.color = '#67c1f5';
+            });
+
+            area.parentElement.addEventListener('drop', (e) => {
+                e.preventDefault();
+                area.style.borderColor = '#67c1f5';
+                area.style.color = '#67c1f5';
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0 && files[0].type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        area.parentElement.style.backgroundImage = `url(${e.target.result})`;
+                        area.parentElement.style.backgroundSize = 'cover';
+                        area.parentElement.style.backgroundPosition = 'center';
+                        area.innerHTML = '';
+                        area.style.border = 'none';
+                    };
+                    reader.readAsDataURL
