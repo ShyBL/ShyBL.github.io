@@ -18,6 +18,7 @@ class BearStickTeam {
             this.container.innerHTML = '<div class="loading-throbber"><div class="loading-spinner"></div></div>';
             await this.loadTeam();
             this.render();
+            this.setupScrollAnimations();
         } catch (error) {
             console.error('Failed to load team:', error);
             this.showError('Failed to load team members');
@@ -162,7 +163,7 @@ class BearStickTeam {
             : '<div class="role">Team Member</div>';
 
         return `
-            <div class="team-card">
+            <div class="team-card fade-in-section">
                 <div class="avatar-container">
                     ${avatarHTML}
                 </div>
@@ -182,6 +183,44 @@ class BearStickTeam {
             .join('')
             .toUpperCase()
             .slice(0, 2);
+    }
+
+    setupScrollAnimations() {
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    // Stagger the animation
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in sections
+        const fadeInSections = document.querySelectorAll('.fade-in-section');
+        fadeInSections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // Observe header separately for immediate effect
+        const header = document.querySelector('.header');
+        if (header) {
+            const headerObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+            headerObserver.observe(header);
+        }
     }
 
     showError(message) {
