@@ -1,20 +1,18 @@
-# Cryptoria
-Cryptoria and The Whispers is a single-player turn-based card roguelite set in a dark dungeon fantasy world.
+# Rope & Whisper
+A prototype action-adventure game developed for [Silent Commando Games](https://silentcommando.com/) (Logan Spencer).
 <br>
-A collaboration with UX/UI designer Rotem Attias, who designed the full visual system in Figma. My role was to implement the design in Unity — translating his work into a functional, interactive game to serve as a portfolio showcase for his graduation presentation.
+Led a team of 4 as Game Producer and Team Manager, overseeing the full production pipeline from concept to prototype delivery. Responsible for sprint planning, task delegation, and keeping the team aligned on scope and timeline throughout development.
 
 ## Key Features
-- Turn-based card roguelite with two distinct combat modes: Dungeon Scroll (solo hero run) and room combat (full ally deck vs enemy formations)
-- Roster of 3 playable heroes, with 2 more planned
-- 6-card ally deck building system
-- World map navigation with dungeon levels, treasure rooms, and enemy encounters
-- Dark dungeon fantasy art style fully implemented from Figma designs
+- Action-adventure prototype built in Godot Engine
+- Full production pipeline management across a 4-person team
+- Sprint-based workflow using Notion for task tracking and documentation
+- Close collaboration with the client (Silent Commando Games) to meet creative vision
 
 ## Team
-- Shy Blechman (Unity Developer)
-- Rotem Attias (UX/UI Designer)
+- Shy Blechman (Producer / Team Manager)
 
 ## Tech Stack
-- Unity
-- Figma
+- Godot Engine
+- Notion
 - GitHub
