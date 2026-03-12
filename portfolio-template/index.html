@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="mobile.css">
+</head>
+<body>
+<header></header>
+
+<main class="projects">
+    <div class="container">
+        <div id="carousel-container">
+            <div class="loading-throbber">
+                <div class="loading-spinner"></div>
+            </div>
+            <div class="loading-text">Loading projects...</div>
+        </div>
+    </div>
+</main>
+
+<!--
+    OPTIONAL: Steam store widgets.
+    Replace the src URLs with your own:
+    https://store.steampowered.com/widget/<APP_ID>/
+    Remove this entire section if you don't need it.
+-->
+<!--
+<section class="steam-section">
+    <div class="steam-widgets">
+        <iframe
+                src="https://store.steampowered.com/widget/YOUR_APP_ID/"
+                frameborder="0"
+                width="646"
+                height="190">
+        </iframe>
+    </div>
+</section>
+-->
+
+<footer></footer>
+
+<!-- Video Popup -->
+<div id="video-popup" class="video-popup">
+    <div class="video-popup-content" role="dialog" aria-modal="true">
+        <button class="video-close" aria-label="Close video">×</button>
+        <video id="popup-video" controls>
+            <source src="" type="video/mp4">
+            Video not supported
+        </video>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

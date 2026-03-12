@@ -1,0 +1,23 @@
+{
+  "palette": {
+    "backgroundGradientStart": "#667eea",
+    "backgroundGradientEnd":   "#764ba2",
+    "cardBackground":          "#ffffff",
+    "textPrimary":             "#2d3748",
+    "textSecondary":           "#4a5568",
+    "accentStart":             "#667eea",
+    "accentEnd":               "#764ba2"
+  },
+  "style": {
+    "fontFamily": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif",
+    "animationSpeed": 0.3,
+    "techTagStyle": "pill"
+  },
+  "projects": [
+    {
+      "folder": "projects/Example Project",
+      "screenshots": 1,
+      "videos": 0
+    }
+  ]
+}
