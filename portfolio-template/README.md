@@ -93,7 +93,7 @@ Only `# Title` is required. All other sections are optional and are hidden if ab
 | `demo2.mp4`    | Second video (optional)       |
 | `demo3.mp4`    | Third video (optional)        |
 
-Images can be `.jpg`, `.jpeg`, `.png`, `.gif`, or `.webp` — but the filename must still be `screenshot1.png`, `screenshot2.jpg`, etc. Update the extension accordingly in your folder; the site tries `.png` by default.
+Github Pages supports `.jpg`, `.jpeg`, `.png`, `.gif`, or `.webp` — but the filename must still be `screenshot1.png`, `screenshot2.jpg`, etc. Extend the scripts if you'd like to add other file types; the site uses `.png` by default.
 
 ---
 
