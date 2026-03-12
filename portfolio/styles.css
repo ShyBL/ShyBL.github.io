@@ -490,30 +490,22 @@ iframe {
     }
 }
 
-/* ── Steam section ─────────────────────────────────────────── */
 .steam-section {
-    padding: 2rem 0 3rem;
-}
-
-.steam-heading {
-    text-align: center;
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.75);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 1.25rem;
+    padding: 1.5rem 0 3rem;
 }
 
 .steam-widgets {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: row;
     justify-content: center;
+    align-items: flex-start;
     gap: 1.5rem;
+    flex-wrap: nowrap;
 }
 
 .steam-widgets iframe {
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    flex-shrink: 1;
     max-width: 100%;
 }
