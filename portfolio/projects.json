@@ -1,37 +1,48 @@
-[
-  {
-    "folder": "Beat-Em-Up Across The Globe",
-    "screenshots": 4,
-    "videos": 1
+{
+  "palette": {
+    "backgroundGradientStart": "#667eea",
+    "backgroundGradientEnd": "#764ba2",
+    "cardBackground": "#ffffff",
+    "textPrimary": "#2d3748",
+    "textSecondary": "#4a5568",
+    "accentStart": "#667eea",
+    "accentEnd": "#764ba2"
   },
-  {
-    "folder": "Underneath",
-    "screenshots": 4,
-    "videos": 1
-  },
-  {
-    "folder": "Kiril Datura",
-    "screenshots": 0,
-    "videos": 0
-  },
-  {
-    "folder": "Cryptoria",
-    "screenshots": 0,
-    "videos": 0
-  },
-  {
-    "folder": "Rope & Whisper",
-    "screenshots": 0,
-    "videos": 0
-  },
-  {
-    "folder": "Pinewood Racing",
-    "screenshots": 0,
-    "videos": 0
-  },
-  {
-    "folder": "Twitch Overlay in Unity",
-    "screenshots": 0,
-    "videos": 0
-  }
-]
+  "projects": [
+    {
+      "folder": "Beat-Em-Up Across The Globe",
+      "screenshots": 3,
+      "videos": 1
+    },
+    {
+      "folder": "Underneath",
+      "screenshots": 4,
+      "videos": 1
+    },
+    {
+      "folder": "Kiril Datura",
+      "screenshots": 0,
+      "videos": 0
+    },
+    {
+      "folder": "Cryptoria",
+      "screenshots": 6,
+      "videos": 0
+    },
+    {
+      "folder": "Rope & Whisper",
+      "screenshots": 0,
+      "videos": 0
+    },
+    {
+      "folder": "Pinewood Racing",
+      "screenshots": 0,
+      "videos": 0
+    },
+    {
+      "folder": "Twitch Overlay in Unity",
+      "screenshots": 0,
+      "videos": 0
+    }
+  ]
+}

@@ -12,6 +12,22 @@ class Portfolio {
         return mobileRegex.test(userAgent) || window.innerWidth <= 768;
     }
 
+    applyPalette(palette) {
+        const root = document.documentElement.style;
+        const map = {
+            backgroundGradientStart: '--bg-gradient-start',
+            backgroundGradientEnd:   '--bg-gradient-end',
+            cardBackground:          '--card-bg',
+            textPrimary:             '--text-primary',
+            textSecondary:           '--text-secondary',
+            accentStart:             '--accent-start',
+            accentEnd:               '--accent-end'
+        };
+        for (const [key, cssVar] of Object.entries(map)) {
+            if (palette[key]) root.setProperty(cssVar, palette[key]);
+        }
+    }
+
     async init() {
         try {
             const container = document.getElementById('carousel-container');
@@ -31,7 +47,9 @@ class Portfolio {
         try {
             const response = await fetch('projects.json');
             if (response.ok) {
-                configs = await response.json();
+                const data = await response.json();
+                if (data.palette) this.applyPalette(data.palette);
+                configs = data.projects || [];
             } else {
                 console.error('Could not load projects.json');
             }
