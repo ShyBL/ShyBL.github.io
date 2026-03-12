@@ -278,15 +278,19 @@ class Portfolio {
         let html = '';
 
         // Video buttons — one per video file
-        media.videos.forEach((videoPath, index) => {
-            const label = media.videos.length > 1 ? `Watch Gameplay ${index + 1}` : 'Watch Gameplay';
-            html += `
-                <div class="video-button" data-video="${videoPath}">
-                    <div class="play-icon">▶</div>
-                    <span>${label}</span>
-                </div>
-            `;
-        });
+        if (media.videos.length > 0) {
+            html += '<div class="video-buttons">';
+            media.videos.forEach((videoPath, index) => {
+                const label = media.videos.length > 1 ? `Watch Video ${index + 1}` : 'Watch Video';
+                html += `
+            <div class="video-button" data-video="${videoPath}">
+                <div class="play-icon">▶</div>
+                <span>${label}</span>
+            </div>
+        `;
+            });
+            html += '</div>';
+        }
 
         // Screenshot carousel
         if (media.screenshots.length > 0) {

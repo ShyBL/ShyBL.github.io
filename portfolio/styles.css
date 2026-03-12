@@ -103,10 +103,17 @@ iframe {
     height: 100%;
 }
 
-.video-button {
+.video-buttons {
     position: absolute;
     top: 20px;
     right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10;
+}
+
+.video-button {
     background: rgba(0, 0, 0, 0.8);
     color: white;
     padding: 12px 20px;
@@ -117,7 +124,6 @@ iframe {
     gap: 8px;
     font-weight: 500;
     transition: var(--transition);
-    z-index: 10;
 }
 
 .video-button:hover {
