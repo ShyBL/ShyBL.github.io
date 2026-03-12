@@ -440,6 +440,46 @@ iframe {
     100% { transform: rotate(360deg); }
 }
 
+/* Steam widgets section */
+.steam-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem 1rem 3rem;
+}
+
+.steam-widgets {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.steam-widgets iframe {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    max-width: 100%;
+}
+
+.curator-link {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    text-decoration: none;
+    padding: 0.6rem 1.4rem;
+    border-radius: 25px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    backdrop-filter: blur(10px);
+    transition: var(--transition);
+}
+
+.curator-link:hover {
+    background: rgba(255, 255, 255, 0.28);
+    transform: translateY(-2px);
+}
+
 @media (max-width: 768px) {
     .project-content {
         padding: 1.5rem;
@@ -448,4 +488,32 @@ iframe {
         padding: 0.6rem 1rem;
         font-size: 0.9rem;
     }
+}
+
+/* ── Steam section ─────────────────────────────────────────── */
+.steam-section {
+    padding: 2rem 0 3rem;
+}
+
+.steam-heading {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.75);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1.25rem;
+}
+
+.steam-widgets {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.steam-widgets iframe {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    max-width: 100%;
 }
