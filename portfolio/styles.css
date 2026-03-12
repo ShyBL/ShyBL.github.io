@@ -15,6 +15,9 @@
     --shadow-heavy: 0 1.25rem 3.75rem rgba(0, 0, 0, 0.3);
     --border-radius: 1rem;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    --animation-speed: 0.3s;
+    --tech-tag-radius: 20px;
 }
 
 * {
@@ -24,7 +27,7 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: var(--font-family);
     background: var(--primary-gradient);
     min-height: 100vh;
     line-height: 1.6;
@@ -71,7 +74,7 @@ iframe {
 
 .carousel-track {
     display: flex;
-    transition: transform 0.6s ease;
+    transition: transform calc(var(--animation-speed) * 2) ease;
 }
 
 .project-card {
@@ -146,7 +149,7 @@ iframe {
     height: 100%;
     object-fit: cover;
     opacity: 0;
-    transition: opacity 0.5s ease;
+    transition: opacity calc(var(--animation-speed) * 1.5) ease;
 }
 
 .screenshot.active {
@@ -349,7 +352,7 @@ iframe {
     background: var(--accent-gradient);
     color: white;
     padding: 0.4rem 0.8rem;
-    border-radius: 20px;
+    border-radius: var(--tech-tag-radius);
     font-size: 0.85rem;
     font-weight: 500;
     letter-spacing: 0.5px;
@@ -496,7 +499,6 @@ iframe {
         font-size: 0.9rem;
     }
 }
-
 
 .steam-section {
     padding: 1.5rem 0 3rem;

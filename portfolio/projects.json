@@ -8,6 +8,11 @@
     "accentStart": "#667eea",
     "accentEnd": "#764ba2"
   },
+  "style": {
+    "fontFamily": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif",
+    "animationSpeed": 0.3,
+    "techTagStyle": "pill"
+  },
   "projects": [
     {
       "folder": "Beat-Em-Up Across The Globe",
@@ -22,7 +27,7 @@
     {
       "folder": "Kiril Datura",
       "screenshots": 0,
-      "videos": 0
+      "videos": 1
     },
     {
       "folder": "Cryptoria",
@@ -31,8 +36,8 @@
     },
     {
       "folder": "Rope & Whisper",
-      "screenshots": 0,
-      "videos": 0
+      "screenshots": 1,
+      "videos": 2
     },
     {
       "folder": "Pinewood Racing",
@@ -41,8 +46,8 @@
     },
     {
       "folder": "Twitch Overlay in Unity",
-      "screenshots": 0,
-      "videos": 0
+      "screenshots": 1,
+      "videos": 1
     }
   ]
 }

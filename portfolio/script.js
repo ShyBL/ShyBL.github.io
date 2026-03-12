@@ -12,9 +12,11 @@ class Portfolio {
         return mobileRegex.test(userAgent) || window.innerWidth <= 768;
     }
 
-    applyPalette(palette) {
+    applyConfig(config) {
         const root = document.documentElement.style;
-        const map = {
+
+        // Palette
+        const paletteMap = {
             backgroundGradientStart: '--bg-gradient-start',
             backgroundGradientEnd:   '--bg-gradient-end',
             cardBackground:          '--card-bg',
@@ -23,8 +25,26 @@ class Portfolio {
             accentStart:             '--accent-start',
             accentEnd:               '--accent-end'
         };
-        for (const [key, cssVar] of Object.entries(map)) {
-            if (palette[key]) root.setProperty(cssVar, palette[key]);
+        if (config.palette) {
+            for (const [key, cssVar] of Object.entries(paletteMap)) {
+                if (config.palette[key]) root.setProperty(cssVar, config.palette[key]);
+            }
+        }
+
+        // Font family
+        if (config.style?.fontFamily) {
+            root.setProperty('--font-family', config.style.fontFamily);
+        }
+
+        // Animation speed — accepts seconds e.g. 0.2, 0.5
+        if (config.style?.animationSpeed != null) {
+            root.setProperty('--animation-speed', `${config.style.animationSpeed}s`);
+        }
+
+        // Tech tag style — "pill" (default, fully rounded) or "square" (sharp corners)
+        if (config.style?.techTagStyle) {
+            const radius = config.style.techTagStyle === 'square' ? '4px' : '20px';
+            root.setProperty('--tech-tag-radius', radius);
         }
     }
 
@@ -48,7 +68,7 @@ class Portfolio {
             const response = await fetch('projects.json');
             if (response.ok) {
                 const data = await response.json();
-                if (data.palette) this.applyPalette(data.palette);
+                this.applyConfig(data);
                 configs = data.projects || [];
             } else {
                 console.error('Could not load projects.json');
