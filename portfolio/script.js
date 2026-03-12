@@ -8,12 +8,10 @@ class Portfolio {
     }
 
     detectMobile() {
-        // Simple mobile detection
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
         const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
         const isMobileDevice = mobileRegex.test(userAgent);
         const isMobileViewport = window.innerWidth <= 768;
-        
         return isMobileDevice || isMobileViewport;
     }
 
@@ -22,7 +20,6 @@ class Portfolio {
             const container = document.getElementById('carousel-container');
             container.innerHTML = '<div class="loading-throbber"><div class="loading-spinner"></div></div>';
             await this.loadProjects();
-            // Preload all media for all projects
             this.projects.forEach(project => this.preloadMedia(project));
             this.render();
             this.setupControls();
@@ -33,14 +30,23 @@ class Portfolio {
     }
 
     async loadProjects() {
-        // Project folders - update this array with your actual project names
-        const projectFolders = ['Beat-Em-Up Across The Globe', 'Underneath'];
-        
-        // Load projects in parallel for faster loading
+        // FIX #4: Load folder names from projects.json instead of hardcoding them here.
+        // To add a new project, just add its folder name to projects.json.
+        let projectFolders = [];
+        try {
+            const response = await fetch('projects.json');
+            if (response.ok) {
+                projectFolders = await response.json();
+            } else {
+                console.error('Could not load projects.json');
+            }
+        } catch (error) {
+            console.error('Failed to fetch projects.json:', error);
+        }
+
         const projectPromises = projectFolders.map(async (folder) => {
             try {
-                const project = await this.loadProject(folder);
-                return project;
+                return await this.loadProject(folder);
             } catch (error) {
                 console.warn(`Failed to load project ${folder}:`, error);
                 return null;
@@ -52,7 +58,7 @@ class Portfolio {
     }
 
     async loadProject(folder) {
-        const project = { 
+        const project = {
             folder,
             title: this.formatTitle(folder),
             description: 'Project description not found.',
@@ -60,7 +66,6 @@ class Portfolio {
             media: { video: null, screenshots: [] }
         };
 
-        // Try to load README
         try {
             const readme = await this.fetchFile(`${folder}/README.md`);
             if (readme) {
@@ -71,9 +76,7 @@ class Portfolio {
             console.warn(`No README found for ${folder}`, error);
         }
 
-        // Load media files
         project.media = await this.loadMedia(folder);
-        
         return project;
     }
 
@@ -90,38 +93,31 @@ class Portfolio {
     parseMarkdown(content) {
         const lines = content.split('\n');
         const result = { technologies: [], keyFeatures: [], team: [] };
-        
-        // Extract title
+
         const titleLine = lines.find(line => line.startsWith('# '));
         if (titleLine) {
             result.title = titleLine.replace('# ', '').trim();
         }
-        
-        // Extract description (all paragraphs after title until first section)
-        const descriptionStart = lines.findIndex(line => 
+
+        const descriptionStart = lines.findIndex(line =>
             line.trim() && !line.startsWith('#') && !line.startsWith('![')
         );
-        
+
         if (descriptionStart >= 0) {
             const descriptionLines = [];
             for (let i = descriptionStart; i < lines.length; i++) {
                 const line = lines[i].trim();
-                // Stop at first section header (## or ###)
                 if (line.startsWith('##') || line.startsWith('###')) break;
-                // Include non-empty lines and empty lines (for paragraph breaks)
                 if (line || descriptionLines.length > 0) {
                     descriptionLines.push(line);
                 }
             }
-            // Join with double spaces to preserve paragraph breaks
             result.description = this.parseMarkdownText(descriptionLines.join('  ').trim());
         }
-        
-        // Extract technologies
-        const techStart = lines.findIndex(line => 
+
+        const techStart = lines.findIndex(line =>
             /^##?\s*(tech|stack|built|tools)/i.test(line)
         );
-        
         if (techStart >= 0) {
             for (let i = techStart + 1; i < lines.length; i++) {
                 const line = lines[i].trim();
@@ -131,12 +127,10 @@ class Portfolio {
                 }
             }
         }
-        
-        // Extract Key Features
-        const featuresStart = lines.findIndex(line => 
+
+        const featuresStart = lines.findIndex(line =>
             /^##?\s*key features/i.test(line)
         );
-        
         if (featuresStart >= 0) {
             for (let i = featuresStart + 1; i < lines.length; i++) {
                 const line = lines[i].trim();
@@ -146,12 +140,10 @@ class Portfolio {
                 }
             }
         }
-        
-        // Extract Team
-        const teamStart = lines.findIndex(line => 
+
+        const teamStart = lines.findIndex(line =>
             /^##?\s*team/i.test(line)
         );
-        
         if (teamStart >= 0) {
             for (let i = teamStart + 1; i < lines.length; i++) {
                 const line = lines[i].trim();
@@ -161,7 +153,7 @@ class Portfolio {
                 }
             }
         }
-        
+
         return result;
     }
 
@@ -174,8 +166,7 @@ class Portfolio {
 
     async loadMedia(folder) {
         const media = { video: null, screenshots: [] };
-        
-        // Try to find video
+
         const videoExts = ['mp4', 'webm', 'mov'];
         for (const ext of videoExts) {
             const videoPath = `${folder}/demo.${ext}`;
@@ -184,8 +175,7 @@ class Portfolio {
                 break;
             }
         }
-        
-        // Try to find screenshots (limit to 3 for faster loading)
+
         const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
         for (let i = 1; i <= 4; i++) {
             for (const ext of imageExts) {
@@ -196,24 +186,21 @@ class Portfolio {
                 }
             }
         }
-        
+
         return media;
     }
 
     async fileExists(path) {
         try {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 1000); // 1 second timeout
-            
-            const response = await fetch(path, { 
+            const timeoutId = setTimeout(() => controller.abort(), 1000);
+            const response = await fetch(path, {
                 method: 'HEAD',
                 signal: controller.signal
             });
-            
             clearTimeout(timeoutId);
             return response.ok;
         } catch (error) {
-            console.warn('fileExists error for', path, error);
             return false;
         }
     }
@@ -225,23 +212,18 @@ class Portfolio {
     }
 
     preloadMedia(project) {
-        // Preload screenshots
         if (project.media && Array.isArray(project.media.screenshots)) {
             project.media.screenshots.forEach(src => {
                 const img = new Image();
                 img.src = src;
             });
         }
-        // Preload video (as a fetch, not as a video element, to warm the cache)
-        if (project.media && project.media.video) {
-            fetch(project.media.video, { method: 'HEAD' });
-        }
+        // Video existence was already confirmed in loadMedia(), no need to HEAD again
     }
-
 
     render() {
         const container = document.getElementById('carousel-container');
-        
+
         if (this.projects.length === 0) {
             container.innerHTML = '<div class="error">No projects found</div>';
             return;
@@ -258,7 +240,9 @@ class Portfolio {
     }
 
     renderProject(project) {
-        const mediaHTML = this.renderMedia(project.media);
+        // FIX #1: renderMedia() now returns only the inner media content (no wrapper div).
+        // The wrapping <div class="project-media"> lives here, exactly once.
+        const mediaInnerHTML = this.renderMedia(project.media);
         const techHTML = project.technologies
             .map(tech => `<span class="tech-tag">${tech}</span>`)
             .join('');
@@ -281,13 +265,12 @@ class Portfolio {
             </div>
         ` : '<div class="content-column"></div>';
 
-        // Use the helper for description formatting
         let descriptionHTML = formatFirstParagraph(project.description);
 
         return `
             <article class="project-card">
                 <div class="project-media">
-                    ${mediaHTML}
+                    ${mediaInnerHTML}
                 </div>
                 <div class="project-content">
                     <div class="project-header">
@@ -308,9 +291,10 @@ class Portfolio {
     }
 
     renderMedia(media) {
+        // FIX #1: Returns inner content only — no <div class="project-media"> wrapper here.
+        // renderProject() provides the single wrapper.
         let mediaHTML = '';
-        
-        // Add video button if available
+
         if (media.video) {
             mediaHTML += `
                 <div class="video-button" data-video="${media.video}">
@@ -319,23 +303,22 @@ class Portfolio {
                 </div>
             `;
         }
-        
-        // Add screenshot carousel
+
         if (media.screenshots.length > 0) {
             mediaHTML += `
                 <div class="screenshot-carousel">
                     <div class="screenshot-track">
-                        ${media.screenshots.map((screenshot, index) => 
-                            `<img src="${screenshot}" alt="Screenshot ${index + 1}" class="screenshot ${index === 0 ? 'active' : ''}">`
-                        ).join('')}
+                        ${media.screenshots.map((screenshot, index) =>
+                `<img src="${screenshot}" alt="Screenshot ${index + 1}" class="screenshot ${index === 0 ? 'active' : ''}">`
+            ).join('')}
                     </div>
                     ${media.screenshots.length > 1 ? `
                         <div class="screenshot-nav">
                             <button class="screenshot-prev">‹</button>
                             <div class="screenshot-dots">
-                                ${media.screenshots.map((_, index) => 
-                                    `<button class="screenshot-dot ${index === 0 ? 'active' : ''}" data-index="${index}"></button>`
-                                ).join('')}
+                                ${media.screenshots.map((_, index) =>
+                `<button class="screenshot-dot ${index === 0 ? 'active' : ''}" data-index="${index}"></button>`
+            ).join('')}
                             </div>
                             <button class="screenshot-next">›</button>
                         </div>
@@ -343,12 +326,12 @@ class Portfolio {
                 </div>
             `;
         }
-        
-        if (mediaHTML) {
-            return `<div class="project-media">${mediaHTML}</div>`;
+
+        if (!mediaHTML) {
+            return '<div class="media-placeholder">No media available</div>';
         }
-        
-        return '<div class="media-placeholder">No media available</div>';
+
+        return mediaHTML;
     }
 
     renderControls() {
@@ -360,9 +343,9 @@ class Portfolio {
                 <button class="nav-btn" id="next-btn">Next →</button>
             </div>
             <div class="carousel-dots">
-                ${this.projects.map((_, index) => 
-                    `<button class="dot ${index === 0 ? 'active' : ''}" data-index="${index}"></button>`
-                ).join('')}
+                ${this.projects.map((_, index) =>
+            `<button class="dot ${index === 0 ? 'active' : ''}" data-index="${index}"></button>`
+        ).join('')}
             </div>
         `;
     }
@@ -406,7 +389,7 @@ class Portfolio {
 
     setupScreenshotCarousels() {
         const carousels = document.querySelectorAll('.screenshot-carousel');
-        carousels.forEach((carousel, carouselIndex) => {
+        carousels.forEach((carousel) => {
             const screenshots = carousel.querySelectorAll('.screenshot');
             const prevBtn = carousel.querySelector('.screenshot-prev');
             const nextBtn = carousel.querySelector('.screenshot-next');
@@ -438,7 +421,6 @@ class Portfolio {
                         updateScreenshots();
                     });
                 });
-                // Automatic cycling
                 function startAuto() {
                     if (intervalId) clearInterval(intervalId);
                     intervalId = setInterval(goToNext, 3000);
@@ -448,8 +430,8 @@ class Portfolio {
                 }
                 carousel.addEventListener('mouseenter', stopAuto);
                 carousel.addEventListener('mouseleave', startAuto);
-                carousel.addEventListener('touchstart', stopAuto, {passive:true});
-                carousel.addEventListener('touchend', startAuto, {passive:true});
+                carousel.addEventListener('touchstart', stopAuto, { passive: true });
+                carousel.addEventListener('touchend', startAuto, { passive: true });
                 updateScreenshots();
                 startAuto();
             }
@@ -461,47 +443,34 @@ class Portfolio {
         const videoPopup = document.getElementById('video-popup');
         const popupVideo = document.getElementById('popup-video');
         const closeBtn = document.querySelector('.video-close');
-        
+
         videoButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const videoSrc = button.getAttribute('data-video');
                 popupVideo.src = videoSrc;
                 videoPopup.classList.add('active');
-                
-                // Mobile optimization: prevent body scroll when popup is open
                 if (this.isMobile) {
                     document.body.style.overflow = 'hidden';
                 }
-                
                 popupVideo.play();
             });
         });
-        
+
         const closePopup = () => {
             videoPopup.classList.remove('active');
             popupVideo.pause();
             popupVideo.src = '';
-            
-            // Restore body scroll on mobile
             if (this.isMobile) {
                 document.body.style.overflow = '';
             }
         };
-        
+
         closeBtn?.addEventListener('click', closePopup);
-        
-        // Close on background click
         videoPopup.addEventListener('click', (e) => {
-            if (e.target === videoPopup) {
-                closePopup();
-            }
+            if (e.target === videoPopup) closePopup();
         });
-        
-        // Close on escape key
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && videoPopup.classList.contains('active')) {
-                closePopup();
-            }
+            if (e.key === 'Escape' && videoPopup.classList.contains('active')) closePopup();
         });
     }
 
@@ -523,9 +492,7 @@ class Portfolio {
     updateCarousel() {
         const track = document.getElementById('carousel-track');
         const dots = document.querySelectorAll('.dot');
-        
         track.style.transform = `translateX(-${this.currentIndex * 100}%)`;
-        
         dots.forEach((dot, index) => {
             dot.classList.toggle('active', index === this.currentIndex);
         });
@@ -537,7 +504,6 @@ class Portfolio {
     }
 }
 
-// Helper to format the first paragraph as bold and italic
 function formatFirstParagraph(descriptionHTML) {
     if (!descriptionHTML) return '';
     let firstPara = '';
@@ -560,7 +526,6 @@ function formatFirstParagraph(descriptionHTML) {
     return result;
 }
 
-// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     new Portfolio();
-}); 
+});

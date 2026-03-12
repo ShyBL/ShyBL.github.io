@@ -154,11 +154,9 @@ iframe {
     display: flex;
     align-items: center;
     gap: 15px;
-    /* background: rgba(0, 0, 0, 0.7); */
     background: transparent;
     padding: 10px 15px;
     border-radius: 25px;
-    /*backdrop-filter: blur(10px);*/
 }
 
 .screenshot-prev,
@@ -171,13 +169,11 @@ iframe {
     padding: 5px;
     border-radius: 50%;
     transition: var(--transition);
-    /* Add drop shadow */
     filter: drop-shadow(0 2px 4px rgba(0,0,0,1));
 }
 
 .screenshot-prev:hover,
 .screenshot-next:hover {
-    /* Remove hover background */
     background: none;
 }
 
@@ -194,7 +190,6 @@ iframe {
     border: none;
     cursor: pointer;
     transition: var(--transition);
-    /* Add drop shadow */
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
 }
 
@@ -273,6 +268,15 @@ iframe {
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 0.5rem;
+}
+
+.section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #667eea;
+    margin-bottom: 0.25rem;
 }
 
 .tech-stack {
@@ -381,12 +385,14 @@ iframe {
 }
 
 .dot {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.4);
+    border: none;
     cursor: pointer;
     transition: var(--transition);
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35));
 }
 
 .dot.active {
@@ -438,42 +444,8 @@ iframe {
     .project-content {
         padding: 1.5rem;
     }
-    
     .nav-btn {
         padding: 0.6rem 1rem;
         font-size: 0.9rem;
     }
-} 
-
-.section-title,
-.project-title,
-.hero,
-.hero h1 {
-    display: none !important;
-} 
-
-.dot,
-.screenshot-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.4);
-    border: none;
-    cursor: pointer;
-    transition: var(--transition);
-    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35));
 }
-
-.dot.active,
-.screenshot-dot.active {
-    background: white;
-    transform: scale(1.2);
-}
-
-.carousel-dots,
-.screenshot-dots {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    margin-top: 1rem;
-} 
