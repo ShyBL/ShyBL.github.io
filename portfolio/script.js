@@ -2,7 +2,6 @@ class Portfolio {
     constructor() {
         this.projects = [];
         this.currentIndex = 0;
-        this.screenshotIntervals = new Map();
         this.isMobile = this.detectMobile();
         this.init();
     }
@@ -10,9 +9,7 @@ class Portfolio {
     detectMobile() {
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
         const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
-        const isMobileDevice = mobileRegex.test(userAgent);
-        const isMobileViewport = window.innerWidth <= 768;
-        return isMobileDevice || isMobileViewport;
+        return mobileRegex.test(userAgent) || window.innerWidth <= 768;
     }
 
     async init() {
@@ -30,13 +27,11 @@ class Portfolio {
     }
 
     async loadProjects() {
-        // FIX #4: Load folder names from projects.json instead of hardcoding them here.
-        // To add a new project, just add its folder name to projects.json.
-        let projectFolders = [];
+        let configs = [];
         try {
             const response = await fetch('projects.json');
             if (response.ok) {
-                projectFolders = await response.json();
+                configs = await response.json();
             } else {
                 console.error('Could not load projects.json');
             }
@@ -44,40 +39,62 @@ class Portfolio {
             console.error('Failed to fetch projects.json:', error);
         }
 
-        const projectPromises = projectFolders.map(async (folder) => {
+        const projectPromises = configs.map(async (config) => {
             try {
-                return await this.loadProject(folder);
+                return await this.loadProject(config);
             } catch (error) {
-                console.warn(`Failed to load project ${folder}:`, error);
+                console.warn(`Failed to load project ${config.folder}:`, error);
                 return null;
             }
         });
 
         const projects = await Promise.all(projectPromises);
-        this.projects = projects.filter(project => project !== null);
+        this.projects = projects.filter(p => p !== null);
     }
 
-    async loadProject(folder) {
+    async loadProject(config) {
         const project = {
-            folder,
-            title: this.formatTitle(folder),
+            folder: config.folder,
+            title: this.formatTitle(config.folder),
             description: 'Project description not found.',
             technologies: [],
-            media: { video: null, screenshots: [] }
+            media: { videos: [], screenshots: [] }
         };
 
         try {
-            const readme = await this.fetchFile(`${folder}/README.md`);
+            const readme = await this.fetchFile(`${config.folder}/README.md`);
             if (readme) {
-                const parsed = this.parseMarkdown(readme);
-                Object.assign(project, parsed);
+                Object.assign(project, this.parseMarkdown(readme));
             }
         } catch (error) {
-            console.warn(`No README found for ${folder}`, error);
+            console.warn(`No README found for ${config.folder}`, error);
         }
 
-        project.media = await this.loadMedia(folder);
+        // Build media directly from config — no HEAD requests needed
+        project.media = this.buildMedia(config);
+
         return project;
+    }
+
+    buildMedia(config) {
+        const media = { videos: [], screenshots: [] };
+        const folder = config.folder;
+
+        // Videos: demo.mp4, demo2.mp4, demo3.mp4
+        const videoCount = config.videos || 0;
+        for (let i = 1; i <= Math.min(videoCount, 3); i++) {
+            const filename = i === 1 ? 'demo.mp4' : `demo${i}.mp4`;
+            media.videos.push(`${folder}/${filename}`);
+        }
+
+        // Screenshots: screenshot1.jpg ... screenshotN.jpg
+        const screenshotCount = config.screenshots || 0;
+        const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        for (let i = 1; i <= screenshotCount; i++) {
+            media.screenshots.push(`${folder}/screenshot${i}.png`);
+        }
+
+        return media;
     }
 
     async fetchFile(path) {
@@ -95,62 +112,45 @@ class Portfolio {
         const result = { technologies: [], keyFeatures: [], team: [] };
 
         const titleLine = lines.find(line => line.startsWith('# '));
-        if (titleLine) {
-            result.title = titleLine.replace('# ', '').trim();
-        }
+        if (titleLine) result.title = titleLine.replace('# ', '').trim();
 
         const descriptionStart = lines.findIndex(line =>
             line.trim() && !line.startsWith('#') && !line.startsWith('![')
         );
-
         if (descriptionStart >= 0) {
-            const descriptionLines = [];
+            const descLines = [];
             for (let i = descriptionStart; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (line.startsWith('##') || line.startsWith('###')) break;
-                if (line || descriptionLines.length > 0) {
-                    descriptionLines.push(line);
-                }
+                if (line || descLines.length > 0) descLines.push(line);
             }
-            result.description = this.parseMarkdownText(descriptionLines.join('  ').trim());
+            result.description = this.parseMarkdownText(descLines.join('  ').trim());
         }
 
-        const techStart = lines.findIndex(line =>
-            /^##?\s*(tech|stack|built|tools)/i.test(line)
-        );
+        const techStart = lines.findIndex(line => /^##?\s*(tech|stack|built|tools)/i.test(line));
         if (techStart >= 0) {
             for (let i = techStart + 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line || line.startsWith('#')) break;
-                if (line.startsWith('- ')) {
-                    result.technologies.push(this.parseMarkdownText(line.replace('- ', '').trim()));
-                }
+                if (line.startsWith('- ')) result.technologies.push(this.parseMarkdownText(line.replace('- ', '').trim()));
             }
         }
 
-        const featuresStart = lines.findIndex(line =>
-            /^##?\s*key features/i.test(line)
-        );
+        const featuresStart = lines.findIndex(line => /^##?\s*key features/i.test(line));
         if (featuresStart >= 0) {
             for (let i = featuresStart + 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line || line.startsWith('#')) break;
-                if (line.startsWith('- ')) {
-                    result.keyFeatures.push(this.parseMarkdownText(line.replace('- ', '').trim()));
-                }
+                if (line.startsWith('- ')) result.keyFeatures.push(this.parseMarkdownText(line.replace('- ', '').trim()));
             }
         }
 
-        const teamStart = lines.findIndex(line =>
-            /^##?\s*team/i.test(line)
-        );
+        const teamStart = lines.findIndex(line => /^##?\s*team/i.test(line));
         if (teamStart >= 0) {
             for (let i = teamStart + 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line || line.startsWith('#')) break;
-                if (line.startsWith('- ')) {
-                    result.team.push(this.parseMarkdownText(line.replace('- ', '').trim()));
-                }
+                if (line.startsWith('- ')) result.team.push(this.parseMarkdownText(line.replace('- ', '').trim()));
             }
         }
 
@@ -159,80 +159,34 @@ class Portfolio {
 
     parseMarkdownText(text) {
         return text
+            // Links must be parsed BEFORE bold/italic to avoid mangling the brackets
+            .replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/\*(.*?)\*/g, '<em>$1</em>')
             .replace(/`(.*?)`/g, '<code>$1</code>');
     }
 
-    async loadMedia(folder) {
-        const media = { video: null, screenshots: [] };
-
-        const videoExts = ['mp4', 'webm', 'mov'];
-        for (const ext of videoExts) {
-            const videoPath = `${folder}/demo.${ext}`;
-            if (await this.fileExists(videoPath)) {
-                media.video = videoPath;
-                break;
-            }
-        }
-
-        const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-        for (let i = 1; i <= 4; i++) {
-            for (const ext of imageExts) {
-                const imagePath = `${folder}/screenshot${i}.${ext}`;
-                if (await this.fileExists(imagePath)) {
-                    media.screenshots.push(imagePath);
-                    break;
-                }
-            }
-        }
-
-        return media;
-    }
-
-    async fileExists(path) {
-        try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 1000);
-            const response = await fetch(path, {
-                method: 'HEAD',
-                signal: controller.signal
-            });
-            clearTimeout(timeoutId);
-            return response.ok;
-        } catch (error) {
-            return false;
-        }
-    }
-
     formatTitle(folder) {
-        return folder
-            .replace(/[-_]/g, ' ')
-            .replace(/\b\w/g, l => l.toUpperCase());
+        return folder.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     }
 
     preloadMedia(project) {
-        if (project.media && Array.isArray(project.media.screenshots)) {
-            project.media.screenshots.forEach(src => {
-                const img = new Image();
-                img.src = src;
-            });
-        }
-        // Video existence was already confirmed in loadMedia(), no need to HEAD again
+        project.media.screenshots.forEach(src => {
+            const img = new Image();
+            img.src = src;
+        });
     }
 
     render() {
         const container = document.getElementById('carousel-container');
-
         if (this.projects.length === 0) {
             container.innerHTML = '<div class="error">No projects found</div>';
             return;
         }
-
         container.innerHTML = `
             <div class="carousel-wrapper">
                 <div class="carousel-track" id="carousel-track">
-                    ${this.projects.map(project => this.renderProject(project)).join('')}
+                    ${this.projects.map(p => this.renderProject(p)).join('')}
                 </div>
             </div>
             ${this.renderControls()}
@@ -240,32 +194,24 @@ class Portfolio {
     }
 
     renderProject(project) {
-        // FIX #1: renderMedia() now returns only the inner media content (no wrapper div).
-        // The wrapping <div class="project-media"> lives here, exactly once.
         const mediaInnerHTML = this.renderMedia(project.media);
-        const techHTML = project.technologies
-            .map(tech => `<span class="tech-tag">${tech}</span>`)
-            .join('');
+        const techHTML = project.technologies.map(t => `<span class="tech-tag">${t}</span>`).join('');
 
         const featuresHTML = project.keyFeatures && project.keyFeatures.length > 0 ? `
             <div class="content-column">
                 <h4 class="section-title">Key Features</h4>
                 <ul class="feature-list">
-                    ${project.keyFeatures.map(feature => `<li>${feature}</li>`).join('')}
+                    ${project.keyFeatures.map(f => `<li>${f}</li>`).join('')}
                 </ul>
-            </div>
-        ` : '<div class="content-column"></div>';
+            </div>` : '<div class="content-column"></div>';
 
         const teamHTML = project.team && project.team.length > 0 ? `
             <div class="content-column">
                 <h4 class="section-title">Team</h4>
                 <ul class="team-list">
-                    ${project.team.map(member => `<li>${member}</li>`).join('')}
+                    ${project.team.map(m => `<li>${m}</li>`).join('')}
                 </ul>
-            </div>
-        ` : '<div class="content-column"></div>';
-
-        let descriptionHTML = formatFirstParagraph(project.description);
+            </div>` : '<div class="content-column"></div>';
 
         return `
             <article class="project-card">
@@ -280,7 +226,7 @@ class Portfolio {
                     <div class="content-grid">
                         <div class="content-column">
                             <h4 class="section-title">Description</h4>
-                            <div class="project-description">${descriptionHTML}</div>
+                            <div class="project-description">${formatFirstParagraph(project.description)}</div>
                         </div>
                         ${featuresHTML}
                         ${teamHTML}
@@ -291,60 +237,56 @@ class Portfolio {
     }
 
     renderMedia(media) {
-        // FIX #1: Returns inner content only — no <div class="project-media"> wrapper here.
-        // renderProject() provides the single wrapper.
-        let mediaHTML = '';
+        let html = '';
 
-        if (media.video) {
-            mediaHTML += `
-                <div class="video-button" data-video="${media.video}">
+        // Video buttons — one per video file
+        media.videos.forEach((videoPath, index) => {
+            const label = media.videos.length > 1 ? `Watch Gameplay ${index + 1}` : 'Watch Gameplay';
+            html += `
+                <div class="video-button" data-video="${videoPath}">
                     <div class="play-icon">▶</div>
-                    <span>Watch Gameplay</span>
+                    <span>${label}</span>
                 </div>
             `;
-        }
+        });
 
+        // Screenshot carousel
         if (media.screenshots.length > 0) {
-            mediaHTML += `
+            html += `
                 <div class="screenshot-carousel">
                     <div class="screenshot-track">
-                        ${media.screenshots.map((screenshot, index) =>
-                `<img src="${screenshot}" alt="Screenshot ${index + 1}" class="screenshot ${index === 0 ? 'active' : ''}">`
+                        ${media.screenshots.map((src, i) =>
+                `<img src="${src}" alt="Screenshot ${i + 1}" class="screenshot ${i === 0 ? 'active' : ''}">`
             ).join('')}
                     </div>
                     ${media.screenshots.length > 1 ? `
                         <div class="screenshot-nav">
                             <button class="screenshot-prev">‹</button>
                             <div class="screenshot-dots">
-                                ${media.screenshots.map((_, index) =>
-                `<button class="screenshot-dot ${index === 0 ? 'active' : ''}" data-index="${index}"></button>`
+                                ${media.screenshots.map((_, i) =>
+                `<button class="screenshot-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></button>`
             ).join('')}
                             </div>
                             <button class="screenshot-next">›</button>
-                        </div>
-                    ` : ''}
+                        </div>` : ''}
                 </div>
             `;
         }
 
-        if (!mediaHTML) {
-            return '<div class="media-placeholder">No media available</div>';
-        }
-
-        return mediaHTML;
+        if (!html) return '<div class="media-placeholder">No media available</div>';
+        return html;
     }
 
     renderControls() {
         if (this.projects.length <= 1) return '';
-
         return `
             <div class="carousel-nav">
                 <button class="nav-btn" id="prev-btn">← Previous</button>
                 <button class="nav-btn" id="next-btn">Next →</button>
             </div>
             <div class="carousel-dots">
-                ${this.projects.map((_, index) =>
-            `<button class="dot ${index === 0 ? 'active' : ''}" data-index="${index}"></button>`
+                ${this.projects.map((_, i) =>
+            `<button class="dot ${i === 0 ? 'active' : ''}" data-index="${i}"></button>`
         ).join('')}
             </div>
         `;
@@ -358,100 +300,72 @@ class Portfolio {
         if (prevBtn) {
             prevBtn.setAttribute('aria-label', 'Previous project');
             prevBtn.tabIndex = 0;
-            prevBtn.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') prevBtn.click();
-            });
+            prevBtn.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') prevBtn.click(); });
         }
         if (nextBtn) {
             nextBtn.setAttribute('aria-label', 'Next project');
             nextBtn.tabIndex = 0;
-            nextBtn.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') nextBtn.click();
-            });
+            nextBtn.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') nextBtn.click(); });
         }
-        dots.forEach((dot, index) => {
-            dot.setAttribute('aria-label', `Go to project ${index + 1}`);
+        dots.forEach((dot, i) => {
+            dot.setAttribute('aria-label', `Go to project ${i + 1}`);
             dot.tabIndex = 0;
-            dot.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') dot.click();
-            });
+            dot.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') dot.click(); });
+            dot.addEventListener('click', () => this.goToSlide(i));
         });
 
         prevBtn?.addEventListener('click', () => this.goToPrevious());
         nextBtn?.addEventListener('click', () => this.goToNext());
-        dots.forEach((dot, index) => {
-            dot.addEventListener('click', () => this.goToSlide(index));
-        });
 
         this.setupScreenshotCarousels();
         this.setupVideoPopup();
     }
 
     setupScreenshotCarousels() {
-        const carousels = document.querySelectorAll('.screenshot-carousel');
-        carousels.forEach((carousel) => {
+        document.querySelectorAll('.screenshot-carousel').forEach(carousel => {
             const screenshots = carousel.querySelectorAll('.screenshot');
             const prevBtn = carousel.querySelector('.screenshot-prev');
             const nextBtn = carousel.querySelector('.screenshot-next');
             const dots = carousel.querySelectorAll('.screenshot-dot');
-            if (screenshots.length > 1) {
-                let currentIndex = 0;
-                let intervalId = null;
-                const updateScreenshots = () => {
-                    screenshots.forEach((screenshot, index) => {
-                        screenshot.classList.toggle('active', index === currentIndex);
-                    });
-                    dots.forEach((dot, index) => {
-                        dot.classList.toggle('active', index === currentIndex);
-                    });
-                };
-                const goToNext = () => {
-                    currentIndex = (currentIndex + 1) % screenshots.length;
-                    updateScreenshots();
-                };
-                const goToPrev = () => {
-                    currentIndex = currentIndex > 0 ? currentIndex - 1 : screenshots.length - 1;
-                    updateScreenshots();
-                };
-                prevBtn?.addEventListener('click', goToPrev);
-                nextBtn?.addEventListener('click', goToNext);
-                dots.forEach((dot, index) => {
-                    dot.addEventListener('click', () => {
-                        currentIndex = index;
-                        updateScreenshots();
-                    });
-                });
-                function startAuto() {
-                    if (intervalId) clearInterval(intervalId);
-                    intervalId = setInterval(goToNext, 3000);
-                }
-                function stopAuto() {
-                    if (intervalId) clearInterval(intervalId);
-                }
-                carousel.addEventListener('mouseenter', stopAuto);
-                carousel.addEventListener('mouseleave', startAuto);
-                carousel.addEventListener('touchstart', stopAuto, { passive: true });
-                carousel.addEventListener('touchend', startAuto, { passive: true });
-                updateScreenshots();
-                startAuto();
-            }
+            if (screenshots.length <= 1) return;
+
+            let current = 0;
+            let intervalId = null;
+
+            const update = () => {
+                screenshots.forEach((s, i) => s.classList.toggle('active', i === current));
+                dots.forEach((d, i) => d.classList.toggle('active', i === current));
+            };
+            const next = () => { current = (current + 1) % screenshots.length; update(); };
+            const prev = () => { current = current > 0 ? current - 1 : screenshots.length - 1; update(); };
+
+            prevBtn?.addEventListener('click', prev);
+            nextBtn?.addEventListener('click', next);
+            dots.forEach((d, i) => d.addEventListener('click', () => { current = i; update(); }));
+
+            const startAuto = () => { if (intervalId) clearInterval(intervalId); intervalId = setInterval(next, 3000); };
+            const stopAuto = () => { if (intervalId) clearInterval(intervalId); };
+
+            carousel.addEventListener('mouseenter', stopAuto);
+            carousel.addEventListener('mouseleave', startAuto);
+            carousel.addEventListener('touchstart', stopAuto, { passive: true });
+            carousel.addEventListener('touchend', startAuto, { passive: true });
+
+            update();
+            startAuto();
         });
     }
 
     setupVideoPopup() {
-        const videoButtons = document.querySelectorAll('.video-button');
         const videoPopup = document.getElementById('video-popup');
         const popupVideo = document.getElementById('popup-video');
         const closeBtn = document.querySelector('.video-close');
 
-        videoButtons.forEach(button => {
+        document.querySelectorAll('.video-button').forEach(button => {
             button.addEventListener('click', () => {
-                const videoSrc = button.getAttribute('data-video');
-                popupVideo.src = videoSrc;
+                popupVideo.src = button.getAttribute('data-video');
                 videoPopup.classList.add('active');
-                if (this.isMobile) {
-                    document.body.style.overflow = 'hidden';
-                }
+                if (this.isMobile) document.body.style.overflow = 'hidden';
                 popupVideo.play();
             });
         });
@@ -460,16 +374,12 @@ class Portfolio {
             videoPopup.classList.remove('active');
             popupVideo.pause();
             popupVideo.src = '';
-            if (this.isMobile) {
-                document.body.style.overflow = '';
-            }
+            if (this.isMobile) document.body.style.overflow = '';
         };
 
         closeBtn?.addEventListener('click', closePopup);
-        videoPopup.addEventListener('click', (e) => {
-            if (e.target === videoPopup) closePopup();
-        });
-        document.addEventListener('keydown', (e) => {
+        videoPopup.addEventListener('click', e => { if (e.target === videoPopup) closePopup(); });
+        document.addEventListener('keydown', e => {
             if (e.key === 'Escape' && videoPopup.classList.contains('active')) closePopup();
         });
     }
@@ -493,21 +403,17 @@ class Portfolio {
         const track = document.getElementById('carousel-track');
         const dots = document.querySelectorAll('.dot');
         track.style.transform = `translateX(-${this.currentIndex * 100}%)`;
-        dots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === this.currentIndex);
-        });
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === this.currentIndex));
     }
 
     showError(message) {
-        const container = document.getElementById('carousel-container');
-        container.innerHTML = `<div class="error">${message}</div>`;
+        document.getElementById('carousel-container').innerHTML = `<div class="error">${message}</div>`;
     }
 }
 
 function formatFirstParagraph(descriptionHTML) {
     if (!descriptionHTML) return '';
-    let firstPara = '';
-    let rest = '';
+    let firstPara, rest;
     if (descriptionHTML.includes('<br>')) {
         const parts = descriptionHTML.split('<br>');
         firstPara = parts[0].trim();
@@ -518,14 +424,11 @@ function formatFirstParagraph(descriptionHTML) {
         rest = parts.slice(1).join('  ');
     } else {
         firstPara = descriptionHTML;
+        rest = '';
     }
     let result = `<span style="font-weight:bold;font-style:italic;">${firstPara}</span>`;
-    if (rest.trim()) {
-        result += '<br>' + rest.trim();
-    }
+    if (rest.trim()) result += '<br>' + rest.trim();
     return result;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    new Portfolio();
-});
+document.addEventListener('DOMContentLoaded', () => { new Portfolio(); });

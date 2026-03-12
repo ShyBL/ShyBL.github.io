@@ -1,9 +1,37 @@
 [
-  "Beat-Em-Up Across The Globe",
-  "Underneath",
-  "Kiril Datura",
-  "Cryptoria",
-  "Rope & Whisper",
-  "Pinewood Racing",
-  "Twitch Overlay in Unity"
+  {
+    "folder": "Beat-Em-Up Across The Globe",
+    "screenshots": 4,
+    "videos": 1
+  },
+  {
+    "folder": "Underneath",
+    "screenshots": 4,
+    "videos": 1
+  },
+  {
+    "folder": "Kiril Datura",
+    "screenshots": 0,
+    "videos": 0
+  },
+  {
+    "folder": "Cryptoria",
+    "screenshots": 0,
+    "videos": 0
+  },
+  {
+    "folder": "Rope & Whisper",
+    "screenshots": 0,
+    "videos": 0
+  },
+  {
+    "folder": "Pinewood Racing",
+    "screenshots": 0,
+    "videos": 0
+  },
+  {
+    "folder": "Twitch Overlay in Unity",
+    "screenshots": 0,
+    "videos": 0
+  }
 ]
