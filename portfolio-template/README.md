@@ -4,24 +4,54 @@ A customizable, data-driven game dev portfolio site. Add your projects via JSON 
 
 ---
 
-## Quickstart (GitHub Pages)
+# Quickstart (GitHub Pages)
+> Already know how to fork? Fork this repo instead and skip to Step 3.
 
-### 1. Fork or use this template
+### Step 1 — Download the template
 
-Click **"Use this template"** → **"Create a new repository"** at the top of this page.
-
-### 2. Enable GitHub Pages
-
-1. Go to your repo **Settings** → **Pages**
-2. Under **Source**, select **Deploy from a branch**
-3. Set the branch to `main` and the folder to `/ (root)`
-4. Click **Save**
-
-Your site will be live at `https://<your-username>.github.io/<repo-name>/` within a minute or two.
+Click the green **Code** button at the top of this page, then click **Download ZIP**. Unzip the folder somewhere on your computer — you'll upload its contents shortly.
 
 ---
 
-## Adding Your Projects
+### Step 2 — Create a GitHub account (if you don't have one)
+
+Go to [github.com](https://github.com) and sign up for a free account.
+
+---
+
+### Step 3 — Create a new repository
+
+1. In the upper-right corner of any GitHub page, click the **+** icon, then click **New repository**.
+2. Under **Owner**, make sure your own account is selected.
+3. Name the repository exactly: `yourusername.github.io` — replacing `yourusername` with your GitHub username, all lowercase.
+   > ⚠️ The name must match your username exactly, or GitHub Pages won't work.
+4. Leave **everything else as-is** — keep "Add a README file" **off**, and leave the licence and .gitignore set to **None**.
+5. Click **Create repository**.
+
+---
+
+### Step 4 — Enable GitHub Pages
+
+1. In your new (empty) repository, go to **Settings** → **Pages** (in the left sidebar under "Code and automation").
+2. Under **Source**, select **Deploy from a branch**.
+3. Set the branch to `main` and the folder to `/ (root)`.
+4. Click **Save**.
+
+> GitHub Pages is now configured. Your site will go live at `https://yourusername.github.io` once you upload the files in the next step.
+
+---
+
+### Step 5 — Upload the template files
+
+1. In your repository, click **Add file** → **Upload files**.
+2. Open the unzipped folder from Step 1 and drag **all the files inside it** into the upload area (not the folder itself — its contents).
+3. Scroll down and click **Commit changes**.
+
+GitHub will automatically build and publish your site. It can take **up to 2 minutes** to go live. Visit `https://yourusername.github.io` to see it.
+
+---
+
+# Adding Your Projects
 
 ### Step 1 — Register projects in `projects.json`
 
@@ -97,7 +127,7 @@ Github Pages supports `.jpg`, `.jpeg`, `.png`, `.gif`, or `.webp` — but the fi
 
 ---
 
-## Customising the Look
+# Customising the Look
 
 Open `projects.json` and edit the `palette` and `style` blocks:
 
@@ -139,7 +169,7 @@ Open `projects.json` and edit the `palette` and `style` blocks:
 
 ---
 
-## File Structure
+# File Structure
 
 ```
 ├── README.md              ← You are here (GitHub Pages setup guide)
@@ -155,9 +185,7 @@ Open `projects.json` and edit the `palette` and `style` blocks:
         └── demo.mp4
 ```
 
----
-
-## Tips
+# Tips
 
 - **File names are case-sensitive** on GitHub Pages (Linux servers). `Screenshot1.PNG` ≠ `screenshot1.png`.
 - Screenshots auto-advance every 3 seconds. Hovering pauses the slideshow.
