@@ -204,7 +204,7 @@ class ProjectGrid {
                 iconUrl = 'https://cdn.simpleicons.org/autodeskmaya/white';
             } else if (cleanTech.includes('toon boom') || cleanTech.includes('toonboom')) {
                 // Use official SVG vector fallback since simpleicons doesn't have it
-                iconUrl = 'https://upload.wikimedia.org/wikipedia/commons/e/e0/Toon_Boom_2022_logo.svg';
+                iconUrl = 'https://la-grange.mo.cloudinary.net/uploads/img/toonboom-light-067a9c.png';
             } else {
                 // 2. Standard precise matching dictionary
                 const manualSlugs = {

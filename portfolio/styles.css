@@ -336,8 +336,8 @@ iframe {
 
 /* Ensure the image scales neatly down into the center of the tag bounding box */
 .tech-icon {
-    width: 28px; /* Internal icon graphic scaling size */
-    height: 28px;
+    width: 38px; /* Internal icon graphic scaling size */
+    height: 38px;
     object-fit: contain;
     display: block;
 }

@@ -15,6 +15,5 @@ Developed and iterated multiple overlay versions across the lifetime of the chan
 
 ## Tech Stack
 - Unity
-- C#
-- OBS Integration
+- OBS Studio
 - GitHub
