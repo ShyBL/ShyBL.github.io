@@ -508,3 +508,88 @@ iframe {
         font-size: 0.9rem;
     }
 }
+
+/* Grid landing page */
+.grid-page {
+    padding: 1rem 0 2rem;
+}
+
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem 0;
+}
+
+.grid-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-light);
+    display: flex;
+    flex-direction: column;
+}
+
+.grid-thumb {
+    position: relative;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+}
+
+.grid-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.grid-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    gap: 0.75rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--animation-speed) ease;
+    text-align: center;
+}
+
+.grid-card:hover .grid-overlay {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.grid-description {
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.grid-btn {
+    background: var(--accent-gradient);
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1.2rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.grid-info {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    flex-grow: 1;
+}
+
+.grid-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}

@@ -56,6 +56,13 @@ class Portfolio {
             this.projects.forEach(project => this.preloadMedia(project));
             this.render();
             this.setupControls();
+
+            const params = new URLSearchParams(window.location.search);
+            const startIndex = parseInt(params.get('project'), 10);
+            if (!isNaN(startIndex) && startIndex >= 0 && startIndex < this.projects.length) {
+                this.currentIndex = startIndex;
+                this.updateCarousel();
+            }
         } catch (error) {
             console.error('Portfolio initialization failed:', error);
             this.showError('Failed to load projects');

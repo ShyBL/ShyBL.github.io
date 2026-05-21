@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shy Blechman - Game Developer</title>
+    <title>ShyBL Portfolio - Project Detail</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="mobile.css">
 </head>
@@ -27,14 +27,30 @@
     </div>
 </section>
 
-<main class="grid-page">
+<main class="projects">
     <div class="container">
-        <div id="project-grid" class="project-grid"></div>
+        <div id="carousel-container">
+            <div class="loading-throbber">
+                <div class="loading-spinner"></div>
+            </div>
+            <div class="loading-text">Loading projects...</div>
+        </div>
     </div>
 </main>
 
 <footer></footer>
 
-<script src="grid.js"></script>
+<!-- Video Popup -->
+<div id="video-popup" class="video-popup">
+    <div class="video-popup-content" role="dialog" aria-modal="true">
+        <button class="video-close" aria-label="Close video">×</button>
+        <video id="popup-video" controls>
+            <source src="" type="video/mp4">
+            Video not supported
+        </video>
+    </div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
