@@ -195,10 +195,11 @@ class ProjectGrid {
 
         return `
             <article class="grid-card">
+                <div class="grid-thumb">
+                    <img src="${thumb}" alt="${project.title}">
+                </div>
+                
                 <div class="grid-card-content">
-                    <div class="grid-thumb">
-                        <img src="${thumb}" alt="${project.title}">
-                    </div>
                     <div class="grid-info">
                         <h3 class="grid-title">${project.title}</h3>
                         <div class="tech-stack">${techHTML}</div>
@@ -206,6 +207,7 @@ class ProjectGrid {
                         <a class="grid-btn grid-btn-card" href="${projectUrl}">View Project</a>
                     </div>
                 </div>
+                
                 <div class="grid-overlay">
                     ${this.renderOverlayFeatures(project.keyFeatures)}
                     <a class="grid-btn grid-btn-overlay" href="${projectUrl}">View Project</a>

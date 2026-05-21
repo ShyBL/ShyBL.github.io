@@ -308,6 +308,8 @@ iframe {
     flex-wrap: wrap;
     gap: 0.5rem;
     justify-content: center;
+    margin: 0.2rem 0;
+    width: 100%;
 }
 
 .content-grid {
@@ -725,10 +727,9 @@ iframe {
     padding: 1.5rem 0 2rem;
     align-items: stretch;
 }
-
 .grid-card {
     position: relative;
-    background: var(--card-bg);
+    background: #ffffff; /* Dark baseline for loading/images */
     border-radius: var(--border-radius);
     overflow: hidden;
     box-shadow: var(--shadow-light);
@@ -736,20 +737,17 @@ iframe {
     flex-direction: column;
     border: 2px solid transparent;
     transition: var(--transition);
+    aspect-ratio: 16/9; /* Forces the whole card to match video/screenshot dimensions */
 }
 
-.grid-card-content {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-
+/* Make the thumbnail fill the entire card absolute space */
 .grid-thumb {
+    position: absolute;
+    inset: 0;
     width: 100%;
-    aspect-ratio: 16/9;
-    max-height: 180px;
-    overflow: hidden;
-    flex-shrink: 0;
+    height: 100%;
+    max-height: none; /* Override previous max-height limit */
+    z-index: 1;
 }
 
 .grid-thumb img {
@@ -759,11 +757,46 @@ iframe {
     display: block;
 }
 
+/* Force content layer above the background thumbnail */
+.grid-card-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Pushes the title to the bottom of the card */
+    height: 100%;
+    width: 100%;
+    /* Gradient overlay ensures text remains readable regardless of image brightness */
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.2) 60%, transparent 100%);
+}
+
+.grid-info {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    background: transparent;
+    align-items: center;
+    text-align: center; 
+    width: 100%;
+}
+
+/* Turn title white with a subtle text shadow */
+.grid-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff; 
+    line-height: 1.3;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    margin: 0;
+}
+
+/* Adjust overlay to cover on hover properly with absolute index positioning */
 .grid-overlay {
     position: absolute;
     inset: 0;
-    z-index: 10;
-    background: rgba(0, 0, 0, 0.8);
+    z-index: 3; /* Places it over the thumb and title content layer */
+    background: rgba(0, 0, 0, 0.85);
     color: white;
     display: flex;
     flex-direction: column;
@@ -838,23 +871,6 @@ iframe {
     outline-offset: 2px;
 }
 
-.grid-info {
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    flex-grow: 1;
-    background: transparent;
-    align-items: center;
-    text-align: center; 
-}
-
-.grid-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    line-height: 1.3;
-}
 
 .grid-features-touch {
     display: none;
