@@ -303,6 +303,16 @@ iframe {
     margin-bottom: 0.25rem;
 }
 
+/* Force all tech stack containers to wrap and use an explicit gap */
+.tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;          /* This creates the space between rows and columns */
+    justify-content: flex-start; /* Default layout for project page */
+    margin: 0.5rem 0;
+    width: 100%;
+}
+
 .grid-card .tech-stack {
     display: flex;
     flex-wrap: wrap;
