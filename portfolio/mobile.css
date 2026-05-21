@@ -82,6 +82,10 @@
     .grid-thumb {
         max-height: 200px;
     }
+
+    .grid-features-touch-line {
+        font-size: 0.8rem;
+    }
 }
 
 @media (max-width: 480px) {

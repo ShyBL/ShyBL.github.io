@@ -1,5 +1,3 @@
-const GRID_MAX_FEATURES = 3;
-
 class ProjectGrid {
     constructor() {
         this.init();
@@ -154,20 +152,29 @@ class ProjectGrid {
         return folder.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     }
 
-    renderFeaturesList(features) {
+    renderFeatureLines(features, lineClass) {
         if (!features.length) return '';
+        return features.map(f => `<p class="${lineClass}">${f}</p>`).join('');
+    }
 
-        const visible = features.slice(0, GRID_MAX_FEATURES);
-        const remaining = features.length - visible.length;
-        const items = visible.map(f => `<li>${f}</li>`).join('');
-        const moreItem = remaining > 0
-            ? `<li class="feature-more">+${remaining} more on project page</li>`
-            : '';
-
+    renderOverlayFeatures(features) {
+        if (!features.length) {
+            return '<p class="grid-overlay-line grid-overlay-empty">No key features listed</p>';
+        }
         return `
-            <div class="grid-features">
-                <h4 class="section-title">Key Features</h4>
-                <ul class="feature-list">${items}${moreItem}</ul>
+            <p class="grid-overlay-label">Key Features</p>
+            <div class="grid-overlay-features">
+                ${this.renderFeatureLines(features, 'grid-overlay-line')}
+            </div>
+        `;
+    }
+
+    renderTouchFeatures(features) {
+        if (!features.length) return '';
+        return `
+            <div class="grid-features-touch">
+                <p class="grid-features-touch-label">Key Features</p>
+                ${this.renderFeatureLines(features, 'grid-features-touch-line')}
             </div>
         `;
     }
@@ -185,23 +192,23 @@ class ProjectGrid {
         const thumb = `${project.folder}/screenshot1.png`;
         const projectUrl = `project.html?project=${project.index}`;
         const techHTML = project.technologies.map(t => `<span class="tech-tag">${t}</span>`).join('');
-        const featuresHTML = this.renderFeaturesList(project.keyFeatures);
 
         return `
             <article class="grid-card">
-                <div class="grid-thumb">
-                    <img src="${thumb}" alt="${project.title}">
-                    <div class="grid-overlay">
-                        <p class="grid-description">${project.description}</p>
-                        <a class="grid-btn grid-btn-overlay" href="${projectUrl}">View Project</a>
+                <div class="grid-card-content">
+                    <div class="grid-thumb">
+                        <img src="${thumb}" alt="${project.title}">
+                    </div>
+                    <div class="grid-info">
+                        <h3 class="grid-title">${project.title}</h3>
+                        <div class="tech-stack">${techHTML}</div>
+                        ${this.renderTouchFeatures(project.keyFeatures)}
+                        <a class="grid-btn grid-btn-card" href="${projectUrl}">View Project</a>
                     </div>
                 </div>
-                <div class="grid-info">
-                    <h3 class="grid-title">${project.title}</h3>
-                    <p class="grid-description-mobile">${project.description}</p>
-                    <div class="tech-stack">${techHTML}</div>
-                    ${featuresHTML}
-                    <a class="grid-btn grid-btn-card" href="${projectUrl}">View Project</a>
+                <div class="grid-overlay">
+                    ${this.renderOverlayFeatures(project.keyFeatures)}
+                    <a class="grid-btn grid-btn-overlay" href="${projectUrl}">View Project</a>
                 </div>
             </article>
         `;
