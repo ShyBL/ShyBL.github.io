@@ -533,6 +533,7 @@ iframe {
 .grid-thumb {
     position: relative;
     aspect-ratio: 16/9;
+    max-height: 180px;
     overflow: hidden;
 }
 
