@@ -42,9 +42,17 @@ iframe {
 }
 
 .container {
-    max-width: 75rem;
     margin: 0 auto;
     padding: 0 1rem;
+}
+
+.projects-container {
+    max-width: 100rem;
+}
+
+.grid-container {
+    max-width: 175rem;
+
 }
 
 .projects {
@@ -460,37 +468,82 @@ iframe {
 }
 
 /* Steam widgets section */
+/* Base settings for both side panels */
 .side-panel {
     position: fixed;
+    width: 340px;
     top: 1.5rem;
-    left: 1.5rem;
     z-index: 100;
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    background: rgba(0, 0, 0, 0.45);
+    align-items: flex-start;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Internal styling for the panel containers */
+.side-panel .panel-content {
+    background: rgba(0, 0, 0, 0.75); /* Darkened slightly for better widget readability */
     backdrop-filter: blur(12px);
     border-radius: 1rem;
     padding: 1.25rem 1rem;
-    max-width: 340px;
     box-shadow: var(--shadow-heavy);
 }
 
-.side-panel .header {
-    padding: 0;
-    text-align: left;
+/* Specific sides placement */
+.left-panel {
+    left: 1.5rem;
+}
+.right-panel {
+    right: 1.5rem;
+    width: auto;
 }
 
-.side-panel .steam-widgets {
-    flex-direction: column;
-    gap: 0.75rem;
+/* Sliding logic using CSS transform */
+/* Moves the left panel entirely off-screen minus a tiny margin, right panel does the opposite */
+.left-panel.collapsed {
+    transform: translateX(calc(-100% - 1.5rem)); 
+}
+.right-panel.collapsed {
+    transform: translateX(calc(100% + 1.5rem));
 }
 
-.side-panel .steam-widgets iframe {
-    width: 100%;
-    height: 100px;
-    margin: 0;
-    box-shadow: none;
+/* The physical interactive tabs */
+.panel-toggle-tab {
+    position: absolute;
+    top: 15px;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 1.25rem;
+    padding: 12px 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    box-shadow: var(--shadow-light);
+    transition: var(--transition);
+}
+
+/* Anchor tabs outside the panel boundaries */
+.left-panel .panel-toggle-tab {
+    left: calc(100% + 10px); /* Sticks out to the right of the left panel */
+}
+.right-panel .panel-toggle-tab {
+    right: calc(100% + 10px); /* Sticks out to the left of the right panel */
+    writing-mode: horizontal-tb; 
+    
+    white-space: nowrap; 
+    
+    display: flex;
+    flex-direction: row; 
+    align-items: center;
+    gap: 0.6rem;
+    
+    padding: 10px 18px;
+}
+
+/* Subtle tab hover effect */
+.panel-toggle-tab:hover {
+    background: var(--accent-gradient);
+    transform: scale(1.05);
 }
 /* .steam-section {
     display: flex;
@@ -573,9 +626,59 @@ iframe {
     font-size: 0.9rem;
 }
 
+/* Styling for the new about text layout */
+.panel-about {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.panel-about p {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    text-align: left;
+}
+
+/* Links collection setup */
+.panel-links {
+    margin-top: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    font-style: normal; /* Removes default address italics */
+}
+
+/* Base interactive button look for socials */
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    transition: var(--transition);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Smooth hover interaction using your design's gradient profile */
+.social-link:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(4px);
+}
+
+.link-icon {
+    font-size: 1.1rem;
+}
+
 /* Grid landing page */
 .grid-page {
-    padding: 0.5rem 0 2rem;
+    padding: 5rem;
 }
 
 .grid-intro {

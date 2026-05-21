@@ -64,7 +64,7 @@
     }
 
     .side-panel .steam-widgets iframe {
-        height: 80px;
+        max-width: 100%;
     }
 }
     .header {

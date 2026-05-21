@@ -480,4 +480,20 @@ function formatFirstParagraph(descriptionHTML) {
     return result;
 }
 
-document.addEventListener('DOMContentLoaded', () => { new Portfolio(); });
+function initSidePanels() {
+    const panels = document.querySelectorAll('.side-panel');
+    
+    panels.forEach(panel => {
+        const tab = panel.querySelector('.panel-toggle-tab');
+        if (tab) {
+            tab.addEventListener('click', () => {
+                panel.classList.toggle('collapsed');
+            });
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => { 
+    new Portfolio();
+    initSidePanels();
+});

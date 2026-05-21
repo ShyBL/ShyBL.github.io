@@ -9,29 +9,58 @@
 </head>
 <body>
 
-<div class="side-panel">
-    <header class="header">
-        <h1>Shy Blechman</h1>
-        <p class="header-tagline">Game Developer Portfolio</p>
-    </header>
-    <div class="steam-widgets">
-        <iframe
-                src="https://store.steampowered.com/widget/3404400/?t=UNDERNEATH%20is%20a%20fast-paced%2C%20stylized%20Metroidvania%20situated%20in%20a%20poor%2C%20underground%20city.%20Collect%20trash%20%26%20loot%2C%20explore%20an%20extensive%20urban%20underground%20wasteland%2C%20engage%20with%20fascinating%20characters%2C%20and%20make%20choices%20that%20will%20affect%20how%20Emma%27s%20story%20will%20end--for%20better%20or%20worse."
-                frameborder="0"
-                width="646"
-                height="190">
-        </iframe>
-        <iframe
-                src="https://store.steampowered.com/widget/4038650/"
-                frameborder="0"
-                width="646"
-                height="190">
-        </iframe>
+    <div class="side-panel left-panel">
+        <button class="panel-toggle-tab" aria-label="Toggle header panel">☰</button>
+        <div class="panel-content">
+            <header class="header">
+                <h1>Shy Blechman</h1>
+                <p class="header-tagline">Game Developer</p>
+            </header>
+            
+            <div class="panel-about">
+                <p>
+                Multimedia artist with a strong passion for the gaming industry, transitioning towards a career as a Tech Artist and Game/Product Designer. 
+                I am actively pursuing formal education in Unity and Unreal engines, focusing on mobile games (Unity) and cinema (Unreal).
+                </p>
+            </div>
+    
+            <address class="panel-links">
+                <a href="https://github.com/ShyBL" target="_blank" rel="noopener" class="social-link">
+                    <img src="https://cdn.simpleicons.org/github/white" width="18" height="18" alt="" /> GitHub
+                </a>
+                <a href="https://linkedin.com/in/shy-blechman" target="_blank" rel="noopener" class="social-link">
+                    <img src="https://raw.githubusercontent.com/Naman-Devio/PORTFOLIO/main/public/icons/linkedin.svg" width="22" height="22" alt="" /> LinkedIn
+                </a>
+            </address>
+        </div>
+    </div>
+
+<div class="side-panel right-panel collapsed" id="right-panel">
+    <button class="panel-toggle-tab" aria-label="Toggle widgets panel">
+        <span class="tab-text">My Games on Steam</span>
+        <br></br>
+        <img src="https://cdn.simpleicons.org/steam/white" width="24" height="24" alt="Steam Games" />
+    </button>
+    <div class="panel-content">
+        <div class="steam-widgets">
+            <iframe
+                    src="https://store.steampowered.com/widget/3404400/"
+                    frameborder="0"
+                    width="646"
+                    height="190">
+            </iframe>
+            <iframe
+                    src="https://store.steampowered.com/widget/4038650/"
+                    frameborder="0"
+                    width="646"
+                    height="190">
+            </iframe>
+        </div>
     </div>
 </div>
 
 <main class="grid-page">
-    <div class="container">
+    <div class="container" id="grid-container">
         <div class="grid-intro">
             <h2 class="grid-intro-title">Projects</h2>
             <p class="grid-intro-count" id="grid-project-count">Loading…</p>
