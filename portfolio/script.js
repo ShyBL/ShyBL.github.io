@@ -229,13 +229,13 @@ class Portfolio {
             return;
         }
         container.innerHTML = `
-            <div class="carousel-wrapper">
-                <div class="carousel-track" id="carousel-track">
-                    ${this.projects.map(p => this.renderProject(p)).join('')}
-                </div>
+        ${this.renderControls()}
+        <div class="carousel-wrapper">
+            <div class="carousel-track" id="carousel-track">
+                ${this.projects.map(p => this.renderProject(p)).join('')}
             </div>
-            ${this.renderControls()}
-        `;
+        </div>
+    `;
     }
 
     renderProject(project) {

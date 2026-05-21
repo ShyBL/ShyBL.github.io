@@ -47,15 +47,26 @@
         width: 2rem;
         height: 2rem;
     }
-    .steam-widgets {
+    /* .steam-widgets {
         flex-direction: column;
         align-items: center;
     }
     .steam-widgets iframe {
         width: 100%;
         height: 160px;
+    } */
+@media (max-width: 768px) {
+    .side-panel {
+        position: static;
+        max-width: 100%;
+        margin: 0.75rem 0.5rem;
+        border-radius: 0.75rem;
     }
 
+    .side-panel .steam-widgets iframe {
+        height: 80px;
+    }
+}
     .header {
         padding: 1.25rem 0.5rem 0.25rem;
     }
