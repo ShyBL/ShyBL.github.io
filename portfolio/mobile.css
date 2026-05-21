@@ -55,6 +55,33 @@
         width: 100%;
         height: 160px;
     }
+
+    .header {
+        padding: 1.25rem 0.5rem 0.25rem;
+    }
+
+    .steam-section {
+        padding: 1rem 0 1.5rem;
+    }
+
+    .project-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+        padding: 1rem 0 1.5rem;
+    }
+
+    .grid-info {
+        padding: 0.85rem;
+        gap: 0.5rem;
+    }
+
+    .grid-title {
+        font-size: 1rem;
+    }
+
+    .grid-thumb {
+        max-height: 200px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -78,5 +105,14 @@
     }
     .header h1 {
         font-size: 1.3rem;
+    }
+
+    .grid-intro-title {
+        font-size: 1.25rem;
+    }
+
+    .grid-btn {
+        padding: 0.45rem 1rem;
+        font-size: 0.8rem;
     }
 }

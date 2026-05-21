@@ -8,7 +8,10 @@
     <link rel="stylesheet" href="mobile.css">
 </head>
 <body>
-<header></header>
+<header class="header">
+    <h1>Shy Blechman</h1>
+    <p class="header-tagline">Game Developer Portfolio</p>
+</header>
 
 <section class="steam-section">
     <div class="steam-widgets">
@@ -29,11 +32,17 @@
 
 <main class="grid-page">
     <div class="container">
+        <div class="grid-intro">
+            <h2 class="grid-intro-title">Projects</h2>
+            <p class="grid-intro-count" id="grid-project-count">Loading…</p>
+        </div>
         <div id="project-grid" class="project-grid"></div>
     </div>
 </main>
 
-<footer></footer>
+<footer class="footer">
+    <p>© Shy Blechman</p>
+</footer>
 
 <script src="grid.js"></script>
 </body>

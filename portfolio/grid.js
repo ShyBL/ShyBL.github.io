@@ -1,3 +1,5 @@
+const GRID_MAX_FEATURES = 3;
+
 class ProjectGrid {
     constructor() {
         this.init();
@@ -35,11 +37,29 @@ class ProjectGrid {
         }
     }
 
+    showLoading(container) {
+        container.innerHTML = `
+            <div class="grid-loading">
+                <div class="loading-throbber">
+                    <div class="loading-spinner"></div>
+                </div>
+                <p class="loading-text">Loading projects…</p>
+            </div>
+        `;
+    }
+
+    updateProjectCount(count) {
+        const el = document.getElementById('grid-project-count');
+        if (el) {
+            el.textContent = count === 1 ? '1 project' : `${count} projects`;
+        }
+    }
+
     async init() {
         const container = document.getElementById('project-grid');
         if (!container) return;
 
-        container.innerHTML = '<p class="loading-text">Loading projects...</p>';
+        this.showLoading(container);
 
         try {
             const response = await fetch('projects.json');
@@ -72,9 +92,11 @@ class ProjectGrid {
             });
 
             const projects = await Promise.all(projectPromises);
+            this.updateProjectCount(projects.length);
             this.render(container, projects);
         } catch (error) {
             console.error('Grid initialization failed:', error);
+            this.updateProjectCount(0);
             container.innerHTML = '<p class="error">Failed to load projects</p>';
         }
     }
@@ -132,6 +154,24 @@ class ProjectGrid {
         return folder.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     }
 
+    renderFeaturesList(features) {
+        if (!features.length) return '';
+
+        const visible = features.slice(0, GRID_MAX_FEATURES);
+        const remaining = features.length - visible.length;
+        const items = visible.map(f => `<li>${f}</li>`).join('');
+        const moreItem = remaining > 0
+            ? `<li class="feature-more">+${remaining} more on project page</li>`
+            : '';
+
+        return `
+            <div class="grid-features">
+                <h4 class="section-title">Key Features</h4>
+                <ul class="feature-list">${items}${moreItem}</ul>
+            </div>
+        `;
+    }
+
     render(container, projects) {
         if (projects.length === 0) {
             container.innerHTML = '<p class="error">No projects found</p>';
@@ -143,26 +183,27 @@ class ProjectGrid {
 
     renderCard(project) {
         const thumb = `${project.folder}/screenshot1.png`;
+        const projectUrl = `project.html?project=${project.index}`;
         const techHTML = project.technologies.map(t => `<span class="tech-tag">${t}</span>`).join('');
-        const featuresHTML = project.keyFeatures.length > 0
-            ? `<ul class="feature-list">${project.keyFeatures.map(f => `<li>${f}</li>`).join('')}</ul>`
-            : '';
+        const featuresHTML = this.renderFeaturesList(project.keyFeatures);
 
         return `
-            <div class="grid-card">
+            <article class="grid-card">
                 <div class="grid-thumb">
                     <img src="${thumb}" alt="${project.title}">
                     <div class="grid-overlay">
                         <p class="grid-description">${project.description}</p>
-                        <a class="grid-btn" href="project.html?project=${project.index}">View Project</a>
+                        <a class="grid-btn grid-btn-overlay" href="${projectUrl}">View Project</a>
                     </div>
                 </div>
                 <div class="grid-info">
                     <h3 class="grid-title">${project.title}</h3>
+                    <p class="grid-description-mobile">${project.description}</p>
                     <div class="tech-stack">${techHTML}</div>
                     ${featuresHTML}
+                    <a class="grid-btn grid-btn-card" href="${projectUrl}">View Project</a>
                 </div>
-            </div>
+            </article>
         `;
     }
 }
