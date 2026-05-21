@@ -19,9 +19,9 @@ Created for the July 2024 Ignite Game Jam hosted by P1. You venture into various
 
 ## Tech Stack
 - Unity
-- FMOD for Unity
+- FMOD
 - Krita
-- ToonBoom
+- Toon Boom
 - JIRA
 - Miro
 - GitHub

@@ -191,7 +191,45 @@ class ProjectGrid {
     renderCard(project) {
         const thumb = `${project.folder}/screenshot1.png`;
         const projectUrl = `project.html?project=${project.index}`;
-        const techHTML = project.technologies.map(t => `<span class="tech-tag">${t}</span>`).join('');
+
+        // Render each tech tag as an image instead of text
+        const techHTML = project.technologies.map(t => {
+            const cleanTech = t.toLowerCase().trim();
+            let iconUrl = '';
+            
+            // 1. Check manual overrides first
+            if (cleanTech.includes('obs integration') || cleanTech === 'obs') {
+                iconUrl = 'https://cdn.simpleicons.org/obsstudio/white';
+            } else if (cleanTech === 'maya' || cleanTech.includes('autodesk maya')) {
+                iconUrl = 'https://cdn.simpleicons.org/autodeskmaya/white';
+            } else if (cleanTech.includes('toon boom') || cleanTech.includes('toonboom')) {
+                // Use official SVG vector fallback since simpleicons doesn't have it
+                iconUrl = 'https://upload.wikimedia.org/wikipedia/commons/e/e0/Toon_Boom_2022_logo.svg';
+            } else {
+                // 2. Standard precise matching dictionary
+                const manualSlugs = {
+                    'c#': 'csharp',
+                    'c++': 'cplusplus',
+                    'js': 'javascript',
+                    'html': 'html5',
+                    'css': 'css3',
+                    'three.js': 'threedotjs',
+                    'node.js': 'nodedotjs',
+                    'web audio api': 'web-audio-api',
+                    'unity': 'unity',
+                    'blender': 'blender'
+                };
+
+                const slug = manualSlugs[cleanTech] || cleanTech.replace(/[\s\.\-]+/g, '');
+                iconUrl = `https://cdn.simpleicons.org/${slug}/white`;
+            }
+
+            return `
+                <span class="tech-tag" title="${t}">
+                    <img src="${iconUrl}" alt="${t}" class="tech-icon" onerror="this.parentElement.innerText='${t}'">
+                </span>
+            `;
+        }).join('');
 
         return `
             <article class="grid-card">
