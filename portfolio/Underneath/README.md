@@ -20,8 +20,6 @@ Created for the July 2024 Ignite Game Jam hosted by P1. You venture into various
 ## Tech Stack
 - Unity
 - FMOD
-- Krita
-- Toon Boom
-- JIRA
+- Jira
 - Miro
 - GitHub
